@@ -2,11 +2,8 @@
 title: 'Custom Integrated Kitchen'
 shortDescription: 'A complete kitchen designed to measure: upper cabinets, lower cabinets and interior layout.'
 description: 'We design the complete kitchen to fit your space: upper and lower cabinets, interior layout, and finishes coordinated with countertop and appliances.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom integrated kitchen — reference image'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Upper and lower cabinets of an integrated kitchen'
+heroImage: '/images/products/cocinas-integrales/hero-cocina-integral-gabinetes-madera.webp'
+heroImageAlt: 'Custom integrated kitchen with wood-tone upper and lower cabinets'
 category: 'Kitchens'
 featured: true
 materials:

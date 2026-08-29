@@ -8,8 +8,8 @@ gallery:
     alt: 'Upper cabinets of the example kitchen'
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Lower cabinets of the example kitchen'
-beforeImage: '/images/placeholders/placeholder-before.svg'
-afterImage: '/images/placeholders/placeholder-after.svg'
+beforeImage: '/images/projects/cocina-integral-demo/before-cocina-antigua-original.webp'
+afterImage: '/images/projects/cocina-integral-demo/after-cocina-renovada-blanca.webp'
 services:
   - 'cocinas-a-medida'
 products:

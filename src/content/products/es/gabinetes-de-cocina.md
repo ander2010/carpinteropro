@@ -2,8 +2,8 @@
 title: 'Gabinetes de cocina'
 shortDescription: 'Gabinetes de cocina individuales, ideales para renovar parte de tu cocina sin rehacerla completa.'
 description: 'Fabricamos gabinetes de cocina individuales o por módulos, ideales cuando quieres renovar o ampliar parte de tu cocina sin un proyecto completo.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Gabinetes de cocina a medida — imagen de referencia'
+heroImage: '/images/products/gabinetes-de-cocina/hero-gabinete-blanco-instalacion.webp'
+heroImageAlt: 'Gabinetes de cocina blancos recién instalados, con puerta abierta mostrando repisas'
 category: 'Cocinas'
 featured: false
 materials:

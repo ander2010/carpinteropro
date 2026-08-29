@@ -2,8 +2,8 @@
 title: 'Centro de entretenimiento a medida'
 shortDescription: 'Mueble para TV y sistema de entretenimiento, diseñado a medida de tu sala.'
 description: 'Centros de entretenimiento y muebles de TV diseñados a medida del espacio y del equipo que tienes, con almacenamiento integrado para consolas, libros o decoración.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Centro de entretenimiento a medida — imagen de referencia'
+heroImage: '/images/products/centros-de-entretenimiento/hero-centro-entretenimiento-nogal.webp'
+heroImageAlt: 'Centro de entretenimiento a medida en nogal con TV, estantería abierta y almacenamiento cerrado'
 category: 'Muebles'
 featured: false
 materials:

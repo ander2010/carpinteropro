@@ -2,8 +2,8 @@
 title: 'Kitchen Cabinets'
 shortDescription: 'Individual kitchen cabinets, ideal for renovating part of your kitchen without redoing it entirely.'
 description: 'We build individual or modular kitchen cabinets, ideal when you want to renovate or expand part of your kitchen without a full project.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom kitchen cabinets — reference image'
+heroImage: '/images/products/gabinetes-de-cocina/hero-gabinete-blanco-instalacion.webp'
+heroImageAlt: 'Newly installed white kitchen cabinets with one door open showing shelving'
 category: 'Kitchens'
 featured: false
 materials:

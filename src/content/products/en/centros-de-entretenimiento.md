@@ -2,8 +2,8 @@
 title: 'Custom Entertainment Center'
 shortDescription: 'A TV and entertainment system unit, designed to fit your living room.'
 description: 'Entertainment centers and TV units designed to fit your space and equipment, with integrated storage for consoles, books or decor.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom entertainment center — reference image'
+heroImage: '/images/products/centros-de-entretenimiento/hero-centro-entretenimiento-nogal.webp'
+heroImageAlt: 'Custom walnut entertainment center with TV, open shelving and closed storage'
 category: 'Furniture'
 featured: false
 materials:

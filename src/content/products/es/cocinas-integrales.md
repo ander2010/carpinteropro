@@ -2,11 +2,8 @@
 title: 'Cocina integral a medida'
 shortDescription: 'Cocina completa diseñada a medida: gabinetes superiores, inferiores y distribución interior.'
 description: 'Diseñamos la cocina completa a medida de tu espacio: gabinetes superiores e inferiores, distribución interior y terminaciones coordinadas con encimera y electrodomésticos.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Cocina integral a medida — imagen de referencia'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Gabinetes superiores e inferiores de cocina integral'
+heroImage: '/images/products/cocinas-integrales/hero-cocina-integral-gabinetes-madera.webp'
+heroImageAlt: 'Cocina integral a medida con gabinetes superiores e inferiores en tono madera'
 category: 'Cocinas'
 featured: true
 materials:

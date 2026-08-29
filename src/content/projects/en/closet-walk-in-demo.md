@@ -8,8 +8,8 @@ gallery:
     alt: 'Hanging zone of the example walk-in closet'
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Drawer area of the example walk-in closet'
-beforeImage: '/images/placeholders/placeholder-before.svg'
-afterImage: '/images/placeholders/placeholder-after.svg'
+beforeImage: '/images/projects/closet-walk-in-demo/before-closet-reach-in-original.webp'
+afterImage: '/images/projects/closet-walk-in-demo/after-walkin-closet-terminado.webp'
 services:
   - 'closets-a-medida'
 products:

@@ -8,8 +8,8 @@ gallery:
     alt: 'Zona de colgado del walk-in closet de ejemplo'
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Cajonería del walk-in closet de ejemplo'
-beforeImage: '/images/placeholders/placeholder-before.svg'
-afterImage: '/images/placeholders/placeholder-after.svg'
+beforeImage: '/images/projects/closet-walk-in-demo/before-closet-reach-in-original.webp'
+afterImage: '/images/projects/closet-walk-in-demo/after-walkin-closet-terminado.webp'
 services:
   - 'closets-a-medida'
 products:

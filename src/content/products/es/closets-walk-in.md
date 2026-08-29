@@ -2,13 +2,8 @@
 title: 'Closet walk-in a medida'
 shortDescription: 'Closet walk-in diseñado como una habitación de vestidor completa, a medida del espacio disponible.'
 description: 'Diseñamos closets walk-in que aprovechan al máximo el espacio disponible, combinando zonas de colgado, cajonería y estantería abierta según tu forma de organizar la ropa.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Closet walk-in a medida — imagen de referencia'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Interior de closet walk-in con estantería abierta'
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Zona de cajones de closet walk-in'
+heroImage: '/images/products/closets-walk-in/hero-walkin-closet-vestidor.webp'
+heroImageAlt: 'Walk-in closet con zonas de colgado, estantería abierta y cajonería en isla central'
 category: 'Closets'
 featured: true
 materials:

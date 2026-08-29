@@ -2,11 +2,8 @@
 title: 'Closets empotrados'
 shortDescription: 'Closets empotrados de pared a pared, con puertas abatibles o corredizas según tu espacio.'
 description: 'Closets empotrados diseñados para integrarse a la pared de tu habitación, con distribución interior a medida y opciones de puertas abatibles o corredizas.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Closet empotrado a medida — imagen de referencia'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Closet empotrado con puertas corredizas'
+heroImage: '/images/products/closets-empotrados/hero-closet-puertas-corredizas.webp'
+heroImageAlt: 'Closet empotrado de pared a pared con puertas corredizas de madera'
 category: 'Closets'
 featured: false
 materials:

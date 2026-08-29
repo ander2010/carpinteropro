@@ -2,11 +2,8 @@
 title: 'Built-In Closets'
 shortDescription: 'Wall-to-wall built-in closets, with hinged or sliding doors depending on your space.'
 description: 'Built-in closets designed to integrate into your bedroom wall, with a custom interior layout and hinged or sliding door options.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom built-in closet — reference image'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Built-in closet with sliding doors'
+heroImage: '/images/products/closets-empotrados/hero-closet-puertas-corredizas.webp'
+heroImageAlt: 'Wall-to-wall built-in closet with wood sliding doors'
 category: 'Closets'
 featured: false
 materials:

@@ -2,8 +2,13 @@
 title: 'Vanity de baño a medida'
 shortDescription: 'Mueble de baño (vanity) a medida, con materiales resistentes a la humedad.'
 description: 'Vanities de baño a medida, diseñadas para tu lavamanos y espacio disponible, con materiales y selladores pensados para ambientes húmedos.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Vanity de baño a medida — imagen de referencia'
+heroImage: '/images/products/vanities-de-bano/hero-vanity-instalado-bano.webp'
+heroImageAlt: 'Vanity de baño a medida instalado, con lavamanos y espejo'
+gallery:
+  - src: '/images/products/vanities-de-bano/gallery-vanity-lavamanos-grifo.webp'
+    alt: 'Vanity con lavamanos sobrepuesto y grifería en acabado dorado'
+  - src: '/images/products/vanities-de-bano/gallery-vanity-lavamanos-detalle.webp'
+    alt: 'Detalle de vanity con lavamanos sobrepuesto y cajonería'
 category: 'Baño'
 featured: false
 materials:

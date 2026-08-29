@@ -2,13 +2,8 @@
 title: 'Custom Walk-In Closet'
 shortDescription: 'A walk-in closet designed as a full dressing room, built to fit your available space.'
 description: 'We design walk-in closets that make the most of the available space, combining hanging zones, drawers and open shelving based on how you organize your clothes.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom walk-in closet — reference image'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Walk-in closet interior with open shelving'
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Walk-in closet drawer area'
+heroImage: '/images/products/closets-walk-in/hero-walkin-closet-vestidor.webp'
+heroImageAlt: 'Walk-in closet with hanging zones, open shelving and a center island with drawers'
 category: 'Closets'
 featured: true
 materials:

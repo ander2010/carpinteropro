@@ -2,8 +2,13 @@
 title: 'Custom Bathroom Vanity'
 shortDescription: 'A custom bathroom vanity, built with moisture-resistant materials.'
 description: 'Custom bathroom vanities, designed around your sink and available space, with materials and sealants built for humid environments.'
-heroImage: '/images/placeholders/placeholder-1x1.svg'
-heroImageAlt: 'Custom bathroom vanity — reference image'
+heroImage: '/images/products/vanities-de-bano/hero-vanity-instalado-bano.webp'
+heroImageAlt: 'Custom bathroom vanity installed, with sink and mirror'
+gallery:
+  - src: '/images/products/vanities-de-bano/gallery-vanity-lavamanos-grifo.webp'
+    alt: 'Vanity with vessel sink and gold-finish faucet'
+  - src: '/images/products/vanities-de-bano/gallery-vanity-lavamanos-detalle.webp'
+    alt: 'Detail of vanity with vessel sink and drawers'
 category: 'Bathroom'
 featured: false
 materials:

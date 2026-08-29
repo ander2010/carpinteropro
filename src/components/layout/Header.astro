@@ -1,0 +1,169 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { getMainNav, getPrimaryCta } from '@config/navigation';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+  unprefixedPath: string;
+}
+const { locale, unprefixedPath } = Astro.props;
+
+const t = useTranslations(locale);
+const mainNav = getMainNav(locale);
+const primaryCta = getPrimaryCta(locale);
+
+const currentPath = Astro.url.pathname;
+const homeHref = locale === 'es' ? '/' : '/en';
+const isActive = (href: string) =>
+  href === homeHref ? currentPath === homeHref : currentPath.startsWith(href);
+---
+
+<header
+  class="border-ink-900/5 bg-paper-50/90 sticky top-0 z-40 border-b backdrop-blur-md"
+  transition:persist
+  transition:name="site-header"
+>
+  <nav
+    class="container-page flex h-20 items-center justify-between"
+    aria-label="Navegación principal"
+  >
+    <BrandLogo locale={locale} />
+
+    <ul class="hidden items-center gap-8 lg:flex">
+      {
+        mainNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'hover:text-brand-700 text-sm font-medium transition-colors',
+                isActive(item.href) ? 'text-brand-700' : 'text-ink-800',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="hidden items-center gap-3 lg:flex">
+      <LanguageSwitcher locale={locale} unprefixedPath={unprefixedPath} />
+      <a
+        href={primaryCta.href}
+        data-event="quote_click"
+        class="bg-brand-600 text-paper-50 shadow-soft hover:bg-brand-700 hover:shadow-lifted inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition-all hover:-translate-y-0.5"
+      >
+        {primaryCta.label}
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2 lg:hidden">
+      <LanguageSwitcher locale={locale} unprefixedPath={unprefixedPath} />
+      <button
+        type="button"
+        class="text-ink-900 inline-flex items-center justify-center rounded-lg p-2"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-mobile-menu-toggle
+        aria-label={t('nav.openMenu')}
+      >
+        <svg
+          class="h-7 w-7"
+          data-icon-open
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"></path>
+        </svg>
+        <svg
+          class="hidden h-7 w-7"
+          data-icon-close
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div
+    id="mobile-menu"
+    data-mobile-menu
+    class="border-ink-900/5 bg-paper-50 hidden border-t lg:hidden"
+  >
+    <ul class="container-page flex flex-col gap-1 py-4">
+      {
+        mainNav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'block rounded-lg px-3 py-3 text-base font-medium',
+                isActive(item.href)
+                  ? 'bg-brand-50 text-brand-700'
+                  : 'text-ink-800 hover:bg-ink-900/5',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="mt-2">
+        <a
+          href={primaryCta.href}
+          data-event="quote_click"
+          class="bg-brand-600 text-paper-50 block rounded-full px-4 py-3 text-center text-base font-semibold"
+        >
+          {primaryCta.label}
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  function initMobileMenu() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-mobile-menu-toggle]');
+    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
+    if (!toggle || !menu || toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    const iconOpen = toggle.querySelector<SVGElement>('[data-icon-open]');
+    const iconClose = toggle.querySelector<SVGElement>('[data-icon-close]');
+
+    toggle.addEventListener('click', () => {
+      const isOpen = menu.classList.contains('hidden') === false;
+      menu.classList.toggle('hidden');
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+      iconOpen?.classList.toggle('hidden');
+      iconClose?.classList.toggle('hidden');
+    });
+
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+        iconOpen?.classList.remove('hidden');
+        iconClose?.classList.add('hidden');
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

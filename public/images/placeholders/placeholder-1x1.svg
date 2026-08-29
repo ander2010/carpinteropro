@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200" role="img" aria-label="Imagen de referencia, pendiente de sustituir por fotografía real">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#29241b"/>
+      <stop offset="1" stop-color="#1d1912"/>
+    </linearGradient>
+    <pattern id="hatch" width="40" height="40" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="40" stroke="#b17434" stroke-opacity="0.14" stroke-width="16"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <rect width="1200" height="1200" fill="url(#hatch)"/>
+  <g transform="translate(600,540)" text-anchor="middle" font-family="Georgia, serif">
+    <path d="M-40 44 L0 -32 L40 44 Z" stroke="#d9a35f" stroke-width="5" fill="none" stroke-linejoin="round"/>
+    <path d="M-22 44 L0 4 L22 44" stroke="#f8f3ea" stroke-width="5" fill="none" stroke-linejoin="round"/>
+  </g>
+  <text x="600" y="640" text-anchor="middle" font-family="Georgia, serif" font-size="30" fill="#f1e9d9">Imagen de referencia</text>
+  <text x="600" y="678" text-anchor="middle" font-family="Georgia, serif" font-size="18" fill="#c4ac7c">Sustituir por fotografía real</text>
+</svg>

@@ -1,0 +1,87 @@
+---
+import { locales, localeNames } from '@i18n/ui';
+import { getAlternateLocalePaths, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Ruta actual SIN prefijo de idioma (ej. "/services/closets-a-medida"). */
+  unprefixedPath: string;
+  class?: string;
+}
+
+const { locale, unprefixedPath, class: className = '' } = Astro.props;
+const t = useTranslations(locale);
+const alternates = getAlternateLocalePaths(unprefixedPath);
+---
+
+<div class={`relative inline-block ${className}`} data-language-switcher>
+  <button
+    type="button"
+    class="border-ink-900/15 text-ink-800 hover:bg-ink-900/5 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium"
+    aria-haspopup="true"
+    aria-expanded="false"
+    data-language-toggle
+    aria-label={t('nav.language')}
+  >
+    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path
+        fill-rule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13.25a.75.75 0 00-1.5 0v.518c-.622.07-1.226.22-1.797.443a.75.75 0 10.54 1.398c.4-.155.822-.267 1.257-.334v2.475a5.502 5.502 0 00-3.393 1.68.75.75 0 101.09 1.03A4 4 0 019.25 9.99v2.936a4 4 0 01-2.303-1.03.75.75 0 10-1.09 1.03 5.5 5.5 0 003.393 1.679v.518a.75.75 0 001.5 0v-.518a5.5 5.5 0 003.393-1.68.75.75 0 10-1.09-1.029 4 4 0 01-2.303 1.03V9.989a4 4 0 012.303 1.03.75.75 0 101.09-1.03 5.502 5.502 0 00-3.393-1.68V5.834c.435.067.857.179 1.257.334a.75.75 0 10.54-1.398 6.94 6.94 0 00-1.797-.443V4.75z"
+        clip-rule="evenodd"></path>
+    </svg>
+    {locale.toUpperCase()}
+  </button>
+  <ul
+    data-language-menu
+    class="shadow-lifted ring-ink-900/10 absolute right-0 z-20 mt-2 hidden w-32 overflow-hidden rounded-xl bg-white py-1 ring-1"
+    role="menu"
+  >
+    {
+      locales.map((loc) => (
+        <li>
+          <a
+            href={alternates[loc]}
+            role="menuitem"
+            aria-current={loc === locale ? 'true' : undefined}
+            class:list={[
+              'hover:bg-ink-900/5 block px-4 py-2 text-sm',
+              loc === locale ? 'text-brand-700 font-semibold' : 'text-ink-800',
+            ]}
+          >
+            {localeNames[loc]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  function initLanguageSwitchers() {
+    document.querySelectorAll<HTMLElement>('[data-language-switcher]').forEach((wrapper) => {
+      if (wrapper.dataset.bound === 'true') return;
+      wrapper.dataset.bound = 'true';
+
+      const toggle = wrapper.querySelector<HTMLButtonElement>('[data-language-toggle]');
+      const menu = wrapper.querySelector<HTMLElement>('[data-language-menu]');
+      if (!toggle || !menu) return;
+
+      const close = () => {
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      };
+
+      toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isOpen = !menu.classList.contains('hidden');
+        document.querySelectorAll('[data-language-menu]').forEach((m) => m.classList.add('hidden'));
+        menu.classList.toggle('hidden', isOpen);
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      document.addEventListener('click', close);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initLanguageSwitchers);
+</script>

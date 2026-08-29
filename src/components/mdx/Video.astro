@@ -1,0 +1,32 @@
+---
+// Vídeo local (MP4/WebM) con poster y carga diferida.
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  src: string;
+  webmSrc?: string;
+  poster?: string;
+  title?: string;
+  locale?: Locale;
+}
+const { src, webmSrc, poster, title, locale = 'es' } = Astro.props;
+const resolvedTitle = title ?? (locale === 'es' ? 'Vídeo' : 'Video');
+const fallbackText =
+  locale === 'es'
+    ? 'Tu navegador no soporta la reproducción de este vídeo.'
+    : 'Your browser does not support video playback.';
+---
+
+<figure class="my-8">
+  <video
+    controls
+    preload="none"
+    poster={poster}
+    class="bg-ink-950 shadow-lifted aspect-video w-full rounded-2xl"
+    aria-label={resolvedTitle}
+  >
+    {webmSrc && <source src={webmSrc} type="video/webm" />}
+    <source src={src} type="video/mp4" />
+    {fallbackText}
+  </video>
+</figure>

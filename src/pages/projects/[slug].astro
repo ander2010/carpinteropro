@@ -1,0 +1,228 @@
+---
+import { render } from 'astro:content';
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import Badge from '@components/ui/Badge.astro';
+import BeforeAfter from '@components/ui/BeforeAfter.astro';
+import QuoteForm from '@components/conversion/QuoteForm.astro';
+import WhatsAppCTA from '@components/conversion/WhatsAppCTA.astro';
+import ServiceCard from '@components/services/ServiceCard.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import { getPublishedProjects, getPublishedServices, byIds } from '@utils/content';
+import { formatDate } from '@utils/format';
+import { getLocalizedPath, stripLocale, useTranslations } from '@i18n/utils';
+import { getPrimaryCta } from '@config/navigation';
+
+const locale = 'es' as const;
+
+export async function getStaticPaths() {
+  // getStaticPaths() se ejecuta en un scope aislado del resto del
+  // frontmatter (no ve el `const locale` de mas abajo), asi que se
+  // declara aqui tambien.
+  const locale = 'es' as const;
+  const projects = await getPublishedProjects(locale);
+  return projects.map((project) => ({
+    params: { slug: stripLocale(project.id) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const t = useTranslations(locale);
+const { Content } = await render(project);
+const slug = stripLocale(project.id);
+const {
+  title,
+  description,
+  heroImage,
+  heroImageAlt,
+  gallery,
+  beforeImage,
+  afterImage,
+  services,
+  materials,
+  location,
+  date,
+  demo,
+  seoTitle,
+  seoDescription,
+} = project.data;
+
+const [allServices, allProjects] = await Promise.all([
+  getPublishedServices(locale),
+  getPublishedProjects(locale),
+]);
+const servicesList = byIds(allServices, services);
+const moreProjects = allProjects.filter((p) => p.id !== project.id).slice(0, 3);
+const primaryCta = getPrimaryCta(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title={seoTitle ?? title}
+  description={seoDescription ?? description}
+  image={heroImage}
+  noindex={demo}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[
+        { name: t('nav.projects'), path: getLocalizedPath(locale, '/projects') },
+        { name: title, path: getLocalizedPath(locale, `/projects/${slug}`) },
+      ]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-10">
+    {
+      demo && (
+        <Badge tone="sand" class="mb-4">
+          {t('projects.demoBadge')} — {t('blog.demoNote')}
+        </Badge>
+      )
+    }
+    <div class="text-ink-500 flex flex-wrap items-center gap-3 text-sm">
+      {location && <span>{location}</span>}
+      <span aria-hidden="true">·</span>
+      <time datetime={date.toISOString()}>{formatDate(date, locale)}</time>
+    </div>
+    <h1 class="mt-3 max-w-3xl text-4xl font-semibold sm:text-5xl">{title}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">{description}</p>
+    {
+      servicesList.length > 0 && (
+        <div class="mt-5 flex flex-wrap gap-2">
+          {servicesList.map((s) => (
+            <Badge>{s.data.title}</Badge>
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <section class="container-page pb-16">
+    <div class="shadow-lifted aspect-[16/9] overflow-hidden rounded-3xl">
+      <img
+        src={heroImage}
+        alt={heroImageAlt}
+        loading="eager"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
+    </div>
+  </section>
+
+  <section class="container-page pb-16">
+    <div class="prose-carpintero max-w-3xl">
+      <Content />
+    </div>
+  </section>
+
+  {
+    materials.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('projects.materials')}</h2>
+          <div class="mt-5 flex flex-wrap gap-2">
+            {materials.map((m) => (
+              <span class="text-ink-700 ring-ink-900/10 rounded-full bg-white px-4 py-2 text-sm ring-1 ring-inset">
+                {m}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    beforeImage && afterImage && (
+      <section class="container-page py-16">
+        <h2 class="text-ink-950 text-2xl font-semibold">{t('projects.beforeAfter')}</h2>
+        <BeforeAfter
+          locale={locale}
+          beforeSrc={beforeImage}
+          afterSrc={afterImage}
+          beforeAlt={`${title} — ${t('projects.before').toLowerCase()}`}
+          afterAlt={`${title} — ${t('projects.after').toLowerCase()}`}
+        />
+      </section>
+    )
+  }
+
+  {
+    gallery && gallery.length > 0 && (
+      <section class="container-page pb-16">
+        <h2 class="text-ink-950 text-2xl font-semibold">{t('projects.gallery')}</h2>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {gallery.map((img) => (
+            <div class="aspect-[4/3] overflow-hidden rounded-xl">
+              <img
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="bg-ink-950 py-16 text-center">
+    <div class="container-page flex flex-col items-center">
+      <h2 class="text-paper-50 text-2xl font-semibold sm:text-3xl">{t('projects.ctaTitle')}</h2>
+      <p class="text-paper-100/75 mt-3 max-w-xl">{t('projects.ctaText')}</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a
+          href={primaryCta.href}
+          data-event="quote_click"
+          class="bg-brand-600 text-paper-50 shadow-soft hover:bg-brand-700 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5"
+        >
+          {primaryCta.label}
+        </a>
+        <WhatsAppCTA
+          locale={locale}
+          context={title}
+          class="!text-paper-50 !bg-white/10 hover:!bg-white/20"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-16">
+    <QuoteForm locale={locale} context={title} />
+  </section>
+
+  {
+    moreProjects.length > 0 && (
+      <section class="border-ink-900/10 border-t py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('projects.moreProjects')}</h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            {moreProjects.map((p) => (
+              <ProjectCard project={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    servicesList.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('projects.serviceUsed')}</h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            {servicesList.map((s) => (
+              <ServiceCard service={s} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</MainLayout>

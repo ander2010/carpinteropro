@@ -1,0 +1,39 @@
+---
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  locale: Locale;
+  headings: Heading[];
+}
+const { locale, headings } = Astro.props;
+const t = useTranslations(locale);
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const ariaLabel = locale === 'es' ? 'Tabla de contenidos' : 'Table of contents';
+---
+
+{
+  items.length >= 3 && (
+    <nav
+      aria-label={ariaLabel}
+      class="not-prose border-ink-900/10 bg-sand-100/50 mb-10 rounded-2xl border p-6"
+    >
+      <p class="text-ink-500 mb-3 text-sm font-semibold tracking-wide uppercase">
+        {t('blog.inThisArticle')}
+      </p>
+      <ul class="space-y-2 text-sm">
+        {items.map((h) => (
+          <li class:list={[{ 'ml-4': h.depth === 3 }]}>
+            <a href={`#${h.slug}`} class="text-ink-700 hover:text-brand-700 hover:underline">
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

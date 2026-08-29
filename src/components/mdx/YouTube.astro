@@ -1,0 +1,72 @@
+---
+// Facade ligero: no carga el iframe de YouTube hasta que el usuario hace clic
+// en la miniatura (mejor LCP/INP, ver sección 13 y 68 de la especificación).
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  id: string;
+  title: string;
+  locale?: Locale;
+}
+const { id, title, locale = 'es' } = Astro.props;
+const thumbnail = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const playLabel = locale === 'es' ? `Reproducir vídeo: ${title}` : `Play video: ${title}`;
+---
+
+<div
+  class="group bg-ink-950 shadow-lifted relative my-8 aspect-video w-full cursor-pointer overflow-hidden rounded-2xl"
+  data-youtube-facade
+  data-video-id={id}
+  role="button"
+  tabindex="0"
+  aria-label={playLabel}
+>
+  <img
+    src={thumbnail}
+    alt={title}
+    loading="lazy"
+    decoding="async"
+    class="h-full w-full object-cover opacity-80 transition-opacity group-hover:opacity-60"
+  />
+  <span class="absolute inset-0 flex items-center justify-center">
+    <span
+      class="text-ink-950 shadow-lifted flex h-16 w-16 items-center justify-center rounded-full bg-white/90 transition-transform group-hover:scale-110"
+    >
+      <svg class="ml-1 h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M8 5v14l11-7z"></path>
+      </svg>
+    </span>
+  </span>
+  <span class="absolute right-4 bottom-3 left-4 text-sm font-medium text-white/90">{title}</span>
+</div>
+
+<script>
+  function initYouTubeFacades() {
+    document.querySelectorAll<HTMLElement>('[data-youtube-facade]').forEach((el) => {
+      if (el.dataset.bound === 'true') return;
+      el.dataset.bound = 'true';
+
+      const play = () => {
+        const videoId = el.dataset.videoId;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+        iframe.title = el.getAttribute('aria-label') ?? 'YouTube video';
+        iframe.className = 'h-full w-full';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        el.replaceChildren(iframe);
+      };
+
+      el.addEventListener('click', play);
+      el.addEventListener('keydown', (e) => {
+        if (e instanceof KeyboardEvent && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          play();
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initYouTubeFacades);
+</script>

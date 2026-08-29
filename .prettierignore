@@ -1,0 +1,11 @@
+dist
+node_modules
+.astro
+pnpm-lock.yaml
+package-lock.json
+public
+
+# prettier-plugin-astro no procesa correctamente los bloques <script is:inline>
+# que contienen literales de objeto (bug conocido de la versión instalada).
+# El compilador de Astro sí procesa este archivo correctamente (ver build).
+src/components/seo/Analytics.astro

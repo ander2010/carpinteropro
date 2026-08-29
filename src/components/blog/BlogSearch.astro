@@ -1,0 +1,35 @@
+---
+// Búsqueda estática del blog basada en Pagefind (https://pagefind.app).
+// El índice se genera en el postbuild ("npm run build" ejecuta pagefind sobre
+// dist/"). En "astro dev" no hay índice todavía, así que el buscador no
+// devolverá resultados hasta que ejecutes un build — esto es una limitación
+// esperada de las herramientas de búsqueda estática, documentada en README.md.
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<div class="container-page mb-10">
+  <div id="blog-search" class="pagefind-ui max-w-xl" data-search-locale={locale}></div>
+</div>
+
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+<script is:inline src="/pagefind/pagefind-ui.js" defer></script>
+<script is:inline>
+  window.addEventListener('DOMContentLoaded', () => {
+    var el = document.getElementById('blog-search');
+    if (typeof PagefindUI === 'function' && el) {
+      var searchLocale = el.getAttribute('data-search-locale');
+      // eslint-disable-next-line no-undef
+      new PagefindUI({
+        element: '#blog-search',
+        showSubResults: true,
+        showImages: false,
+        language: searchLocale,
+      });
+    }
+  });
+</script>

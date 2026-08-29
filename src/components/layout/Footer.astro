@@ -1,0 +1,189 @@
+---
+import BrandLogo from './BrandLogo.astro';
+import { getFooterNav } from '@config/navigation';
+import {
+  business,
+  hasPhone,
+  hasWhatsApp,
+  hasEmail,
+  hasAddress,
+  hasServiceAreas,
+  getPhoneHref,
+  getEmailHref,
+  getWhatsAppHref,
+  getActiveSocialLinks,
+} from '@config/business';
+import { getPublishedServices, getPublishedProducts } from '@utils/content';
+import { getLocalizedPath, stripLocale, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const services = await getPublishedServices(locale);
+const products = await getPublishedProducts(locale);
+const socialLinks = getActiveSocialLinks();
+
+const socialLabels: Record<string, string> = {
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  tiktok: 'TikTok',
+  pinterest: 'Pinterest',
+  linkedin: 'LinkedIn',
+  googleBusiness: 'Google Business Profile',
+};
+
+const columns = getFooterNav(locale).map((col) => {
+  if (col.key === 'services') {
+    return {
+      ...col,
+      items: services.slice(0, 6).map((s) => ({
+        label: s.data.title,
+        href: getLocalizedPath(locale, `/services/${stripLocale(s.id)}`),
+      })),
+    };
+  }
+  if (col.key === 'products') {
+    return {
+      ...col,
+      items: products.slice(0, 6).map((p) => ({
+        label: p.data.title,
+        href: getLocalizedPath(locale, `/products/${stripLocale(p.id)}`),
+      })),
+    };
+  }
+  return col;
+});
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-ink-900/10 bg-ink-950 text-paper-100 border-t">
+  <div class="container-page py-16">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
+      <div>
+        <BrandLogo variant="inverse" locale={locale} />
+        <p class="text-paper-100/70 mt-4 max-w-xs text-sm">
+          {t('footer.description')}
+        </p>
+
+        <div class="mt-6 space-y-2 text-sm">
+          {
+            hasPhone() && (
+              <a
+                href={getPhoneHref()}
+                data-event="phone_click"
+                class="text-paper-100/80 hover:text-brand-300 flex items-center gap-2"
+              >
+                {business.phoneDisplay}
+              </a>
+            )
+          }
+          {
+            hasWhatsApp() && (
+              <a
+                href={getWhatsAppHref()}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-event="whatsapp_click"
+                class="text-paper-100/80 hover:text-brand-300 flex items-center gap-2"
+              >
+                WhatsApp
+              </a>
+            )
+          }
+          {
+            hasEmail() && (
+              <a
+                href={getEmailHref()}
+                class="text-paper-100/80 hover:text-brand-300 flex items-center gap-2"
+              >
+                {business.email}
+              </a>
+            )
+          }
+          {
+            hasAddress() && business.address && (
+              <p class="text-paper-100/70">
+                {business.address.streetAddress}, {business.address.addressLocality},{' '}
+                {business.address.addressRegion} {business.address.postalCode}
+              </p>
+            )
+          }
+        </div>
+
+        {
+          socialLinks.length > 0 && (
+            <div class="mt-6 flex gap-3">
+              {socialLinks.map((s) => (
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={socialLabels[s.key] ?? s.key}
+                  class="text-paper-50 hover:bg-brand-600 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-colors"
+                >
+                  <span class="text-xs font-semibold uppercase">
+                    {(socialLabels[s.key] ?? s.key).slice(0, 2)}
+                  </span>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      {
+        columns.map(
+          (col) =>
+            col.items.length > 0 && (
+              <div>
+                <h3 class="text-paper-100/50 text-sm font-semibold tracking-wide uppercase">
+                  {col.title}
+                </h3>
+                <ul class="mt-4 space-y-2.5">
+                  {col.items.map((item) => (
+                    <li>
+                      <a href={item.href} class="text-paper-100/80 hover:text-brand-300 text-sm">
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ),
+        )
+      }
+    </div>
+
+    {
+      hasServiceAreas() && (
+        <div class="mt-12 border-t border-white/10 pt-8">
+          <h3 class="text-paper-100/50 text-sm font-semibold tracking-wide uppercase">
+            {t('footer.areas')}
+          </h3>
+          <p class="text-paper-100/70 mt-3 text-sm">
+            {business.serviceAreas.map((area) => area.name).join(' · ')}
+          </p>
+        </div>
+      )
+    }
+
+    <div
+      class="text-paper-100/50 mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-xs sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {business.legalName ?? business.name}. {t('footer.rights')}</p>
+      <div class="flex gap-4">
+        <a href={getLocalizedPath(locale, '/privacy-policy')} class="hover:text-paper-100">
+          {t('nav.privacy')}
+        </a>
+        <a href={getLocalizedPath(locale, '/terms')} class="hover:text-paper-100">
+          {t('nav.terms')}
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>

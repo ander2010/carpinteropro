@@ -1,0 +1,40 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import { getPublishedProjects } from '@utils/content';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const allProjects = await getPublishedProjects(locale);
+const projects = allProjects.slice(0, 6);
+---
+
+{
+  projects.length > 0 && (
+    <section class="container-page py-20 sm:py-28">
+      <SectionHeading
+        eyebrow={t('home.portfolio.eyebrow')}
+        title={t('home.portfolio.title')}
+        subtitle={t('home.portfolio.subtitle')}
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+      <div class="mt-10 text-center">
+        <a
+          href={getLocalizedPath(locale, '/projects')}
+          class="text-brand-700 inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
+        >
+          {t('cta.viewAllProjects')}
+        </a>
+      </div>
+    </section>
+  )
+}

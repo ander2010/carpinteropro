@@ -1,0 +1,48 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { business } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="About Us"
+  description={`Learn how ${business.name} works: professional carpentry and custom furniture with personalized attention on every project.`}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.about'), path: getLocalizedPath(locale, '/about') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-16">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl font-semibold sm:text-5xl">{t('about.title')} {business.name}</h1>
+      <div class="prose-carpintero mt-8">
+        <p>
+          {business.name} is a carpentry workshop focused on designing and building custom furniture and
+          solutions: closets, kitchens, cabinets and custom woodworking projects.
+        </p>
+        <p>
+          Every project starts with a real conversation about the space and the client's needs. From
+          there, we define materials, final design and timing before starting fabrication, so the
+          final result matches exactly what was agreed.
+        </p>
+        <p>
+          We handle both residential and commercial projects, paying attention to every cut, joint
+          and finish.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pb-20">
+    <QuoteCTA locale={locale} title={t('about.ctaTitle')} text={t('about.ctaText')} />
+  </div>
+</MainLayout>

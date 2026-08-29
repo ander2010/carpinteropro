@@ -1,0 +1,59 @@
+---
+import { hasWhatsApp } from '@config/business';
+import WhatsAppCTA from '@components/conversion/WhatsAppCTA.astro';
+import { getPrimaryCta, getSecondaryCta } from '@config/navigation';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const primaryCta = getPrimaryCta(locale);
+const secondaryCta = getSecondaryCta(locale);
+---
+
+<section class="bg-ink-950 relative overflow-hidden">
+  <div class="absolute inset-0">
+    <img
+      src="/images/home/hero-carpenter-workshop.webp"
+      alt=""
+      aria-hidden="true"
+      class="h-full w-full object-cover opacity-40"
+    />
+    <div class="from-ink-950 via-ink-950/70 to-ink-950/40 absolute inset-0 bg-gradient-to-t"></div>
+  </div>
+
+  <div class="container-page relative py-24 sm:py-32 lg:py-40">
+    <div class="animate-fade-up max-w-2xl">
+      <p
+        class="text-brand-300 mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium ring-1 ring-white/20 ring-inset"
+      >
+        {t('home.hero.eyebrow')}
+      </p>
+      <h1 class="text-paper-50 text-4xl leading-tight font-semibold sm:text-5xl lg:text-6xl">
+        {t('home.hero.title')}
+      </h1>
+      <p class="text-paper-100/80 mt-6 max-w-xl text-lg leading-relaxed">
+        {t('home.hero.subtitle')}
+      </p>
+
+      <div class="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href={primaryCta.href}
+          data-event="quote_click"
+          class="bg-brand-600 text-paper-50 shadow-lifted hover:bg-brand-700 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5"
+        >
+          {primaryCta.label}
+        </a>
+        <a
+          href={secondaryCta.href}
+          class="text-paper-50 inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-base font-semibold transition-all hover:bg-white/10"
+        >
+          {secondaryCta.label}
+        </a>
+        {hasWhatsApp() && <WhatsAppCTA locale={locale} variant="icon" />}
+      </div>
+    </div>
+  </div>
+</section>

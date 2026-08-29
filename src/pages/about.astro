@@ -1,0 +1,48 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { business } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Sobre nosotros"
+  description={`Conoce cómo trabaja ${business.name}: carpintería profesional y muebles a medida con atención personalizada en cada proyecto.`}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.about'), path: getLocalizedPath(locale, '/about') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-16">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl font-semibold sm:text-5xl">{t('about.title')} {business.name}</h1>
+      <div class="prose-carpintero mt-8">
+        <p>
+          {business.name} es un taller de carpintería enfocado en el diseño y fabricación de muebles y
+          soluciones a medida: closets, cocinas, gabinetes y proyectos personalizados en madera.
+        </p>
+        <p>
+          Cada proyecto empieza con una conversación real sobre el espacio y las necesidades del
+          cliente. A partir de ahí, definimos materiales, diseño y tiempos antes de comenzar la
+          fabricación, para que el resultado final se ajuste exactamente a lo acordado.
+        </p>
+        <p>
+          Trabajamos tanto proyectos residenciales como comerciales, cuidando el detalle en cada
+          corte, ensamble y terminación.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-page pb-20">
+    <QuoteCTA locale={locale} title={t('about.ctaTitle')} text={t('about.ctaText')} />
+  </div>
+</MainLayout>

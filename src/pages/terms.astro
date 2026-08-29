@@ -1,0 +1,66 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import { business } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Términos y condiciones"
+  description={`Términos y condiciones de uso del sitio web de ${business.name}.`}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.terms'), path: getLocalizedPath(locale, '/terms') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-20">
+    <div class="prose-carpintero max-w-3xl">
+      <h1>Términos y condiciones</h1>
+      <p class="not-prose bg-sand-100 text-ink-700 rounded-xl p-4 text-sm">
+        Este texto es una base genérica de partida y debe ser revisado por un profesional legal
+        antes de su publicación definitiva.
+      </p>
+
+      <h2>Uso del sitio</h2>
+      <p>
+        Este sitio web tiene como objetivo informar sobre los servicios de carpintería de {
+          business.name
+        }
+        y facilitar el contacto para solicitar presupuestos. El contenido se ofrece "tal cual" y puede
+        actualizarse sin previo aviso.
+      </p>
+
+      <h2>Presupuestos</h2>
+      <p>
+        Los presupuestos solicitados a través del sitio son estimaciones sujetas a confirmación tras
+        la evaluación real del proyecto (medidas exactas, materiales elegidos y alcance final del
+        trabajo).
+      </p>
+
+      <h2>Propiedad intelectual</h2>
+      <p>
+        El contenido, imágenes y diseño de este sitio pertenecen a {business.name}, salvo cuando se
+        indique lo contrario, y no pueden reproducirse sin autorización.
+      </p>
+
+      <h2>Enlaces externos</h2>
+      <p>
+        Este sitio puede enlazar a redes sociales o servicios de terceros. No nos hacemos
+        responsables del contenido de sitios externos.
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        Para cualquier consulta sobre estos términos, contáctanos a través de la
+        <a href={getLocalizedPath(locale, '/contact')}> página de contacto</a>.
+      </p>
+    </div>
+  </section>
+</MainLayout>

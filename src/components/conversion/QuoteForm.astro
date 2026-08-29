@@ -1,0 +1,355 @@
+---
+// QuoteForm — formulario de presupuesto reutilizable.
+// Se puede insertar en Home, Services, Products, Blog y Contact.
+//
+// Comportamiento de envío (progresivo, ver <script> al final):
+// 1. Si PUBLIC_CONTACT_ENDPOINT está configurado (.env), se envía por fetch()
+//    como FormData (soporta adjuntar fotos) al endpoint externo.
+// 2. Si no hay endpoint pero sí WhatsApp configurado, se abre WhatsApp con un
+//    mensaje generado a partir de los datos del formulario.
+// 3. Si tampoco hay WhatsApp pero sí email, se abre un mailto: prellenado.
+// 4. Si no hay ningún canal configurado, se muestra un aviso (estado pre-lanzamiento).
+import { business, hasWhatsApp, hasEmail } from '@config/business';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  subtitle?: string;
+  /** Nombre del servicio/producto/artículo desde el que se abre el formulario, para contexto. */
+  context?: string;
+  id?: string;
+  class?: string;
+}
+
+const { locale, title, subtitle, context, id = 'quote-form', class: className = '' } = Astro.props;
+
+const t = useTranslations(locale);
+const formTitle = title ?? t('form.title');
+const formSubtitle = subtitle ?? t('form.subtitle');
+const projectTypes = t('form.projectTypes').split(',');
+const contactMethods = t('form.contactMethods').split(',');
+---
+
+<div
+  id={id}
+  data-quote-form-wrapper
+  class={`rounded-3xl bg-white p-6 shadow-lifted ring-1 ring-ink-900/5 sm:p-10 ${className}`}
+>
+  <div class="mb-6">
+    <h3 class="text-ink-950 text-2xl font-semibold">{formTitle}</h3>
+    <p class="text-ink-600 mt-2">{formSubtitle}</p>
+  </div>
+
+  <form
+    data-quote-form
+    data-locale={locale}
+    data-endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? ''}
+    data-whatsapp-enabled={hasWhatsApp()}
+    data-whatsapp-number={business.whatsapp}
+    data-email-enabled={hasEmail()}
+    data-email={business.email}
+    data-context={context ?? ''}
+    class="space-y-5"
+    novalidate
+  >
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={`${id}-name`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.name')} *</label
+        >
+        <input
+          type="text"
+          id={`${id}-name`}
+          name="name"
+          required
+          autocomplete="name"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        />
+      </div>
+      <div>
+        <label for={`${id}-phone`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.phone')} *</label
+        >
+        <input
+          type="tel"
+          id={`${id}-phone`}
+          name="phone"
+          required
+          autocomplete="tel"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        />
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={`${id}-email`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.email')}</label
+        >
+        <input
+          type="email"
+          id={`${id}-email`}
+          name="email"
+          autocomplete="email"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        />
+      </div>
+      <div>
+        <label for={`${id}-project-type`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.projectType')}</label
+        >
+        <select
+          id={`${id}-project-type`}
+          name="projectType"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        >
+          <option value="">{t('form.projectTypeSelect')}</option>
+          {
+            projectTypes.map((type) => (
+              <option value={type} selected={type === context}>
+                {type}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={`${id}-location`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.location')}</label
+        >
+        <input
+          type="text"
+          id={`${id}-location`}
+          name="location"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        />
+      </div>
+      <div>
+        <label for={`${id}-date`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+          >{t('form.date')}</label
+        >
+        <input
+          type="date"
+          id={`${id}-date`}
+          name="preferredDate"
+          class="border-ink-900/15 bg-paper-50 text-ink-900 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+        />
+      </div>
+    </div>
+
+    <div>
+      <label for={`${id}-budget`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+        >{t('form.budget')}</label
+      >
+      <input
+        type="text"
+        id={`${id}-budget`}
+        name="budget"
+        placeholder={t('form.budgetPlaceholder')}
+        class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+      />
+    </div>
+
+    <div>
+      <label for={`${id}-description`} class="text-ink-800 mb-1.5 block text-sm font-medium"
+        >{t('form.description')} *</label
+      >
+      <textarea
+        id={`${id}-description`}
+        name="description"
+        rows="4"
+        required
+        placeholder={t('form.descriptionPlaceholder')}
+        class="border-ink-900/15 bg-paper-50 text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:ring-brand-500 block w-full rounded-lg"
+      ></textarea>
+    </div>
+
+    <div>
+      <label for={`${id}-photos`} class="text-ink-800 mb-1.5 block text-sm font-medium">
+        {t('form.photos')}
+      </label>
+      <input
+        type="file"
+        id={`${id}-photos`}
+        name="photos"
+        accept="image/*"
+        multiple
+        class="text-ink-700 file:bg-ink-950 file:text-paper-50 hover:file:bg-ink-800 block w-full text-sm file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold"
+      />
+    </div>
+
+    <fieldset>
+      <legend class="text-ink-800 mb-1.5 block text-sm font-medium"
+        >{t('form.preferredContact')}</legend
+      >
+      <div class="flex flex-wrap gap-4">
+        {
+          contactMethods.map((method, i) => (
+            <label class="text-ink-700 flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="preferredContact"
+                value={method}
+                checked={i === 0}
+                class="border-ink-900/25 text-brand-600 focus:ring-brand-500"
+              />
+              {method}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <!-- Honeypot anti-spam: campo oculto que un humano nunca rellena. -->
+    <div class="hidden" aria-hidden="true">
+      <label for={`${id}-company`}>{t('footer.honeypotLabel')}</label>
+      <input type="text" id={`${id}-company`} name="company" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="flex items-start gap-3">
+      <input
+        type="checkbox"
+        id={`${id}-consent`}
+        name="consent"
+        required
+        class="border-ink-900/25 text-brand-600 focus:ring-brand-500 mt-0.5 rounded"
+      />
+      <label for={`${id}-consent`} class="text-ink-600 text-sm">
+        {t('form.consent')} *
+      </label>
+    </div>
+
+    <div data-form-status class="hidden rounded-lg p-4 text-sm" role="status" aria-live="polite">
+    </div>
+
+    <button
+      type="submit"
+      data-submit-button
+      data-event="quote_submit"
+      class="bg-brand-600 text-paper-50 shadow-soft hover:bg-brand-700 hover:shadow-lifted inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5 disabled:pointer-events-none disabled:opacity-60 sm:w-auto"
+    >
+      <span data-submit-label>{t('cta.sendRequest')}</span>
+    </button>
+  </form>
+</div>
+
+<script>
+  import { useTranslations, type Locale } from '@i18n/utils';
+
+  function initQuoteForms() {
+    const forms = document.querySelectorAll<HTMLFormElement>('[data-quote-form]');
+
+    forms.forEach((form) => {
+      if (form.dataset.initialized === 'true') return;
+      form.dataset.initialized = 'true';
+
+      const locale = (form.dataset.locale as Locale) ?? 'es';
+      const t = useTranslations(locale);
+
+      const statusEl = form.querySelector<HTMLElement>('[data-form-status]');
+      const submitButton = form.querySelector<HTMLButtonElement>('[data-submit-button]');
+      const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+      const endpoint = form.dataset.endpoint ?? '';
+      const whatsappEnabled = form.dataset.whatsappEnabled === 'true';
+      const emailEnabled = form.dataset.emailEnabled === 'true';
+      const context = form.dataset.context ?? '';
+
+      const setStatus = (message: string, tone: 'success' | 'error' | 'info') => {
+        if (!statusEl) return;
+        statusEl.textContent = message;
+        statusEl.classList.remove(
+          'hidden',
+          'bg-emerald-50',
+          'text-emerald-800',
+          'bg-red-50',
+          'text-red-800',
+          'bg-sand-100',
+          'text-ink-800',
+        );
+        if (tone === 'success') statusEl.classList.add('bg-emerald-50', 'text-emerald-800');
+        else if (tone === 'error') statusEl.classList.add('bg-red-50', 'text-red-800');
+        else statusEl.classList.add('bg-sand-100', 'text-ink-800');
+      };
+
+      const buildSummary = (data: FormData): string => {
+        const projectLabel = locale === 'es' ? 'Proyecto' : 'Project';
+        const nameLabel = locale === 'es' ? 'Nombre' : 'Name';
+        const phoneLabel = locale === 'es' ? 'Teléfono' : 'Phone';
+        const typeLabel = locale === 'es' ? 'Tipo de proyecto' : 'Project type';
+        const locationLabel = locale === 'es' ? 'Ubicación' : 'Location';
+        const budgetLabel = locale === 'es' ? 'Presupuesto' : 'Budget';
+        const descriptionLabel = locale === 'es' ? 'Descripción' : 'Description';
+
+        const parts = [
+          context ? `${projectLabel}: ${context}` : '',
+          `${nameLabel}: ${data.get('name') ?? ''}`,
+          `${phoneLabel}: ${data.get('phone') ?? ''}`,
+          data.get('email') ? `Email: ${data.get('email')}` : '',
+          data.get('projectType') ? `${typeLabel}: ${data.get('projectType')}` : '',
+          data.get('location') ? `${locationLabel}: ${data.get('location')}` : '',
+          data.get('budget') ? `${budgetLabel}: ${data.get('budget')}` : '',
+          `${descriptionLabel}: ${data.get('description') ?? ''}`,
+        ].filter(Boolean);
+        return parts.join('\n');
+      };
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Honeypot: si tiene contenido, se descarta silenciosamente (probable bot).
+        const honeypot = form.querySelector<HTMLInputElement>('input[name="company"]');
+        if (honeypot && honeypot.value.trim() !== '') return;
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const data = new FormData(form);
+        if (context) data.set('context', context);
+
+        if (submitButton) submitButton.disabled = true;
+        if (submitLabel) submitLabel.textContent = t('cta.sending');
+
+        try {
+          if (endpoint) {
+            const response = await fetch(endpoint, {
+              method: 'POST',
+              body: data,
+              headers: { Accept: 'application/json' },
+            });
+            if (!response.ok) throw new Error('request-failed');
+            setStatus(t('form.successMessage'), 'success');
+            form.reset();
+          } else if (whatsappEnabled) {
+            const waNumber = form.dataset.whatsappNumber ?? '';
+            const text = encodeURIComponent(buildSummary(data));
+            window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank', 'noopener,noreferrer');
+            setStatus(t('form.whatsappRedirect'), 'info');
+          } else if (emailEnabled) {
+            const to = form.dataset.email ?? '';
+            const subjectPrefix = locale === 'es' ? 'Solicitud de presupuesto' : 'Quote request';
+            const subject = encodeURIComponent(`${subjectPrefix}${context ? ` — ${context}` : ''}`);
+            const body = encodeURIComponent(buildSummary(data));
+            window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+            setStatus(t('form.emailRedirect'), 'info');
+          } else {
+            setStatus(t('form.noChannel'), 'error');
+          }
+        } catch (error) {
+          // No se borran los datos del formulario si el envío falla (ver sección 81 de la especificación).
+          setStatus(t('form.errorMessage'), 'error');
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+          if (submitLabel) submitLabel.textContent = t('cta.sendRequest');
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initQuoteForms);
+</script>

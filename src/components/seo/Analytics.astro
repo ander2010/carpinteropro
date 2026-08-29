@@ -1,0 +1,36 @@
+---
+// Carga GA4/GTM SOLO si las variables de entorno correspondientes existen.
+// Ver .env.example — PUBLIC_GA_ID y PUBLIC_GTM_ID.
+const gaId = import.meta.env.PUBLIC_GA_ID;
+const gtmId = import.meta.env.PUBLIC_GTM_ID;
+---
+
+{
+  gtmId && (
+    <script is:inline data-gtm-id={gtmId}>
+      var gtmContainerId = document.currentScript.getAttribute('data-gtm-id');
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'gtm.js', 'gtm.start': new Date().getTime() });
+      var gtmScriptTag = document.createElement('script');
+      gtmScriptTag.async = true;
+      gtmScriptTag.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtmContainerId;
+      document.head.appendChild(gtmScriptTag);
+    </script>
+  )
+}
+
+{
+  gaId && !gtmId && (
+    <>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+      <script is:inline define:vars={{ gaId }}>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', gaId);
+      </script>
+    </>
+  )
+}

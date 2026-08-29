@@ -1,0 +1,33 @@
+---
+// Sólo se renderiza si hay ciudades reales configuradas en business.ts.
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { business, hasServiceAreas } from '@config/business';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+{
+  hasServiceAreas() && (
+    <section class="container-page py-20 sm:py-28">
+      <SectionHeading
+        eyebrow={t('home.areas.eyebrow')}
+        title={t('home.areas.title')}
+        align="center"
+        class="mx-auto"
+      />
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        {business.serviceAreas.map((area) => (
+          <span class="bg-sand-100 text-ink-800 ring-sand-300 rounded-full px-5 py-2.5 text-sm font-medium ring-1 ring-inset">
+            {area.name}
+            {area.region && <span class="text-ink-500">, {area.region}</span>}
+          </span>
+        ))}
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,38 @@
+---
+interface GalleryImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+interface Props {
+  images: GalleryImage[];
+  columns?: 2 | 3;
+}
+const { images, columns = 3 } = Astro.props;
+---
+
+<div
+  class:list={[
+    'my-8 grid gap-4',
+    columns === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3',
+  ]}
+>
+  {
+    images.map((img) => (
+      <figure class="bg-ink-100 shadow-soft overflow-hidden rounded-xl">
+        <div class="aspect-[4/3] overflow-hidden">
+          <img
+            src={img.src}
+            alt={img.alt}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </div>
+        {img.caption && (
+          <figcaption class="text-ink-600 px-3 py-2 text-xs">{img.caption}</figcaption>
+        )}
+      </figure>
+    ))
+  }
+</div>

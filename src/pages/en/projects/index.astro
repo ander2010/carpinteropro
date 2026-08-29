@@ -1,0 +1,54 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { getPublishedProjects } from '@utils/content';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+const projects = await getPublishedProjects(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Projects & Portfolio"
+  description="Explore real carpentry projects completed by CarpinteroPro: closets, kitchens, cabinets and custom furniture."
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.projects'), path: getLocalizedPath(locale, '/projects') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-8">
+    <h1 class="max-w-2xl text-4xl font-semibold sm:text-5xl">{t('projects.title')}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">
+      {t('projects.subtitle')}
+    </p>
+  </section>
+
+  <section class="container-page pb-20">
+    {
+      projects.length > 0 ? (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      ) : (
+        <p class="text-ink-600">{t('projects.empty')}</p>
+      )
+    }
+  </section>
+
+  <div class="container-page pb-20">
+    <QuoteCTA
+      locale={locale}
+      title="Want to see your project here?"
+      text="Tell us your idea and let's work together on the next success story."
+    />
+  </div>
+</MainLayout>

@@ -1,0 +1,42 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import ServiceCard from '@components/services/ServiceCard.astro';
+import { getPublishedServices } from '@utils/content';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const allServices = await getPublishedServices(locale);
+const services = allServices.slice(0, 6);
+---
+
+{
+  services.length > 0 && (
+    <section class="container-page py-20 sm:py-28">
+      <SectionHeading
+        eyebrow={t('home.services.eyebrow')}
+        title={t('home.services.title')}
+        subtitle={t('home.services.subtitle')}
+      />
+      <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((service) => (
+          <ServiceCard service={service} />
+        ))}
+      </div>
+      {allServices.length > 6 && (
+        <div class="mt-10 text-center">
+          <a
+            href={getLocalizedPath(locale, '/services')}
+            class="text-brand-700 inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
+          >
+            {t('cta.viewAllServices')}
+          </a>
+        </div>
+      )}
+    </section>
+  )
+}

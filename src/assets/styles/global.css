@@ -1,0 +1,129 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/* =============================================================================
+   DESIGN TOKENS — CarpinteroPro
+   Paleta: madera cálida + charcoal + off-white. Sin abusar del marrón.
+   Un único acento (brand) reservado casi exclusivamente para CTAs.
+   ============================================================================= */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+
+  /* Ink — charcoal cálido, para texto y fondos oscuros */
+  --color-ink-950: #14110d;
+  --color-ink-900: #1d1912;
+  --color-ink-800: #29241b;
+  --color-ink-700: #3a3324;
+  --color-ink-600: #504531;
+  --color-ink-500: #6b5c40;
+  --color-ink-400: #8a795a;
+
+  /* Paper — blanco roto cálido para fondos claros */
+  --color-paper-50: #fdfbf7;
+  --color-paper-100: #f8f3ea;
+  --color-paper-200: #f0e8d8;
+
+  /* Sand — neutros cálidos intermedios (bordes, tarjetas, separadores) */
+  --color-sand-100: #f1e9d9;
+  --color-sand-200: #e6d9bd;
+  --color-sand-300: #d8c69d;
+  --color-sand-400: #c4ac7c;
+  --color-sand-500: #ab8f5e;
+
+  /* Brand — acento cálido tipo nogal/latón, reservado para CTAs y detalles */
+  --color-brand-50: #fbf1e6;
+  --color-brand-100: #f4dcbc;
+  --color-brand-300: #d9a35f;
+  --color-brand-400: #c88a45;
+  --color-brand-500: #b17434;
+  --color-brand-600: #925e29;
+  --color-brand-700: #744a22;
+  --color-brand-800: #5a3a1c;
+
+  --shadow-soft: 0 1px 2px rgba(20, 17, 13, 0.04), 0 8px 24px -8px rgba(20, 17, 13, 0.12);
+  --shadow-lifted: 0 4px 8px rgba(20, 17, 13, 0.06), 0 24px 48px -16px rgba(20, 17, 13, 0.22);
+}
+
+/* =============================================================================
+   BASE
+   ============================================================================= */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    @apply bg-paper-50 text-ink-900 font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink-950;
+  }
+
+  ::selection {
+    @apply bg-brand-300 text-ink-950;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  :focus-visible {
+    @apply outline-brand-600 outline-2 outline-offset-2;
+  }
+}
+
+/* =============================================================================
+   COMPONENTES REUTILIZABLES DE BAJO NIVEL
+   ============================================================================= */
+@layer components {
+  .skip-link {
+    @apply focus:bg-ink-950 focus:text-paper-50 focus:shadow-lifted sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-3;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .prose-carpintero {
+    @apply prose prose-stone prose-headings:font-display prose-headings:text-ink-950 prose-a:text-brand-700 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl max-w-none;
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.6s ease-out both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

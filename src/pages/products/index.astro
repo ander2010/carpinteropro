@@ -1,0 +1,112 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import ProductCard from '@components/products/ProductCard.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { getPublishedProducts } from '@utils/content';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+const t = useTranslations(locale);
+const products = await getPublishedProducts(locale);
+const categories = [...new Set(products.map((p) => p.data.category))];
+---
+
+<MainLayout
+  locale={locale}
+  title="Productos de carpintería"
+  description="Descubre las soluciones de carpintería que fabricamos a medida: closets, cocinas, gabinetes, muebles y más."
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.products'), path: getLocalizedPath(locale, '/products') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-8">
+    <h1 class="max-w-2xl text-4xl font-semibold sm:text-5xl">{t('products.title')}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">
+      {t('products.subtitle')}
+    </p>
+  </section>
+
+  {
+    categories.length > 1 && (
+      <div class="container-page mb-8 flex flex-wrap gap-2" data-category-filters>
+        <button
+          type="button"
+          data-filter="all"
+          class="bg-ink-950 text-paper-50 rounded-full px-4 py-2 text-sm font-semibold"
+          aria-pressed="true"
+        >
+          {t('products.all')}
+        </button>
+        {categories.map((cat) => (
+          <button
+            type="button"
+            data-filter={cat}
+            class="text-ink-800 ring-ink-900/10 rounded-full bg-white px-4 py-2 text-sm font-semibold ring-1 ring-inset"
+            aria-pressed="false"
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <section class="container-page pb-20">
+    {
+      products.length > 0 ? (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-product-grid>
+          {products.map((product) => (
+            <div data-category={product.data.category}>
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="text-ink-600">{t('products.empty')}</p>
+      )
+    }
+  </section>
+
+  <div class="container-page pb-20">
+    <QuoteCTA locale={locale} />
+  </div>
+
+  <script>
+    function initCategoryFilters() {
+      const wrapper = document.querySelector('[data-category-filters]');
+      if (!wrapper || wrapper instanceof HTMLElement === false) return;
+      if (wrapper.getAttribute('data-bound') === 'true') return;
+      wrapper.setAttribute('data-bound', 'true');
+
+      const buttons = wrapper.querySelectorAll<HTMLButtonElement>('button[data-filter]');
+      const items = document.querySelectorAll<HTMLElement>('[data-product-grid] > [data-category]');
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const filter = button.dataset.filter;
+          buttons.forEach((b) => {
+            const active = b === button;
+            b.setAttribute('aria-pressed', String(active));
+            b.classList.toggle('bg-ink-950', active);
+            b.classList.toggle('text-paper-50', active);
+            b.classList.toggle('bg-white', !active);
+            b.classList.toggle('text-ink-800', !active);
+            b.classList.toggle('ring-1', !active);
+            b.classList.toggle('ring-inset', !active);
+            b.classList.toggle('ring-ink-900/10', !active);
+          });
+          items.forEach((item) => {
+            const show = filter === 'all' || item.dataset.category === filter;
+            item.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', initCategoryFilters);
+  </script>
+</MainLayout>

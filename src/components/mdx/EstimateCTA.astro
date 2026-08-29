@@ -1,0 +1,23 @@
+---
+// Incrusta el formulario de presupuesto completo dentro de un artículo/página.
+import QuoteForm from '@components/conversion/QuoteForm.astro';
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  locale?: Locale;
+  title?: string;
+  subtitle?: string;
+  context?: string;
+}
+const { locale = 'es', title, subtitle, context } = Astro.props;
+---
+
+<div class="not-prose">
+  <QuoteForm
+    locale={locale}
+    title={title}
+    subtitle={subtitle}
+    context={context}
+    id={`estimate-cta-${Math.random().toString(36).slice(2, 8)}`}
+  />
+</div>

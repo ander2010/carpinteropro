@@ -1,0 +1,32 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import FAQ from '@components/mdx/FAQ.astro';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const faqs = [
+  { question: t('faq.home1.q'), answer: t('faq.home1.a') },
+  { question: t('faq.home2.q'), answer: t('faq.home2.a') },
+  { question: t('faq.home3.q'), answer: t('faq.home3.a') },
+  { question: t('faq.home4.q'), answer: t('faq.home4.a') },
+  { question: t('faq.home5.q'), answer: t('faq.home5.a') },
+  { question: t('faq.home6.q'), answer: t('faq.home6.a') },
+];
+---
+
+<section class="container-page py-20 sm:py-28" id="faq">
+  <SectionHeading
+    eyebrow={t('home.faq.eyebrow')}
+    title={t('home.faq.title')}
+    align="center"
+    class="mx-auto"
+  />
+  <div class="mx-auto mt-12 max-w-3xl">
+    <FAQ items={faqs} title="" locale={locale} />
+  </div>
+</section>

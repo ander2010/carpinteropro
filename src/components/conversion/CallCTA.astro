@@ -1,0 +1,42 @@
+---
+import { business, hasPhone, getPhoneHref } from '@config/business';
+
+interface Props {
+  label?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { label, variant = 'secondary', size = 'md', class: className = '' } = Astro.props;
+
+if (!hasPhone()) {
+  return null;
+}
+
+const variants: Record<string, string> = {
+  primary: 'bg-brand-600 text-paper-50 hover:bg-brand-700',
+  secondary: 'bg-ink-950 text-paper-50 hover:bg-ink-800',
+  ghost: 'bg-transparent text-ink-900 border border-ink-900/15 hover:bg-ink-900/5',
+};
+
+const sizes: Record<string, string> = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-base',
+};
+---
+
+<a
+  href={getPhoneHref()}
+  data-event="phone_click"
+  class={`inline-flex items-center justify-center gap-2 rounded-full font-semibold shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lifted ${variants[variant]} ${sizes[size]} ${className}`}
+>
+  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+    <path
+      fill-rule="evenodd"
+      d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-.464 1.435l-1.09 1.005a1 1 0 00-.081 1.396 12.02 12.02 0 004.9 4.9 1 1 0 001.396-.081l1.005-1.09a1.5 1.5 0 011.435-.464l3.223.716A1.5 1.5 0 0118 16.352V17.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 011.43 8.326 13.019 13.019 0 011 5V3.5z"
+      clip-rule="evenodd"></path>
+  </svg>
+  {label ?? business.phoneDisplay}
+</a>

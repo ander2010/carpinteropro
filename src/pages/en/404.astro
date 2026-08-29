@@ -1,0 +1,57 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import { getPrimaryCta } from '@config/navigation';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+const primaryCta = getPrimaryCta(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Page Not Found"
+  description="The page you're looking for doesn't exist or was moved."
+  noindex
+>
+  <section
+    class="container-page flex min-h-[60vh] flex-col items-center justify-center py-24 text-center"
+  >
+    <p class="font-display text-brand-300 text-7xl">404</p>
+    <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">{t('notFound.title')}</h1>
+    <p class="text-ink-600 mt-4 max-w-md">
+      {t('notFound.subtitle')}
+    </p>
+
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a
+        href={getLocalizedPath(locale, '/')}
+        class="bg-ink-950 text-paper-50 rounded-full px-5 py-2.5 text-sm font-semibold"
+        >{t('nav.home')}</a
+      >
+      <a
+        href={getLocalizedPath(locale, '/services')}
+        class="text-ink-800 ring-ink-900/10 rounded-full bg-white px-5 py-2.5 text-sm font-semibold ring-1 ring-inset"
+        >{t('nav.services')}</a
+      >
+      <a
+        href={getLocalizedPath(locale, '/blog')}
+        class="text-ink-800 ring-ink-900/10 rounded-full bg-white px-5 py-2.5 text-sm font-semibold ring-1 ring-inset"
+        >{t('nav.blog')}</a
+      >
+      <a
+        href={getLocalizedPath(locale, '/contact')}
+        class="text-ink-800 ring-ink-900/10 rounded-full bg-white px-5 py-2.5 text-sm font-semibold ring-1 ring-inset"
+        >{t('nav.contact')}</a
+      >
+    </div>
+
+    <a
+      href={primaryCta.href}
+      data-event="quote_click"
+      class="bg-brand-600 text-paper-50 shadow-soft hover:bg-brand-700 mt-10 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5"
+    >
+      {primaryCta.label}
+    </a>
+  </section>
+</MainLayout>

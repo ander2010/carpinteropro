@@ -1,0 +1,101 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+// Beneficios reales y sostenibles: nada de estadísticas o cifras inventadas.
+// Edita este array libremente; si en el futuro hay datos reales (años de
+// experiencia, nº de proyectos, valoración), se muestran automáticamente
+// desde business.ts en <TrustStats /> más abajo.
+const benefitsFor: Record<Locale, { title: string; description: string }[]> = {
+  es: [
+    {
+      title: 'Atención personalizada',
+      description:
+        'Escuchamos tu proyecto desde el primer contacto y te acompañamos durante todo el proceso, sin intermediarios.',
+    },
+    {
+      title: 'Presupuesto claro',
+      description: 'Sabes qué incluye tu proyecto y qué cuesta antes de empezar, sin sorpresas.',
+    },
+    {
+      title: 'Diseño según el espacio',
+      description:
+        'Cada mueble se piensa a partir de las medidas y necesidades reales de tu espacio.',
+    },
+    {
+      title: 'Materiales de calidad',
+      description: 'Trabajamos con materiales seleccionados pensando en durabilidad y terminación.',
+    },
+    {
+      title: 'Terminaciones profesionales',
+      description: 'Cuidamos el detalle en cada corte, ensamble y acabado del proyecto.',
+    },
+    {
+      title: 'Comunicación durante el proyecto',
+      description: 'Te mantenemos al tanto del avance, sin dejarte con dudas sobre los tiempos.',
+    },
+  ],
+  en: [
+    {
+      title: 'Personalized attention',
+      description:
+        'We listen to your project from the first contact and stick with you through the whole process, no middlemen.',
+    },
+    {
+      title: 'Clear pricing',
+      description:
+        'You know what your project includes and what it costs before we start — no surprises.',
+    },
+    {
+      title: 'Design built around your space',
+      description: 'Every piece is planned from the real measurements and needs of your space.',
+    },
+    {
+      title: 'Quality materials',
+      description: 'We work with materials chosen for durability and finish.',
+    },
+    {
+      title: 'Professional finishes',
+      description: 'We pay attention to every cut, joint and finish of the project.',
+    },
+    {
+      title: 'Communication throughout',
+      description: "We keep you posted on progress, so you're never left wondering about timing.",
+    },
+  ],
+};
+const benefits = benefitsFor[locale];
+---
+
+<section class="bg-sand-100/60 py-20 sm:py-28">
+  <div class="container-page">
+    <SectionHeading eyebrow={t('home.why.eyebrow')} title={t('home.why.title')} />
+    <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        benefits.map((benefit) => (
+          <div class="flex gap-4">
+            <span class="bg-brand-600/10 text-brand-700 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path
+                  fill-rule="evenodd"
+                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </span>
+            <div>
+              <h3 class="text-ink-950 font-semibold">{benefit.title}</h3>
+              <p class="text-ink-600 mt-1.5 text-sm leading-relaxed">{benefit.description}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

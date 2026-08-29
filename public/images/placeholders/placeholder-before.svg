@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="Imagen 'antes' de referencia, pendiente de sustituir">
+  <defs>
+    <pattern id="hatchB" width="36" height="36" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="36" stroke="#8a795a" stroke-opacity="0.35" stroke-width="14"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="900" fill="#3a3324"/>
+  <rect width="1200" height="900" fill="url(#hatchB)"/>
+  <text x="600" y="460" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#f1e9d9">ANTES</text>
+  <text x="600" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="16" fill="#d8c69d">Foto de referencia</text>
+</svg>

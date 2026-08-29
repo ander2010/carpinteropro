@@ -1,0 +1,407 @@
+# =============================================================================
+# Decap CMS — panel de administración de contenido para CarpinteroPro
+# =============================================================================
+# Panel tipo CRM en /admin: completas el formulario, das clic en "Publish" y
+# el CMS crea/edita el archivo correspondiente directamente en el repositorio
+# (commit real a Git). Ver CMS_SETUP.md para la configuración necesaria antes
+# de poder usarlo (Netlify Identity + Git Gateway).
+#
+# IMPORTANTE — slugs entre idiomas: para que el selector de idioma del sitio
+# funcione correctamente, una misma pieza de contenido en español e inglés
+# debe usar el MISMO "URL Slug" en ambos idiomas (ej. "closets-a-medida" en
+# services/es Y en services/products). El campo "URL Slug" de cada colección
+# está pensado exactamente para eso — compruébalo antes de publicar.
+# =============================================================================
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Los archivos que suba un editor (imágenes, etc.) se guardan aquí y quedan
+# servidos públicamente en /images/uploads/...
+media_folder: 'public/images/uploads'
+public_folder: '/images/uploads'
+
+site_url: https://carpinteropro.com
+display_url: https://carpinteropro.com
+
+locale: 'es'
+
+collections:
+  # ---------------------------------------------------------------------------
+  # BLOG
+  # ---------------------------------------------------------------------------
+  - name: 'blog_es'
+    label: 'Blog (Español)'
+    label_singular: 'Artículo'
+    folder: 'src/content/blog/es'
+    path: '{{slug}}/index'
+    slug: '{{year}}-{{month}}-{{day}}-{{fields.urlSlug}}'
+    extension: 'mdx'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Título', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Sólo minúsculas y guiones, ej. guia-completa-closets', pattern: ['^[a-z0-9-]+$', 'Sólo minúsculas, números y guiones'] }
+      - { label: 'Descripción (meta description)', name: 'description', widget: 'text' }
+      - { label: 'Fecha de publicación', name: 'publishDate', widget: 'datetime' }
+      - { label: 'Fecha de actualización', name: 'updatedDate', widget: 'datetime', required: false }
+      - { label: 'Autor', name: 'author', widget: 'string', default: 'Equipo CarpinteroPro' }
+      - label: 'Categoría'
+        name: 'category'
+        widget: 'select'
+        options: ['carpinteria', 'muebles-a-medida', 'cocinas', 'closets', 'gabinetes', 'madera', 'diseno', 'reparaciones', 'consejos', 'proyectos', 'inspiracion']
+      - label: 'Tipo de artículo'
+        name: 'type'
+        widget: 'select'
+        options: ['guide', 'howto', 'project', 'beforeafter', 'video', 'gallery', 'faq', 'comparison', 'inspiration', 'news', 'casestudy']
+        default: 'guide'
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - { label: 'Destacado en home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Borrador (no se publica)', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Imagen destacada', name: 'heroImage', widget: 'image', required: false }
+      - { label: 'Texto alternativo de la imagen', name: 'heroImageAlt', widget: 'string', required: false }
+      - label: 'Galería'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Imagen', name: 'src', widget: 'image' }
+          - { label: 'Texto alternativo', name: 'alt', widget: 'string' }
+          - { label: 'Leyenda', name: 'caption', widget: 'string', required: false }
+      - { label: 'ID de YouTube', name: 'youtube', widget: 'string', required: false, hint: 'Sólo el ID del vídeo, ej. dQw4w9WgXcQ' }
+      - { label: 'Palabras clave (SEO)', name: 'keywords', widget: 'list', required: false }
+      - { label: 'Servicios relacionados (slugs)', name: 'relatedServices', widget: 'list', required: false }
+      - { label: 'Productos relacionados (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Artículos relacionados (slugs)', name: 'relatedPosts', widget: 'list', required: false }
+      - { label: 'Ubicación', name: 'location', widget: 'string', required: false }
+      - { label: 'Título SEO (opcional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'Descripción SEO (opcional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Contenido', name: 'body', widget: 'markdown' }
+
+  - name: 'blog_en'
+    label: 'Blog (English)'
+    label_singular: 'Post'
+    folder: 'src/content/blog/en'
+    path: '{{slug}}/index'
+    slug: '{{year}}-{{month}}-{{day}}-{{fields.urlSlug}}'
+    extension: 'mdx'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Lowercase and hyphens only, e.g. complete-guide-closets', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only'] }
+      - { label: 'Description (meta description)', name: 'description', widget: 'text' }
+      - { label: 'Publish date', name: 'publishDate', widget: 'datetime' }
+      - { label: 'Updated date', name: 'updatedDate', widget: 'datetime', required: false }
+      - { label: 'Author', name: 'author', widget: 'string', default: 'CarpinteroPro Team' }
+      - label: 'Category'
+        name: 'category'
+        widget: 'select'
+        options: ['carpinteria', 'muebles-a-medida', 'cocinas', 'closets', 'gabinetes', 'madera', 'diseno', 'reparaciones', 'consejos', 'proyectos', 'inspiracion']
+      - label: 'Article type'
+        name: 'type'
+        widget: 'select'
+        options: ['guide', 'howto', 'project', 'beforeafter', 'video', 'gallery', 'faq', 'comparison', 'inspiration', 'news', 'casestudy']
+        default: 'guide'
+      - { label: 'Tags', name: 'tags', widget: 'list', default: [] }
+      - { label: 'Featured on home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Draft (not published)', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Hero image', name: 'heroImage', widget: 'image', required: false }
+      - { label: 'Hero image alt text', name: 'heroImageAlt', widget: 'string', required: false }
+      - label: 'Gallery'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Image', name: 'src', widget: 'image' }
+          - { label: 'Alt text', name: 'alt', widget: 'string' }
+          - { label: 'Caption', name: 'caption', widget: 'string', required: false }
+      - { label: 'YouTube ID', name: 'youtube', widget: 'string', required: false, hint: 'Just the video ID, e.g. dQw4w9WgXcQ' }
+      - { label: 'SEO keywords', name: 'keywords', widget: 'list', required: false }
+      - { label: 'Related services (slugs)', name: 'relatedServices', widget: 'list', required: false }
+      - { label: 'Related products (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Related posts (slugs)', name: 'relatedPosts', widget: 'list', required: false }
+      - { label: 'Location', name: 'location', widget: 'string', required: false }
+      - { label: 'SEO title (optional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'SEO description (optional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+
+  # ---------------------------------------------------------------------------
+  # SERVICES
+  # ---------------------------------------------------------------------------
+  - name: 'services_es'
+    label: 'Servicios (Español)'
+    label_singular: 'Servicio'
+    folder: 'src/content/services/es'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Título', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Usa el MISMO slug que la versión en inglés de este servicio', pattern: ['^[a-z0-9-]+$', 'Sólo minúsculas, números y guiones'] }
+      - { label: 'Descripción corta', name: 'shortDescription', widget: 'text' }
+      - { label: 'Descripción larga', name: 'description', widget: 'text' }
+      - { label: 'Imagen destacada', name: 'heroImage', widget: 'image' }
+      - { label: 'Texto alternativo', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Galería'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Imagen', name: 'src', widget: 'image' }
+          - { label: 'Texto alternativo', name: 'alt', widget: 'string' }
+          - { label: 'Leyenda', name: 'caption', widget: 'string', required: false }
+      - label: 'Beneficios'
+        name: 'benefits'
+        widget: 'list'
+        required: false
+      - label: 'Proceso'
+        name: 'process'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Título del paso', name: 'title', widget: 'string' }
+          - { label: 'Descripción', name: 'description', widget: 'text' }
+      - label: 'Preguntas frecuentes'
+        name: 'faqs'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Pregunta', name: 'question', widget: 'string' }
+          - { label: 'Respuesta', name: 'answer', widget: 'text' }
+      - { label: 'Productos relacionados (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Proyectos relacionados (slugs)', name: 'relatedProjects', widget: 'list', required: false }
+      - { label: 'Artículos relacionados (slugs)', name: 'relatedPosts', widget: 'list', required: false }
+      - { label: 'Destacado en home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Borrador', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Orden', name: 'order', widget: 'number', default: 0 }
+      - { label: 'Título SEO (opcional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'Descripción SEO (opcional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Contenido', name: 'body', widget: 'markdown' }
+
+  - name: 'services_en'
+    label: 'Services (English)'
+    label_singular: 'Service'
+    folder: 'src/content/services/en'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Use the SAME slug as the Spanish version of this service', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only'] }
+      - { label: 'Short description', name: 'shortDescription', widget: 'text' }
+      - { label: 'Long description', name: 'description', widget: 'text' }
+      - { label: 'Hero image', name: 'heroImage', widget: 'image' }
+      - { label: 'Alt text', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Gallery'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Image', name: 'src', widget: 'image' }
+          - { label: 'Alt text', name: 'alt', widget: 'string' }
+          - { label: 'Caption', name: 'caption', widget: 'string', required: false }
+      - label: 'Benefits'
+        name: 'benefits'
+        widget: 'list'
+        required: false
+      - label: 'Process'
+        name: 'process'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Step title', name: 'title', widget: 'string' }
+          - { label: 'Description', name: 'description', widget: 'text' }
+      - label: 'FAQs'
+        name: 'faqs'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Question', name: 'question', widget: 'string' }
+          - { label: 'Answer', name: 'answer', widget: 'text' }
+      - { label: 'Related products (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Related projects (slugs)', name: 'relatedProjects', widget: 'list', required: false }
+      - { label: 'Related posts (slugs)', name: 'relatedPosts', widget: 'list', required: false }
+      - { label: 'Featured on home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Draft', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Order', name: 'order', widget: 'number', default: 0 }
+      - { label: 'SEO title (optional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'SEO description (optional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+
+  # ---------------------------------------------------------------------------
+  # PRODUCTS
+  # ---------------------------------------------------------------------------
+  - name: 'products_es'
+    label: 'Productos (Español)'
+    label_singular: 'Producto'
+    folder: 'src/content/products/es'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Título', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Usa el MISMO slug que la versión en inglés de este producto', pattern: ['^[a-z0-9-]+$', 'Sólo minúsculas, números y guiones'] }
+      - { label: 'Descripción corta', name: 'shortDescription', widget: 'text' }
+      - { label: 'Descripción larga', name: 'description', widget: 'text' }
+      - { label: 'Imagen destacada', name: 'heroImage', widget: 'image' }
+      - { label: 'Texto alternativo', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Galería'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Imagen', name: 'src', widget: 'image' }
+          - { label: 'Texto alternativo', name: 'alt', widget: 'string' }
+          - { label: 'Leyenda', name: 'caption', widget: 'string', required: false }
+      - { label: 'Categoría', name: 'category', widget: 'string' }
+      - { label: 'Destacado en home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Materiales', name: 'materials', widget: 'list', required: false }
+      - { label: 'Características', name: 'features', widget: 'list', required: false }
+      - { label: 'Ideal para', name: 'useCases', widget: 'list', required: false }
+      - label: 'Preguntas frecuentes'
+        name: 'faqs'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Pregunta', name: 'question', widget: 'string' }
+          - { label: 'Respuesta', name: 'answer', widget: 'text' }
+      - { label: 'Servicios relacionados (slugs)', name: 'relatedServices', widget: 'list', required: false }
+      - { label: 'Productos relacionados (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Artículos relacionados (slugs)', name: 'relatedBlogPosts', widget: 'list', required: false }
+      - { label: 'Borrador', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Orden', name: 'order', widget: 'number', default: 0 }
+      - { label: 'Título SEO (opcional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'Descripción SEO (opcional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Contenido', name: 'body', widget: 'markdown' }
+
+  - name: 'products_en'
+    label: 'Products (English)'
+    label_singular: 'Product'
+    folder: 'src/content/products/en'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', hint: 'Use the SAME slug as the Spanish version of this product', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only'] }
+      - { label: 'Short description', name: 'shortDescription', widget: 'text' }
+      - { label: 'Long description', name: 'description', widget: 'text' }
+      - { label: 'Hero image', name: 'heroImage', widget: 'image' }
+      - { label: 'Alt text', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Gallery'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Image', name: 'src', widget: 'image' }
+          - { label: 'Alt text', name: 'alt', widget: 'string' }
+          - { label: 'Caption', name: 'caption', widget: 'string', required: false }
+      - { label: 'Category', name: 'category', widget: 'string' }
+      - { label: 'Featured on home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Materials', name: 'materials', widget: 'list', required: false }
+      - { label: 'Features', name: 'features', widget: 'list', required: false }
+      - { label: 'Great for', name: 'useCases', widget: 'list', required: false }
+      - label: 'FAQs'
+        name: 'faqs'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Question', name: 'question', widget: 'string' }
+          - { label: 'Answer', name: 'answer', widget: 'text' }
+      - { label: 'Related services (slugs)', name: 'relatedServices', widget: 'list', required: false }
+      - { label: 'Related products (slugs)', name: 'relatedProducts', widget: 'list', required: false }
+      - { label: 'Related posts (slugs)', name: 'relatedBlogPosts', widget: 'list', required: false }
+      - { label: 'Draft', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Order', name: 'order', widget: 'number', default: 0 }
+      - { label: 'SEO title (optional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'SEO description (optional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Content', name: 'body', widget: 'markdown' }
+
+  # ---------------------------------------------------------------------------
+  # PROJECTS
+  # ---------------------------------------------------------------------------
+  - name: 'projects_es'
+    label: 'Proyectos (Español)'
+    label_singular: 'Proyecto'
+    folder: 'src/content/projects/es'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Título', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Sólo minúsculas, números y guiones'] }
+      - { label: 'Descripción', name: 'description', widget: 'text' }
+      - { label: 'Imagen destacada', name: 'heroImage', widget: 'image' }
+      - { label: 'Texto alternativo', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Galería'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Imagen', name: 'src', widget: 'image' }
+          - { label: 'Texto alternativo', name: 'alt', widget: 'string' }
+          - { label: 'Leyenda', name: 'caption', widget: 'string', required: false }
+      - { label: 'Imagen "antes"', name: 'beforeImage', widget: 'image', required: false }
+      - { label: 'Imagen "después"', name: 'afterImage', widget: 'image', required: false }
+      - { label: 'Servicios (slugs)', name: 'services', widget: 'list', required: false }
+      - { label: 'Productos (slugs)', name: 'products', widget: 'list', required: false }
+      - { label: 'Materiales', name: 'materials', widget: 'list', required: false }
+      - { label: 'Ubicación', name: 'location', widget: 'string', required: false }
+      - { label: 'Fecha', name: 'date', widget: 'datetime' }
+      - { label: 'Destacado en home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Es contenido de ejemplo (demo)', name: 'demo', widget: 'boolean', default: false, hint: 'Actívalo SOLO para proyectos ficticios de demostración' }
+      - { label: 'Borrador', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'Título SEO (opcional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'Descripción SEO (opcional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Contenido', name: 'body', widget: 'markdown' }
+
+  - name: 'projects_en'
+    label: 'Projects (English)'
+    label_singular: 'Project'
+    folder: 'src/content/projects/en'
+    slug: '{{fields.urlSlug}}'
+    extension: 'md'
+    format: 'frontmatter'
+    create: true
+    identifier_field: title
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'URL Slug', name: 'urlSlug', widget: 'string', pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and hyphens only'] }
+      - { label: 'Description', name: 'description', widget: 'text' }
+      - { label: 'Hero image', name: 'heroImage', widget: 'image' }
+      - { label: 'Alt text', name: 'heroImageAlt', widget: 'string' }
+      - label: 'Gallery'
+        name: 'gallery'
+        widget: 'list'
+        required: false
+        fields:
+          - { label: 'Image', name: 'src', widget: 'image' }
+          - { label: 'Alt text', name: 'alt', widget: 'string' }
+          - { label: 'Caption', name: 'caption', widget: 'string', required: false }
+      - { label: '"Before" image', name: 'beforeImage', widget: 'image', required: false }
+      - { label: '"After" image', name: 'afterImage', widget: 'image', required: false }
+      - { label: 'Services (slugs)', name: 'services', widget: 'list', required: false }
+      - { label: 'Products (slugs)', name: 'products', widget: 'list', required: false }
+      - { label: 'Materials', name: 'materials', widget: 'list', required: false }
+      - { label: 'Location', name: 'location', widget: 'string', required: false }
+      - { label: 'Date', name: 'date', widget: 'datetime' }
+      - { label: 'Featured on home', name: 'featured', widget: 'boolean', default: false }
+      - { label: 'Is demo content', name: 'demo', widget: 'boolean', default: false, hint: 'Only enable for fictional demonstration projects' }
+      - { label: 'Draft', name: 'draft', widget: 'boolean', default: true }
+      - { label: 'SEO title (optional)', name: 'seoTitle', widget: 'string', required: false }
+      - { label: 'SEO description (optional)', name: 'seoDescription', widget: 'string', required: false }
+      - { label: 'Content', name: 'body', widget: 'markdown' }

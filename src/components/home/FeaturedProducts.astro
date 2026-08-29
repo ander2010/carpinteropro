@@ -1,0 +1,43 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import ProductCard from '@components/products/ProductCard.astro';
+import { getPublishedProducts } from '@utils/content';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const allProducts = await getPublishedProducts(locale);
+const featured = allProducts.filter((p) => p.data.featured).slice(0, 8);
+const products = featured.length > 0 ? featured : allProducts.slice(0, 8);
+---
+
+{
+  products.length > 0 && (
+    <section class="bg-sand-100/60 py-20 sm:py-28">
+      <div class="container-page">
+        <SectionHeading
+          eyebrow={t('home.products.eyebrow')}
+          title={t('home.products.title')}
+          subtitle={t('home.products.subtitle')}
+        />
+        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+        <div class="mt-10 text-center">
+          <a
+            href={getLocalizedPath(locale, '/products')}
+            class="text-brand-700 inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
+          >
+            {t('cta.viewAllProducts')}
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}

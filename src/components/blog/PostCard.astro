@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Badge from '@components/ui/Badge.astro';
+import { formatDate } from '@utils/format';
+import { getCategoryLabel } from '@config/site';
+import { getLocalizedPath, stripLocale, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  featured?: boolean;
+}
+const { post, featured = false } = Astro.props;
+const { title, description, heroImage, heroImageAlt, publishDate, category, readingTime } =
+  post.data;
+
+const locale = post.id.split('/')[0] as Locale;
+const t = useTranslations(locale);
+const href = getLocalizedPath(locale, `/blog/${stripLocale(post.id)}`);
+---
+
+<a
+  href={href}
+  class:list={[
+    'group shadow-soft ring-ink-900/5 hover:shadow-lifted flex flex-col overflow-hidden rounded-2xl bg-white ring-1 transition-all duration-300 hover:-translate-y-1',
+    { 'md:col-span-2 md:flex-row': featured },
+  ]}
+>
+  <div
+    class:list={[
+      'bg-ink-100 aspect-[16/10] overflow-hidden',
+      { 'md:aspect-auto md:w-1/2': featured },
+    ]}
+  >
+    {
+      heroImage && (
+        <img
+          src={heroImage}
+          alt={heroImageAlt ?? title}
+          loading={featured ? 'eager' : 'lazy'}
+          decoding="async"
+          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      )
+    }
+  </div>
+  <div
+    class:list={['flex flex-1 flex-col p-6', { 'md:w-1/2 md:justify-center md:p-10': featured }]}
+  >
+    <div class="flex items-center gap-3">
+      <Badge>{getCategoryLabel(category, locale)}</Badge>
+      {
+        readingTime && (
+          <span class="text-ink-500 text-xs">
+            {readingTime} {t('blog.readingTime')}
+          </span>
+        )
+      }
+    </div>
+    <h3 class:list={['text-ink-950 mt-3 font-semibold', featured ? 'text-2xl' : 'text-xl']}>
+      {title}
+    </h3>
+    <p class="text-ink-600 mt-2 line-clamp-2 text-sm">{description}</p>
+    <time
+      datetime={publishDate.toISOString()}
+      class="text-ink-400 mt-4 text-xs tracking-wide uppercase"
+    >
+      {formatDate(publishDate, locale)}
+    </time>
+  </div>
+</a>

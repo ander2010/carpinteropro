@@ -1,0 +1,80 @@
+---
+import { business, hasWhatsApp, getWhatsAppHref } from '@config/business';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Texto del botón. */
+  label?: string;
+  /** Nombre del servicio/producto para personalizar el mensaje precargado. */
+  context?: string;
+  variant?: 'button' | 'icon';
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const {
+  locale,
+  label,
+  context,
+  variant = 'button',
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+if (!hasWhatsApp()) {
+  return null;
+}
+
+const t = useTranslations(locale);
+const buttonLabel = label ?? t('cta.whatsapp');
+
+const defaultMessage =
+  locale === 'es'
+    ? `Hola ${business.name}, quiero solicitar información sobre un proyecto de carpintería.`
+    : `Hi ${business.name}, I'd like to request information about a carpentry project.`;
+const contextMessage = context
+  ? locale === 'es'
+    ? `Hola ${business.name}, quiero solicitar información sobre ${context}.`
+    : `Hi ${business.name}, I'd like to request information about ${context}.`
+  : undefined;
+const href = getWhatsAppHref(contextMessage ?? defaultMessage);
+
+const sizes: Record<string, string> = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-base',
+};
+---
+
+{
+  variant === 'icon' ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-event="whatsapp_click"
+      aria-label={buttonLabel}
+      class={`shadow-lifted inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white transition-transform hover:scale-105 ${className}`}
+    >
+      <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+        <path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.887.525 3.65 1.437 5.155L2 22l4.964-1.404A9.94 9.94 0 0012.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.09a8.05 8.05 0 01-4.354-1.267l-.312-.192-3.021.854.826-2.978-.207-.32A8.06 8.06 0 013.91 12c0-4.463 3.63-8.09 8.091-8.09 4.462 0 8.09 3.627 8.09 8.09 0 4.463-3.628 8.09-8.09 8.09z" />
+      </svg>
+    </a>
+  ) : (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-event="whatsapp_click"
+      class={`text-ink-950 shadow-soft hover:shadow-lifted inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] font-semibold transition-all hover:-translate-y-0.5 ${sizes[size]} ${className}`}
+    >
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+        <path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.887.525 3.65 1.437 5.155L2 22l4.964-1.404A9.94 9.94 0 0012.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.09a8.05 8.05 0 01-4.354-1.267l-.312-.192-3.021.854.826-2.978-.207-.32A8.06 8.06 0 013.91 12c0-4.463 3.63-8.09 8.091-8.09 4.462 0 8.09 3.627 8.09 8.09 0 4.463-3.628 8.09-8.09 8.09z" />
+      </svg>
+      {buttonLabel}
+    </a>
+  )
+}

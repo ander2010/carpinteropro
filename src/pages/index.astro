@@ -1,0 +1,45 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Hero from '@components/home/Hero.astro';
+import ServicesGrid from '@components/home/ServicesGrid.astro';
+import TrustStats from '@components/home/TrustStats.astro';
+import WhyChooseUs from '@components/home/WhyChooseUs.astro';
+import HowItWorks from '@components/home/HowItWorks.astro';
+import FeaturedProducts from '@components/home/FeaturedProducts.astro';
+import PortfolioPreview from '@components/home/PortfolioPreview.astro';
+import ServiceAreas from '@components/home/ServiceAreas.astro';
+import Testimonials from '@components/home/Testimonials.astro';
+import LatestArticles from '@components/home/LatestArticles.astro';
+import HomeFAQ from '@components/home/HomeFAQ.astro';
+import FinalCTA from '@components/home/FinalCTA.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { seoDefaults } from '@config/seo';
+
+const locale = 'es' as const;
+const description = seoDefaults.defaultDescriptionFor[locale];
+---
+
+<MainLayout locale={locale} description={description}>
+  <Hero locale={locale} />
+  <ServicesGrid locale={locale} />
+  <div class="container-page">
+    <QuoteCTA locale={locale} />
+  </div>
+  <TrustStats locale={locale} />
+  <WhyChooseUs locale={locale} />
+  <HowItWorks locale={locale} />
+  <FeaturedProducts locale={locale} />
+  <PortfolioPreview locale={locale} />
+  <div class="container-page">
+    <QuoteCTA
+      locale={locale}
+      title="¿Quieres un proyecto como estos?"
+      text="Cuéntanos qué espacio quieres transformar y te damos una evaluación sin compromiso."
+    />
+  </div>
+  <ServiceAreas locale={locale} />
+  <Testimonials locale={locale} />
+  <LatestArticles locale={locale} />
+  <HomeFAQ locale={locale} />
+  <FinalCTA locale={locale} />
+</MainLayout>

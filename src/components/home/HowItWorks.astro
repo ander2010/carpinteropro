@@ -1,0 +1,88 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import { useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const stepsFor: Record<Locale, { title: string; description: string }[]> = {
+  es: [
+    {
+      title: 'Cuéntanos tu proyecto',
+      description: 'Escríbenos por el formulario o WhatsApp con la idea que tienes en mente.',
+    },
+    {
+      title: 'Envía medidas y fotos',
+      description: 'Compártenos el espacio disponible y referencias visuales si las tienes.',
+    },
+    {
+      title: 'Recibe tu evaluación',
+      description: 'Analizamos tu caso y te damos una evaluación clara del proyecto.',
+    },
+    {
+      title: 'Coordinamos el trabajo',
+      description: 'Definimos materiales, diseño final y tiempos de ejecución.',
+    },
+    {
+      title: 'Fabricación e instalación',
+      description: 'Fabricamos con cuidado y coordinamos la instalación en tu espacio.',
+    },
+    {
+      title: 'Entrega',
+      description: 'Revisamos juntos el resultado final antes de dar el proyecto por terminado.',
+    },
+  ],
+  en: [
+    {
+      title: 'Tell us about your project',
+      description: 'Write to us through the form or WhatsApp with the idea you have in mind.',
+    },
+    {
+      title: 'Send measurements and photos',
+      description: 'Share the available space and visual references, if you have them.',
+    },
+    {
+      title: 'Get your evaluation',
+      description: 'We review your case and give you a clear evaluation of the project.',
+    },
+    {
+      title: 'We coordinate the work',
+      description: 'We define materials, final design and execution timing.',
+    },
+    {
+      title: 'Manufacturing and installation',
+      description: 'We build with care and coordinate installation in your space.',
+    },
+    {
+      title: 'Delivery',
+      description: 'We review the final result together before considering the project done.',
+    },
+  ],
+};
+const steps = stepsFor[locale];
+---
+
+<section class="container-page py-20 sm:py-28">
+  <SectionHeading
+    eyebrow={t('home.how.eyebrow')}
+    title={t('home.how.title')}
+    align="center"
+    class="mx-auto"
+  />
+  <ol class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      steps.map((step, index) => (
+        <li class="border-ink-900/10 relative rounded-2xl border bg-white p-6">
+          <span class="font-display text-brand-300 text-3xl">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h3 class="text-ink-950 mt-3 font-semibold">{step.title}</h3>
+          <p class="text-ink-600 mt-1.5 text-sm leading-relaxed">{step.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

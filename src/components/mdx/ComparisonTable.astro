@@ -1,0 +1,48 @@
+---
+interface Props {
+  headers: string[];
+  rows: string[][];
+  caption?: string;
+}
+const { headers, rows, caption } = Astro.props;
+---
+
+<div class="not-prose border-ink-900/10 my-8 overflow-x-auto rounded-2xl border">
+  <table class="w-full min-w-[480px] text-left text-sm">
+    {
+      caption && (
+        <caption class="border-ink-900/10 bg-sand-100 text-ink-800 border-b px-5 py-3 text-left font-semibold">
+          {caption}
+        </caption>
+      )
+    }
+    <thead class="bg-ink-950 text-paper-50">
+      <tr>
+        {
+          headers.map((h) => (
+            <th scope="col" class="px-5 py-3.5 font-semibold">
+              {h}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody class="divide-ink-900/10 divide-y bg-white">
+      {
+        rows.map((row) => (
+          <tr>
+            {row.map((cell, i) =>
+              i === 0 ? (
+                <th scope="row" class="text-ink-900 px-5 py-3.5 font-medium">
+                  {cell}
+                </th>
+              ) : (
+                <td class="text-ink-700 px-5 py-3.5">{cell}</td>
+              ),
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

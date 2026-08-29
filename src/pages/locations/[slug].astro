@@ -1,0 +1,105 @@
+---
+// Página de ubicación (ver src/data/locations.ts). Mientras ese array esté
+// vacío, getStaticPaths() no genera ninguna página aquí: no se publican
+// ciudades inventadas (sección 29 de la especificación).
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import ServiceCard from '@components/services/ServiceCard.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import FAQ from '@components/mdx/FAQ.astro';
+import QuoteForm from '@components/conversion/QuoteForm.astro';
+import { locations } from '@data/locations';
+import { getPublishedServices, getPublishedProjects, byIds } from '@utils/content';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+
+export async function getStaticPaths() {
+  // getStaticPaths() se ejecuta en un scope aislado del resto del
+  // frontmatter (no ve el `const locale` de mas abajo), asi que se
+  // declara aqui tambien.
+  const locale = 'es' as const;
+  return locations
+    .filter((location) => location.locale === locale)
+    .map((location) => ({ params: { slug: location.slug }, props: { location } }));
+}
+
+const { location } = Astro.props;
+const t = useTranslations(locale);
+const [allServices, allProjects] = await Promise.all([
+  getPublishedServices(locale),
+  getPublishedProjects(locale),
+]);
+const servicesList = byIds(allServices, location.services);
+const projectsList = byIds(allProjects, location.projectSlugs ?? []);
+const path = getLocalizedPath(locale, `/locations/${location.slug}`);
+---
+
+<MainLayout
+  locale={locale}
+  title={location.seoTitle ?? `Carpintero en ${location.city}`}
+  description={location.seoDescription ?? location.intro}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs locale={locale} items={[{ name: location.city, path }]} />
+  </div>
+
+  <section class="container-page pt-6 pb-12">
+    <h1 class="max-w-2xl text-4xl font-semibold sm:text-5xl">Carpintero en {location.city}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">{location.intro}</p>
+  </section>
+
+  {
+    servicesList.length > 0 && (
+      <section class="container-page pb-16">
+        <h2 class="text-ink-950 text-2xl font-semibold">
+          Servicios disponibles en {location.city}
+        </h2>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {servicesList.map((s) => (
+            <ServiceCard service={s} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    projectsList.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">
+            Proyectos realizados en {location.city}
+          </h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projectsList.map((p) => (
+              <ProjectCard project={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    location.faqs && location.faqs.length > 0 && (
+      <section class="container-page py-16">
+        <div class="mx-auto max-w-3xl">
+          <FAQ
+            locale={locale}
+            items={location.faqs}
+            title={`Preguntas frecuentes sobre carpintería en ${location.city}`}
+          />
+        </div>
+      </section>
+    )
+  }
+
+  <section class="container-page pb-20">
+    <QuoteForm
+      locale={locale}
+      title={`${t('cta.quoteFor')} ${location.city}`}
+      context={location.city}
+    />
+  </section>
+</MainLayout>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Símbolo CarpinteroPro">
+  <rect width="64" height="64" rx="14" fill="#1D1912"/>
+  <path d="M14 44 L32 14 L50 44 Z" stroke="#D9A35F" stroke-width="3.5" stroke-linejoin="round" fill="none"/>
+  <path d="M22 44 L32 27 L42 44" stroke="#F8F3EA" stroke-width="3.5" stroke-linejoin="round" fill="none"/>
+</svg>

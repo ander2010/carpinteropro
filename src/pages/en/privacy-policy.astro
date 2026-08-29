@@ -1,0 +1,80 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import { business, hasEmail, getEmailHref } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Privacy Policy"
+  description={`${business.name}'s privacy policy: how we handle the data you share with us when requesting a quote.`}
+  noindex={false}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.privacy'), path: getLocalizedPath(locale, '/privacy-policy') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-20">
+    <div class="prose-carpintero max-w-3xl">
+      <h1>Privacy Policy</h1>
+      <p class="not-prose bg-sand-100 text-ink-700 rounded-xl p-4 text-sm">
+        This text is a generic starting point and should be reviewed by a legal professional before
+        final publication, to ensure compliance with the regulations that apply to your jurisdiction
+        (e.g. CCPA, GDPR, or other local regulations).
+      </p>
+
+      <h2>What data we collect</h2>
+      <p>
+        When you fill out the quote or contact form, we collect the information you voluntarily
+        provide: name, phone, email, approximate location, project details and, if you choose to
+        attach them, photos related to your project.
+      </p>
+
+      <h2>How we use your data</h2>
+      <p>
+        We use this information exclusively to respond to your request, evaluate your project and
+        coordinate next steps with you. We do not sell or share your data with third parties for
+        commercial purposes unrelated to your request.
+      </p>
+
+      <h2>Web analytics</h2>
+      <p>
+        This site may use analytics tools (such as Google Analytics) to understand aggregate site
+        usage, only if these tools have been configured. You can review your browser's cookie
+        settings to manage your preferences.
+      </p>
+
+      <h2>Data retention</h2>
+      <p>
+        We retain contact information for as long as needed to handle your request and, if a project
+        moves forward, for the duration of the resulting business relationship.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You can ask us at any time to access, correct or delete the data you've provided to us.
+        {
+          hasEmail() && (
+            <>
+              {' '}
+              Write to us at <a href={getEmailHref()}>{business.email}</a>.
+            </>
+          )
+        }
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        If you have questions about this privacy policy, contact us through our
+        <a href={getLocalizedPath(locale, '/contact')}> contact page</a>.
+      </p>
+    </div>
+  </section>
+</MainLayout>

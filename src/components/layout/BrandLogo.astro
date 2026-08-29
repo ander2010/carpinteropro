@@ -1,0 +1,22 @@
+---
+import { business } from '@config/business';
+import { getLocalizedPath, type Locale } from '@i18n/utils';
+
+interface Props {
+  variant?: 'default' | 'inverse';
+  class?: string;
+  locale?: Locale;
+}
+const { variant = 'default', class: className = 'h-9 w-auto', locale = 'es' } = Astro.props;
+
+const src = variant === 'inverse' ? '/images/brand/logo-inverse.svg' : '/images/brand/logo.svg';
+const homeLabel = locale === 'es' ? 'ir a inicio' : 'go to homepage';
+---
+
+<a
+  href={getLocalizedPath(locale, '/')}
+  class="inline-flex shrink-0 items-center"
+  aria-label={`${business.name} — ${homeLabel}`}
+>
+  <img src={src} alt={business.name} class={className} width="160" height="32" />
+</a>

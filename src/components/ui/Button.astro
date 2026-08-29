@@ -1,0 +1,52 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'whatsapp';
+  size?: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit';
+  class?: string;
+  id?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  class: className = '',
+  id,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+
+const variants: Record<string, string> = {
+  primary:
+    'bg-brand-600 text-paper-50 hover:bg-brand-700 shadow-soft hover:shadow-lifted focus-visible:outline-brand-700',
+  secondary:
+    'bg-ink-950 text-paper-50 hover:bg-ink-800 shadow-soft hover:shadow-lifted focus-visible:outline-ink-950',
+  ghost:
+    'bg-transparent text-ink-900 border border-ink-900/15 hover:bg-ink-900/5 focus-visible:outline-ink-900',
+  whatsapp:
+    'bg-[#25D366] text-ink-950 hover:bg-[#1fbd5a] shadow-soft hover:shadow-lifted focus-visible:outline-[#1fbd5a]',
+};
+
+const sizes: Record<string, string> = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-base',
+};
+
+const classes = [base, variants[variant], sizes[size], className].join(' ');
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  id={id}
+  class={classes}
+  {...href?.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  <slot />
+</Tag>

@@ -1,0 +1,88 @@
+---
+import type { GetStaticPathsOptions } from 'astro';
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import BlogSearch from '@components/blog/BlogSearch.astro';
+import Pagination from '@components/ui/Pagination.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { getPublishedBlogPosts } from '@utils/content';
+import { blogCategories } from '@config/site';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  // getStaticPaths() se ejecuta en un scope aislado del resto del
+  // frontmatter (no ve el `const locale` de mas abajo), asi que se
+  // declara aqui tambien.
+  const locale = 'es' as const;
+  const posts = await getPublishedBlogPosts(locale);
+  return paginate(posts, { pageSize: 9 });
+}
+
+const { page } = Astro.props;
+const t = useTranslations(locale);
+const isFirstPage = page.currentPage === 1;
+const featured = isFirstPage ? (page.data.find((p) => p.data.featured) ?? page.data[0]) : undefined;
+const restPosts = featured ? page.data.filter((p) => p.id !== featured.id) : page.data;
+---
+
+<MainLayout
+  locale={locale}
+  title={isFirstPage ? 'Blog' : `Blog — página ${page.currentPage}`}
+  description="Guías, consejos y proyectos sobre carpintería, muebles a medida, cocinas, closets y más."
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.blog'), path: getLocalizedPath(locale, '/blog') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-8">
+    <h1 class="max-w-2xl text-4xl font-semibold sm:text-5xl">{t('blog.title')}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">
+      {t('blog.subtitle')}
+    </p>
+  </section>
+
+  {isFirstPage && <BlogSearch locale={locale} />}
+
+  <div class="container-page mb-10 flex flex-wrap gap-2">
+    {
+      blogCategories.map((cat) => (
+        <a
+          href={getLocalizedPath(locale, `/blog/category/${cat.slug}`)}
+          class="text-ink-700 ring-ink-900/10 hover:bg-sand-100 rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-inset"
+        >
+          {cat.label[locale]}
+        </a>
+      ))
+    }
+  </div>
+
+  <section class="container-page pb-8">
+    {
+      page.data.length === 0 ? (
+        <p class="text-ink-600">{t('blog.empty')}</p>
+      ) : (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {featured && <PostCard post={featured} featured />}
+          {restPosts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      )
+    }
+    <Pagination locale={locale} page={page} />
+  </section>
+
+  <div class="container-page py-16">
+    <QuoteCTA
+      locale={locale}
+      title="¿Listo para tu propio proyecto?"
+      text="Convierte la inspiración del blog en un presupuesto real."
+    />
+  </div>
+</MainLayout>

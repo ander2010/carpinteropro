@@ -1,0 +1,51 @@
+---
+// Sólo se renderiza si existe al menos un dato real en business.ts. Nunca
+// inventa cifras: mientras yearsOfExperience/projectsCompleted/rating estén en
+// null, este bloque no aparece en el sitio.
+import { business, hasRating } from '@config/business';
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const stats: { value: string; label: string }[] = [];
+
+if (business.yearsOfExperience !== null) {
+  stats.push({
+    value: `${business.yearsOfExperience}+`,
+    label: locale === 'es' ? 'años de experiencia' : 'years of experience',
+  });
+}
+if (business.projectsCompleted !== null) {
+  stats.push({
+    value: `${business.projectsCompleted}+`,
+    label: locale === 'es' ? 'proyectos completados' : 'completed projects',
+  });
+}
+if (hasRating() && business.rating) {
+  stats.push({
+    value: `${business.rating.value.toFixed(1)}★`,
+    label:
+      locale === 'es'
+        ? `en ${business.rating.source} (${business.rating.count} reseñas)`
+        : `on ${business.rating.source} (${business.rating.count} reviews)`,
+  });
+}
+---
+
+{
+  stats.length > 0 && (
+    <section class="border-ink-900/10 border-y bg-white">
+      <div class="container-page divide-ink-900/10 grid grid-cols-1 divide-y py-10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {stats.map((stat) => (
+          <div class="flex flex-col items-center gap-1 py-6 text-center sm:py-0">
+            <span class="font-display text-ink-950 text-4xl">{stat.value}</span>
+            <span class="text-ink-600 text-sm">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

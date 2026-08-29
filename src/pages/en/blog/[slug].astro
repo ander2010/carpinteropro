@@ -1,0 +1,250 @@
+---
+import { render } from 'astro:content';
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import Badge from '@components/ui/Badge.astro';
+import JsonLd from '@components/seo/JsonLd.astro';
+import TableOfContents from '@components/blog/TableOfContents.astro';
+import SocialShare from '@components/blog/SocialShare.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import ServiceCard from '@components/services/ServiceCard.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { getPublishedBlogPosts, getPublishedServices, byIds } from '@utils/content';
+import { formatDate, estimateReadingTime } from '@utils/format';
+import { getCategoryLabel } from '@config/site';
+import { articleSchema, videoObjectSchema } from '@utils/jsonld';
+import { getLocalizedPath, stripLocale, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+
+export async function getStaticPaths() {
+  // getStaticPaths() se ejecuta en un scope aislado del resto del
+  // frontmatter (no ve el `const locale` de mas abajo), asi que se
+  // declara aqui tambien.
+  const locale = 'en' as const;
+  const posts = await getPublishedBlogPosts(locale);
+  return posts.map((post, index) => ({
+    params: { slug: stripLocale(post.id) },
+    props: { post, prev: posts[index + 1], next: posts[index - 1] },
+  }));
+}
+
+const { post, prev, next } = Astro.props;
+const t = useTranslations(locale);
+const { Content, headings } = await render(post);
+const slug = stripLocale(post.id);
+const {
+  title,
+  description,
+  publishDate,
+  updatedDate,
+  author,
+  category,
+  tags,
+  heroImage,
+  heroImageAlt,
+  youtube,
+  relatedServices,
+  relatedPosts,
+  location,
+  readingTime,
+  seoTitle,
+  seoDescription,
+} = post.data;
+
+const allServices = await getPublishedServices(locale);
+const allPosts = await getPublishedBlogPosts(locale);
+const servicesList = byIds(allServices, relatedServices).slice(0, 3);
+const postsList = byIds(allPosts, relatedPosts).slice(0, 3);
+
+const minutes = readingTime ?? estimateReadingTime(post.body ?? '');
+const path = getLocalizedPath(locale, `/blog/${slug}`);
+
+const schemas: Record<string, unknown>[] = [
+  articleSchema({
+    title,
+    description,
+    path,
+    image: heroImage,
+    publishDate,
+    updatedDate,
+    author,
+  }),
+];
+
+if (youtube) {
+  schemas.push(
+    videoObjectSchema({
+      name: title,
+      description,
+      thumbnailUrl: heroImage ?? '/og-default.png',
+      uploadDate: publishDate,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${youtube}`,
+    }),
+  );
+}
+---
+
+<MainLayout
+  locale={locale}
+  title={seoTitle ?? title}
+  description={seoDescription ?? description}
+  image={heroImage}
+  type="article"
+  article={{
+    publishedTime: publishDate.toISOString(),
+    modifiedTime: updatedDate?.toISOString(),
+    author,
+    section: getCategoryLabel(category, locale),
+    tags,
+  }}
+>
+  <JsonLd schema={schemas} />
+
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[
+        { name: t('nav.blog'), path: getLocalizedPath(locale, '/blog') },
+        {
+          name: getCategoryLabel(category, locale),
+          path: getLocalizedPath(locale, `/blog/category/${category}`),
+        },
+        { name: title, path },
+      ]}
+    />
+  </div>
+
+  <article class="container-page pt-6 pb-20">
+    <header class="mx-auto max-w-3xl">
+      <div class="flex flex-wrap items-center gap-3">
+        <Badge>{getCategoryLabel(category, locale)}</Badge>
+        {location && <span class="text-ink-500 text-xs">{location}</span>}
+      </div>
+      <h1 class="mt-4 text-4xl leading-tight font-semibold sm:text-5xl">{title}</h1>
+      <p class="text-ink-600 mt-4 text-lg">{description}</p>
+
+      <div class="text-ink-500 mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <span class="text-ink-800 font-medium">{author}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={publishDate.toISOString()}>{formatDate(publishDate, locale)}</time>
+        {
+          updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                {t('blog.updated')} {formatDate(updatedDate, locale)}
+              </span>
+            </>
+          )
+        }
+        <span aria-hidden="true">·</span>
+        <span>
+          {`${minutes} ${t('blog.readingTime')}`}
+        </span>
+      </div>
+    </header>
+
+    {
+      heroImage && (
+        <div class="shadow-lifted mx-auto mt-10 aspect-[16/9] max-w-4xl overflow-hidden rounded-3xl">
+          <img
+            src={heroImage}
+            alt={heroImageAlt ?? title}
+            loading="eager"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      )
+    }
+
+    <div class="mx-auto mt-12 max-w-3xl">
+      <TableOfContents locale={locale} headings={headings} />
+
+      <div class="prose-carpintero">
+        <Content />
+      </div>
+
+      {
+        tags.length > 0 && (
+          <div class="border-ink-900/10 mt-10 flex flex-wrap gap-2 border-t pt-6">
+            {tags.map((tag) => (
+              <span class="bg-sand-100 text-ink-600 rounded-full px-3 py-1 text-xs font-medium">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="border-ink-900/10 mt-8 border-t pt-6">
+        <SocialShare locale={locale} path={path} title={title} />
+      </div>
+    </div>
+  </article>
+
+  {
+    servicesList.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('blog.relatedServices')}</h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            {servicesList.map((s) => (
+              <ServiceCard service={s} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <div class="container-page py-16">
+    <QuoteCTA locale={locale} context={title} />
+  </div>
+
+  {
+    postsList.length > 0 && (
+      <section class="border-ink-900/10 border-t py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('blog.relatedPosts')}</h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            {postsList.map((p) => (
+              <PostCard post={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    (prev || next) && (
+      <nav
+        class="container-page border-ink-900/10 flex flex-col gap-4 border-t py-12 sm:flex-row sm:justify-between"
+        aria-label="Article navigation"
+      >
+        {prev ? (
+          <a
+            href={getLocalizedPath(locale, `/blog/${stripLocale(prev.id)}`)}
+            class="max-w-sm text-sm"
+          >
+            <span class="text-ink-500">{t('blog.previousPost')}</span>
+            <p class="text-ink-900 hover:text-brand-700 mt-1 font-semibold">{prev.data.title}</p>
+          </a>
+        ) : (
+          <span />
+        )}
+        {next && (
+          <a
+            href={getLocalizedPath(locale, `/blog/${stripLocale(next.id)}`)}
+            class="max-w-sm text-right text-sm sm:text-right"
+          >
+            <span class="text-ink-500">{t('blog.nextPost')}</span>
+            <p class="text-ink-900 hover:text-brand-700 mt-1 font-semibold">{next.data.title}</p>
+          </a>
+        )}
+      </nav>
+    )
+  }
+</MainLayout>

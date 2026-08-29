@@ -1,0 +1,55 @@
+---
+import JsonLd from '@components/seo/JsonLd.astro';
+import { breadcrumbSchema } from '@utils/jsonld';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+interface Crumb {
+  name: string;
+  path: string;
+}
+
+interface Props {
+  locale: Locale;
+  items: Crumb[];
+  class?: string;
+}
+
+const { locale, items, class: className = '' } = Astro.props;
+const t = useTranslations(locale);
+const allItems = [{ name: t('breadcrumb.home'), path: getLocalizedPath(locale, '/') }, ...items];
+---
+
+<JsonLd schema={breadcrumbSchema(allItems)} />
+<nav aria-label="Breadcrumb" class={`text-sm ${className}`}>
+  <ol class="text-ink-600 flex flex-wrap items-center gap-1.5">
+    {
+      allItems.map((item, index) => (
+        <li class="flex items-center gap-1.5">
+          {index > 0 && (
+            <svg
+              class="text-ink-400 h-3.5 w-3.5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          )}
+          {index === allItems.length - 1 ? (
+            <span class="text-ink-900 font-medium" aria-current="page">
+              {item.name}
+            </span>
+          ) : (
+            <a href={item.path} class="hover:text-brand-700 hover:underline">
+              {item.name}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

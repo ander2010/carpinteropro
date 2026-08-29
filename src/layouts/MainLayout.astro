@@ -1,0 +1,114 @@
+---
+import '@assets/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import SEO from '@components/seo/SEO.astro';
+import JsonLd from '@components/seo/JsonLd.astro';
+import Analytics from '@components/seo/Analytics.astro';
+import Header from '@components/layout/Header.astro';
+import Footer from '@components/layout/Footer.astro';
+import MobileConversionBar from '@components/conversion/MobileConversionBar.astro';
+import { langFor } from '@config/site';
+import { organizationSchema, localBusinessSchema, websiteSchema } from '@utils/jsonld';
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  article?: {
+    publishedTime: string;
+    modifiedTime?: string;
+    author?: string;
+    section?: string;
+    tags?: string[];
+  };
+  /** Oculta la barra sticky móvil de conversión (usar en páginas donde no aporte, ej. 404). */
+  hideMobileBar?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  image,
+  noindex = false,
+  type = 'website',
+  article,
+  hideMobileBar = false,
+} = Astro.props;
+
+const path = Astro.url.pathname;
+// Ruta sin prefijo de idioma, usada por el selector de idioma del header.
+const unprefixedPath = locale === 'en' && path.startsWith('/en') ? path.slice(3) || '/' : path;
+---
+
+<!doctype html>
+<html lang={langFor[locale]}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+
+    <SEO
+      locale={locale}
+      title={title}
+      description={description}
+      path={path}
+      image={image}
+      noindex={noindex}
+      type={type}
+      article={article}
+    />
+    <JsonLd schema={[organizationSchema(), localBusinessSchema(), websiteSchema()]} />
+    <Analytics />
+
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a href="#main-content" class="skip-link">
+      {locale === 'es' ? 'Saltar al contenido principal' : 'Skip to main content'}
+    </a>
+
+    <Header locale={locale} unprefixedPath={unprefixedPath} />
+
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer locale={locale} />
+
+    {!hideMobileBar && <MobileConversionBar locale={locale} />}
+
+    <script>
+      import { trackEvent, type TrackedEvent } from '@utils/events';
+      import { initScrollReveal } from '@assets/scripts/scrollReveal';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      function bindTrackedClicks() {
+        document.querySelectorAll<HTMLElement>('[data-event]').forEach((el) => {
+          if (el.dataset.trackBound === 'true') return;
+          el.dataset.trackBound = 'true';
+          el.addEventListener('click', () => {
+            trackEvent(el.dataset.event as TrackedEvent);
+          });
+        });
+      }
+
+      document.addEventListener('astro:page-load', bindTrackedClicks);
+      document.addEventListener('astro:page-load', initScrollReveal);
+      // Limpia los ScrollTrigger de la página anterior antes de la transición
+      // de vista, para no acumular listeners atados a elementos ya eliminados.
+      document.addEventListener('astro:before-swap', () => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      });
+    </script>
+  </body>
+</html>

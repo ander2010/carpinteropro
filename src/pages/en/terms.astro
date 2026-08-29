@@ -1,0 +1,63 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import { business } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Terms & Conditions"
+  description={`Terms and conditions for using ${business.name}'s website.`}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.terms'), path: getLocalizedPath(locale, '/terms') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-20">
+    <div class="prose-carpintero max-w-3xl">
+      <h1>Terms & Conditions</h1>
+      <p class="not-prose bg-sand-100 text-ink-700 rounded-xl p-4 text-sm">
+        This text is a generic starting point and should be reviewed by a legal professional before
+        final publication.
+      </p>
+
+      <h2>Use of this site</h2>
+      <p>
+        This website exists to share information about {business.name}'s carpentry services and to
+        make it easy to get in touch for quotes. Content is provided "as is" and may be updated
+        without notice.
+      </p>
+
+      <h2>Quotes</h2>
+      <p>
+        Quotes requested through the site are estimates subject to confirmation after the actual
+        project evaluation (exact measurements, chosen materials and final scope of work).
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        The content, images and design of this site belong to {business.name}, unless otherwise
+        noted, and may not be reproduced without authorization.
+      </p>
+
+      <h2>External links</h2>
+      <p>
+        This site may link to social media or third-party services. We are not responsible for the
+        content of external sites.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        For any questions about these terms, contact us through our
+        <a href={getLocalizedPath(locale, '/contact')}> contact page</a>.
+      </p>
+    </div>
+  </section>
+</MainLayout>

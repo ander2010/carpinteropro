@@ -1,0 +1,90 @@
+---
+import JsonLd from '@components/seo/JsonLd.astro';
+import type { Locale } from '@i18n/utils';
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+interface Props {
+  items: FAQItem[];
+  title?: string;
+  /** Sólo se usa para el título por defecto cuando no se pasa `title` explícito. */
+  locale?: Locale;
+}
+const { items, title, locale = 'es' } = Astro.props;
+const resolvedTitle =
+  title ?? (locale === 'es' ? 'Preguntas frecuentes' : 'Frequently Asked Questions');
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<JsonLd schema={faqSchema} />
+<div class="not-prose my-8" data-faq-accordion>
+  {resolvedTitle && <h2 class="font-display text-ink-950 mb-5 text-2xl">{resolvedTitle}</h2>}
+  <div class="divide-ink-900/10 border-ink-900/10 divide-y rounded-2xl border bg-white">
+    {
+      items.map((item) => (
+        <div class="p-1">
+          <button
+            type="button"
+            data-faq-trigger
+            aria-expanded="false"
+            class="text-ink-900 flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold"
+          >
+            {item.question}
+            <svg
+              data-faq-icon
+              class="text-brand-600 h-5 w-5 shrink-0 transition-transform"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 10.939l3.71-3.71a.75.75 0 111.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </button>
+          <div data-faq-panel class="text-ink-600 hidden px-5 pb-4 text-sm leading-relaxed">
+            {item.answer}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  function initFaqAccordions() {
+    document.querySelectorAll<HTMLElement>('[data-faq-accordion]').forEach((wrapper) => {
+      wrapper.querySelectorAll<HTMLButtonElement>('[data-faq-trigger]').forEach((trigger) => {
+        if (trigger.dataset.bound === 'true') return;
+        trigger.dataset.bound = 'true';
+
+        trigger.addEventListener('click', () => {
+          const panel = trigger.nextElementSibling as HTMLElement | null;
+          const icon = trigger.querySelector<SVGElement>('[data-faq-icon]');
+          const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+          panel?.classList.toggle('hidden');
+          icon?.classList.toggle('rotate-180');
+        });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFaqAccordions);
+</script>

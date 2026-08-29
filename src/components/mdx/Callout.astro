@@ -1,0 +1,37 @@
+---
+import type { Locale } from '@i18n/utils';
+
+interface Props {
+  type?: 'info' | 'tip' | 'warning';
+  title?: string;
+  locale?: Locale;
+}
+const { type = 'info', title, locale = 'es' } = Astro.props;
+
+const styles: Record<string, { wrap: string; icon: string }> = {
+  info: { wrap: 'border-sand-300 bg-sand-100 text-ink-800', icon: 'text-brand-700' },
+  tip: { wrap: 'border-emerald-200 bg-emerald-50 text-emerald-900', icon: 'text-emerald-600' },
+  warning: { wrap: 'border-amber-300 bg-amber-50 text-amber-900', icon: 'text-amber-600' },
+};
+const s = styles[type];
+
+const defaultTitlesFor: Record<Locale, Record<string, string>> = {
+  es: { info: 'Nota', tip: 'Consejo', warning: 'Importante' },
+  en: { info: 'Note', tip: 'Tip', warning: 'Important' },
+};
+---
+
+<div class={`my-6 rounded-xl border-l-4 p-5 ${s.wrap}`} role="note">
+  <p class={`mb-1 flex items-center gap-2 text-sm font-semibold ${s.icon}`}>
+    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path
+        fill-rule="evenodd"
+        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+        clip-rule="evenodd"></path>
+    </svg>
+    {title ?? defaultTitlesFor[locale][type]}
+  </p>
+  <div class="text-sm leading-relaxed [&>p]:m-0">
+    <slot />
+  </div>
+</div>

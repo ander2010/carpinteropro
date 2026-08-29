@@ -1,0 +1,153 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import QuoteForm from '@components/conversion/QuoteForm.astro';
+import WhatsAppCTA from '@components/conversion/WhatsAppCTA.astro';
+import CallCTA from '@components/conversion/CallCTA.astro';
+import {
+  business,
+  hasPhone,
+  hasWhatsApp,
+  hasEmail,
+  hasAddress,
+  hasOpeningHours,
+  getEmailHref,
+} from '@config/business';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+const locale = 'en' as const;
+const t = useTranslations(locale);
+
+const dayLabelsFor: Record<Locale, Record<string, string>> = {
+  es: {
+    Monday: 'Lunes',
+    Tuesday: 'Martes',
+    Wednesday: 'Miércoles',
+    Thursday: 'Jueves',
+    Friday: 'Viernes',
+    Saturday: 'Sábado',
+    Sunday: 'Domingo',
+  },
+  en: {
+    Monday: 'Monday',
+    Tuesday: 'Tuesday',
+    Wednesday: 'Wednesday',
+    Thursday: 'Thursday',
+    Friday: 'Friday',
+    Saturday: 'Saturday',
+    Sunday: 'Sunday',
+  },
+};
+const dayLabels = dayLabelsFor[locale];
+---
+
+<MainLayout
+  locale={locale}
+  title="Contact"
+  description="Contact us to request a carpentry quote. Tell us about your project and we'll get back to you promptly."
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.contact'), path: getLocalizedPath(locale, '/contact') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-16">
+    <div class="max-w-2xl">
+      <h1 class="text-4xl font-semibold sm:text-5xl">{t('contact.title')}</h1>
+      <p class="text-ink-600 mt-4 text-lg">
+        {t('contact.subtitle')}
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+      <div class="space-y-6">
+        {
+          !hasPhone() && !hasWhatsApp() && !hasEmail() && !hasAddress() && !hasOpeningHours() && (
+            <div class="border-ink-900/20 bg-sand-100/60 text-ink-600 rounded-2xl border border-dashed p-6 text-sm">
+              {t('contact.noInfoYet')}
+            </div>
+          )
+        }
+
+        {
+          (hasPhone() || hasWhatsApp()) && (
+            <div class="flex flex-wrap gap-3">
+              {hasPhone() && <CallCTA />}
+              {hasWhatsApp() && <WhatsAppCTA locale={locale} />}
+            </div>
+          )
+        }
+
+        {
+          hasEmail() && (
+            <div class="border-ink-900/10 rounded-2xl border bg-white p-6">
+              <h2 class="text-ink-500 text-sm font-semibold tracking-wide uppercase">
+                {t('contact.email')}
+              </h2>
+              <a
+                href={getEmailHref()}
+                class="text-ink-900 hover:text-brand-700 mt-2 block text-lg font-medium"
+              >
+                {business.email}
+              </a>
+            </div>
+          )
+        }
+
+        {
+          hasAddress() && business.address && (
+            <div class="border-ink-900/10 rounded-2xl border bg-white p-6">
+              <h2 class="text-ink-500 text-sm font-semibold tracking-wide uppercase">
+                {t('contact.address')}
+              </h2>
+              <p class="text-ink-800 mt-2">
+                {business.address.streetAddress}
+                <br />
+                {business.address.addressLocality}, {business.address.addressRegion}{' '}
+                {business.address.postalCode}
+              </p>
+            </div>
+          )
+        }
+
+        {
+          hasOpeningHours() && (
+            <div class="border-ink-900/10 rounded-2xl border bg-white p-6">
+              <h2 class="text-ink-500 text-sm font-semibold tracking-wide uppercase">
+                {t('contact.hours')}
+              </h2>
+              <ul class="text-ink-700 mt-2 space-y-1 text-sm">
+                {business.openingHours.map((block) => (
+                  <li>
+                    {block.days.map((d) => dayLabels[d]).join(', ')}: {block.opens} – {block.closes}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          business.serviceAreas.length > 0 && (
+            <div class="border-ink-900/10 rounded-2xl border bg-white p-6">
+              <h2 class="text-ink-500 text-sm font-semibold tracking-wide uppercase">
+                {t('contact.areas')}
+              </h2>
+              <p class="text-ink-700 mt-2 text-sm">
+                {business.serviceAreas.map((a) => a.name).join(' · ')}
+              </p>
+            </div>
+          )
+        }
+      </div>
+
+      <QuoteForm
+        locale={locale}
+        title={t('contact.formTitle')}
+        subtitle={t('contact.formSubtitle')}
+      />
+    </div>
+  </section>
+</MainLayout>

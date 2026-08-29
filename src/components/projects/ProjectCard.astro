@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Badge from '@components/ui/Badge.astro';
+import { getLocalizedPath, stripLocale, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { title, description, heroImage, heroImageAlt, location, demo } = project.data;
+
+const locale = project.id.split('/')[0] as Locale;
+const t = useTranslations(locale);
+const href = getLocalizedPath(locale, `/projects/${stripLocale(project.id)}`);
+---
+
+<a
+  href={href}
+  class="group bg-ink-950 shadow-soft hover:shadow-lifted relative flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-1"
+>
+  <div class="aspect-[4/3] overflow-hidden">
+    <img
+      src={heroImage}
+      alt={heroImageAlt}
+      loading="lazy"
+      decoding="async"
+      class="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105 group-hover:opacity-100"
+    />
+  </div>
+  {
+    demo && (
+      <Badge tone="sand" class="absolute top-3 left-3">
+        {t('projects.demoBadge')}
+      </Badge>
+    )
+  }
+  <div
+    class="from-ink-950 via-ink-950/70 relative -mt-24 flex flex-1 flex-col justify-end bg-gradient-to-t to-transparent p-6 pt-16"
+  >
+    {
+      location && (
+        <p class="text-brand-300 text-xs font-semibold tracking-wide uppercase">{location}</p>
+      )
+    }
+    <h3 class="text-paper-50 mt-1 text-lg font-semibold">{title}</h3>
+    <p class="text-paper-100/80 mt-1 line-clamp-2 text-sm">{description}</p>
+  </div>
+</a>

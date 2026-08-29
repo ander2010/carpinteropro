@@ -1,0 +1,92 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import QuoteCTA from '@components/mdx/QuoteCTA.astro';
+import { getPublishedBlogPosts, getPublishedServices } from '@utils/content';
+import { blogCategories, getCategoryLabel } from '@config/site';
+import { getLocalizedPath, stripLocale, useTranslations } from '@i18n/utils';
+
+const locale = 'en' as const;
+
+export async function getStaticPaths() {
+  return blogCategories.map((cat) => ({ params: { category: cat.slug } }));
+}
+
+const { category } = Astro.params;
+const t = useTranslations(locale);
+const label = getCategoryLabel(category as string, locale);
+const allPosts = await getPublishedBlogPosts(locale);
+const posts = allPosts.filter((p) => p.data.category === category);
+
+// Servicios relacionados con este hub temático, para enlazado interno natural
+// (sección 37 y 87 de la especificación).
+const allServices = await getPublishedServices(locale);
+const relatedServiceSlugs = new Set(posts.flatMap((p) => p.data.relatedServices));
+const relatedServices = allServices
+  .filter((s) => relatedServiceSlugs.has(stripLocale(s.id)))
+  .slice(0, 3);
+---
+
+<MainLayout
+  locale={locale}
+  title={label}
+  description={`Articles about ${label.toLowerCase()} published on the CarpinteroPro blog.`}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[
+        { name: t('nav.blog'), path: getLocalizedPath(locale, '/blog') },
+        { name: label, path: getLocalizedPath(locale, `/blog/category/${category}`) },
+      ]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-10">
+    <h1 class="max-w-2xl text-4xl font-semibold sm:text-5xl">{label}</h1>
+    <p class="text-ink-600 mt-4 max-w-2xl text-lg">
+      All blog articles related to {label.toLowerCase()}.
+    </p>
+  </section>
+
+  <section class="container-page pb-16">
+    {
+      posts.length > 0 ? (
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="text-ink-600">{t('blog.emptyCategory')}</p>
+      )
+    }
+  </section>
+
+  {
+    relatedServices.length > 0 && (
+      <section class="border-ink-900/10 bg-sand-100/60 border-t py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold">{t('blog.relatedServices')}</h2>
+          <ul class="mt-5 flex flex-wrap gap-3">
+            {relatedServices.map((s) => (
+              <li>
+                <a
+                  href={getLocalizedPath(locale, `/services/${stripLocale(s.id)}`)}
+                  class="text-ink-800 ring-ink-900/10 hover:bg-brand-50 rounded-full bg-white px-4 py-2 text-sm font-medium ring-1 ring-inset"
+                >
+                  {s.data.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <div class="container-page py-16">
+    <QuoteCTA locale={locale} />
+  </div>
+</MainLayout>

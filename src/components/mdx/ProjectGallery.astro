@@ -1,0 +1,30 @@
+---
+// Uso dentro de MDX: <ProjectGallery slug="closet-walk-in-demo" locale="en" />
+// Muestra la galería completa de un proyecto real del portfolio.
+// `locale` por defecto es "es"; pásalo explícitamente en artículos en inglés.
+import { getEntry } from 'astro:content';
+import Gallery from './Gallery.astro';
+import { getLocalizedPath, withLocale, type Locale } from '@i18n/utils';
+
+interface Props {
+  slug: string;
+  locale?: Locale;
+}
+const { slug, locale = 'es' } = Astro.props;
+const project = await getEntry('projects', withLocale(locale, slug));
+const linkText = locale === 'es' ? 'Ver caso completo' : 'View full case study';
+---
+
+{
+  project && project.data.gallery && project.data.gallery.length > 0 && (
+    <div class="not-prose">
+      <a
+        href={getLocalizedPath(locale, `/projects/${slug}`)}
+        class="text-brand-700 mb-3 inline-block text-sm font-semibold hover:underline"
+      >
+        {linkText}: {project.data.title} →
+      </a>
+      <Gallery images={project.data.gallery} />
+    </div>
+  )
+}

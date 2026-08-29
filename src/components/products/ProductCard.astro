@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Badge from '@components/ui/Badge.astro';
+import { getLocalizedPath, stripLocale, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+}
+const { product } = Astro.props;
+const { title, shortDescription, heroImage, heroImageAlt, category } = product.data;
+
+const locale = product.id.split('/')[0] as Locale;
+const t = useTranslations(locale);
+const href = getLocalizedPath(locale, `/products/${stripLocale(product.id)}`);
+---
+
+<a
+  href={href}
+  class="group shadow-soft ring-ink-900/5 hover:shadow-lifted flex flex-col overflow-hidden rounded-2xl bg-white ring-1 transition-all duration-300 hover:-translate-y-1"
+>
+  <div class="bg-ink-100 relative aspect-square overflow-hidden">
+    <img
+      src={heroImage}
+      alt={heroImageAlt}
+      loading="lazy"
+      decoding="async"
+      class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+    />
+    <Badge class="absolute top-3 left-3 bg-white/90 backdrop-blur">{category}</Badge>
+  </div>
+  <div class="flex flex-1 flex-col p-6">
+    <h3 class="text-ink-950 text-xl font-semibold">{title}</h3>
+    <p class="text-ink-600 mt-2 flex-1 text-sm">{shortDescription}</p>
+    <span class="text-brand-700 mt-4 inline-flex items-center gap-1 text-sm font-semibold">
+      {t('cta.viewProduct')}
+      <svg
+        class="h-4 w-4 transition-transform group-hover:translate-x-1"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M3 10a.75.75 0 01.75-.75h10.638L11.29 6.15a.75.75 0 111.02-1.1l4.5 4.25a.75.75 0 010 1.1l-4.5 4.25a.75.75 0 11-1.02-1.1l3.098-3.1H3.75A.75.75 0 013 10z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+</a>

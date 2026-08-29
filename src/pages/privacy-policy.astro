@@ -1,0 +1,82 @@
+---
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import { business, hasEmail, getEmailHref } from '@config/business';
+import { getLocalizedPath, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+const t = useTranslations(locale);
+---
+
+<MainLayout
+  locale={locale}
+  title="Política de privacidad"
+  description={`Política de privacidad de ${business.name}: cómo tratamos los datos que nos compartes al solicitar un presupuesto.`}
+  noindex={false}
+>
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[{ name: t('nav.privacy'), path: getLocalizedPath(locale, '/privacy-policy') }]}
+    />
+  </div>
+
+  <section class="container-page pt-6 pb-20">
+    <div class="prose-carpintero max-w-3xl">
+      <h1>Política de privacidad</h1>
+      <p class="not-prose bg-sand-100 text-ink-700 rounded-xl p-4 text-sm">
+        Este texto es una base genérica de partida y debe ser revisado por un profesional legal
+        antes de su publicación definitiva, para asegurar el cumplimiento de la normativa aplicable
+        a tu jurisdicción (ej. CCPA, GDPR u otra normativa local).
+      </p>
+
+      <h2>Qué datos recopilamos</h2>
+      <p>
+        Cuando completas el formulario de presupuesto o de contacto, recopilamos la información que
+        nos proporcionas voluntariamente: nombre, teléfono, email, ubicación aproximada, detalles
+        del proyecto y, si decides adjuntarlas, fotografías relacionadas con tu proyecto.
+      </p>
+
+      <h2>Para qué usamos tus datos</h2>
+      <p>
+        Utilizamos esta información exclusivamente para responder a tu solicitud, evaluar tu
+        proyecto y coordinar contigo los siguientes pasos. No vendemos ni compartimos tus datos con
+        terceros con fines comerciales ajenos a tu solicitud.
+      </p>
+
+      <h2>Analítica web</h2>
+      <p>
+        Este sitio puede utilizar herramientas de analítica (como Google Analytics) para entender
+        cómo se usa el sitio de forma agregada, únicamente si estas herramientas han sido
+        configuradas. Puedes revisar la configuración de cookies de tu navegador para gestionar tus
+        preferencias.
+      </p>
+
+      <h2>Conservación de datos</h2>
+      <p>
+        Conservamos la información de contacto el tiempo necesario para gestionar tu solicitud y, si
+        se concreta un proyecto, durante la relación comercial correspondiente.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        Puedes solicitarnos en cualquier momento acceder, corregir o eliminar los datos que nos has
+        proporcionado.
+        {
+          hasEmail() && (
+            <>
+              {' '}
+              Escríbenos a <a href={getEmailHref()}>{business.email}</a>.
+            </>
+          )
+        }
+      </p>
+
+      <h2>Contacto</h2>
+      <p>
+        Si tienes dudas sobre esta política de privacidad, contáctanos a través de la
+        <a href={getLocalizedPath(locale, '/contact')}> página de contacto</a>.
+      </p>
+    </div>
+  </section>
+</MainLayout>

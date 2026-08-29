@@ -1,0 +1,279 @@
+---
+import { render } from 'astro:content';
+import MainLayout from '@layouts/MainLayout.astro';
+import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
+import JsonLd from '@components/seo/JsonLd.astro';
+import FAQ from '@components/mdx/FAQ.astro';
+import QuoteForm from '@components/conversion/QuoteForm.astro';
+import WhatsAppCTA from '@components/conversion/WhatsAppCTA.astro';
+import ServiceCard from '@components/services/ServiceCard.astro';
+import ProductCard from '@components/products/ProductCard.astro';
+import ProjectCard from '@components/projects/ProjectCard.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import {
+  getPublishedServices,
+  getPublishedProducts,
+  getPublishedProjects,
+  getPublishedBlogPosts,
+  byIds,
+} from '@utils/content';
+import { serviceSchema } from '@utils/jsonld';
+import { getLocalizedPath, stripLocale, useTranslations } from '@i18n/utils';
+
+const locale = 'es' as const;
+
+export async function getStaticPaths() {
+  // getStaticPaths() se ejecuta en un scope aislado del resto del
+  // frontmatter (no ve el `const locale` de mas abajo), asi que se
+  // declara aqui tambien.
+  const locale = 'es' as const;
+  const services = await getPublishedServices(locale);
+  return services.map((service) => ({
+    params: { slug: stripLocale(service.id) },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const t = useTranslations(locale);
+const { Content } = await render(service);
+const slug = stripLocale(service.id);
+const {
+  title,
+  shortDescription,
+  description,
+  heroImage,
+  heroImageAlt,
+  gallery,
+  benefits,
+  process,
+  faqs,
+  relatedProducts,
+  relatedProjects,
+  relatedPosts,
+  seoTitle,
+  seoDescription,
+} = service.data;
+
+const [allServices, allProducts, allProjects, allPosts] = await Promise.all([
+  getPublishedServices(locale),
+  getPublishedProducts(locale),
+  getPublishedProjects(locale),
+  getPublishedBlogPosts(locale),
+]);
+
+const productsList = byIds(allProducts, relatedProducts).slice(0, 4);
+const projectsList = byIds(allProjects, relatedProjects).slice(0, 3);
+const postsList = byIds(allPosts, relatedPosts).slice(0, 3);
+const otherServices = allServices.filter((s) => s.id !== service.id).slice(0, 3);
+---
+
+<MainLayout
+  locale={locale}
+  title={seoTitle ?? title}
+  description={seoDescription ?? shortDescription}
+  image={heroImage}
+>
+  <JsonLd
+    schema={serviceSchema({
+      title,
+      description,
+      path: getLocalizedPath(locale, `/services/${slug}`),
+    })}
+  />
+
+  <div class="container-page pt-8">
+    <Breadcrumbs
+      locale={locale}
+      items={[
+        { name: t('nav.services'), path: getLocalizedPath(locale, '/services') },
+        { name: title, path: getLocalizedPath(locale, `/services/${slug}`) },
+      ]}
+    />
+  </div>
+
+  <section class="container-page grid gap-10 pt-6 pb-16 lg:grid-cols-2 lg:items-center">
+    <div>
+      <h1 class="text-4xl font-semibold sm:text-5xl">{title}</h1>
+      <p class="text-ink-600 mt-5 text-lg leading-relaxed">{shortDescription}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={getLocalizedPath(locale, '/contact')}
+          data-event="quote_click"
+          class="bg-brand-600 text-paper-50 shadow-soft hover:bg-brand-700 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5"
+        >
+          {`${t('cta.quoteFor')} ${title.toLowerCase()}`}
+        </a>
+        <WhatsAppCTA locale={locale} context={title} />
+      </div>
+    </div>
+    <div class="shadow-lifted aspect-[4/3] overflow-hidden rounded-3xl">
+      <img
+        src={heroImage}
+        alt={heroImageAlt}
+        loading="eager"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
+    </div>
+  </section>
+
+  <section class="container-page pb-16">
+    <div class="prose-carpintero max-w-3xl">
+      <Content />
+    </div>
+  </section>
+
+  {
+    benefits.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">{t('services.benefits')}</h2>
+          <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {benefits.map((benefit) => (
+              <li class="shadow-soft flex items-start gap-3 rounded-xl bg-white p-5">
+                <svg
+                  class="text-brand-600 mt-0.5 h-5 w-5 shrink-0"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <span class="text-ink-700 text-sm">{benefit}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    process.length > 0 && (
+      <section class="container-page py-16">
+        <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">{t('services.process')}</h2>
+        <ol class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {process.map((step, index) => (
+            <li class="border-ink-900/10 rounded-2xl border p-6">
+              <span class="font-display text-brand-400 text-2xl">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 class="text-ink-950 mt-2 font-semibold">{step.title}</h3>
+              <p class="text-ink-600 mt-1.5 text-sm">{step.description}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  {
+    gallery && gallery.length > 0 && (
+      <section class="container-page pb-16">
+        <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">{t('services.gallery')}</h2>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {gallery.map((img) => (
+            <div class="aspect-[4/3] overflow-hidden rounded-xl">
+              <img
+                src={img.src}
+                alt={img.alt}
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    projectsList.length > 0 && (
+      <section class="bg-ink-950 py-16">
+        <div class="container-page">
+          <h2 class="text-paper-50 text-2xl font-semibold sm:text-3xl">
+            {t('services.relatedProjects')}
+          </h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projectsList.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    productsList.length > 0 && (
+      <section class="container-page py-16">
+        <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">
+          {t('services.relatedProducts')}
+        </h2>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {productsList.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    faqs.length > 0 && (
+      <section class="container-page pb-16">
+        <div class="mx-auto max-w-3xl">
+          <FAQ items={faqs} title={t('services.faq')} />
+        </div>
+      </section>
+    )
+  }
+
+  {
+    postsList.length > 0 && (
+      <section class="bg-sand-100/60 py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">
+            {t('services.relatedPosts')}
+          </h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {postsList.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="container-page py-16">
+    <QuoteForm
+      locale={locale}
+      title={`${t('cta.quoteFor')} ${title.toLowerCase()}`}
+      context={title}
+    />
+  </section>
+
+  {
+    otherServices.length > 0 && (
+      <section class="border-ink-900/10 bg-sand-100/60 border-t py-16">
+        <div class="container-page">
+          <h2 class="text-ink-950 text-2xl font-semibold sm:text-3xl">
+            {t('services.otherServices')}
+          </h2>
+          <div class="mt-8 grid gap-6 sm:grid-cols-3">
+            {otherServices.map((s) => (
+              <ServiceCard service={s} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</MainLayout>

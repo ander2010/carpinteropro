@@ -1,0 +1,16 @@
+---
+// Uso dentro de MDX: <ProductCard slug="closets-walk-in" locale="en" />
+// `locale` por defecto es "es"; pásalo explícitamente en artículos en inglés.
+import { getEntry } from 'astro:content';
+import ProductCardBase from '@components/products/ProductCard.astro';
+import { withLocale, type Locale } from '@i18n/utils';
+
+interface Props {
+  slug: string;
+  locale?: Locale;
+}
+const { slug, locale = 'es' } = Astro.props;
+const product = await getEntry('products', withLocale(locale, slug));
+---
+
+{product ? <ProductCardBase product={product} /> : null}

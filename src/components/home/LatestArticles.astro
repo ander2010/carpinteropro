@@ -1,0 +1,41 @@
+---
+import SectionHeading from '@components/ui/SectionHeading.astro';
+import PostCard from '@components/blog/PostCard.astro';
+import { getPublishedBlogPosts } from '@utils/content';
+import { getLocalizedPath, useTranslations, type Locale } from '@i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const posts = (await getPublishedBlogPosts(locale)).slice(0, 3);
+---
+
+{
+  posts.length > 0 && (
+    <section class="bg-sand-100/60 py-20 sm:py-28">
+      <div class="container-page">
+        <SectionHeading
+          eyebrow={t('home.blog.eyebrow')}
+          title={t('home.blog.title')}
+          subtitle={t('home.blog.subtitle')}
+        />
+        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+        <div class="mt-10 text-center">
+          <a
+            href={getLocalizedPath(locale, '/blog')}
+            class="text-brand-700 inline-flex items-center gap-1.5 text-sm font-semibold hover:underline"
+          >
+            {t('cta.viewAllBlog')}
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}

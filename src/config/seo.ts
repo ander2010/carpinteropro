@@ -11,8 +11,8 @@ import { site, defaultDescriptionFor } from './site';
 import type { Locale } from '@i18n/utils';
 
 const homeTitleFor: Record<Locale, string> = {
-  es: `${site.brandName} | Carpintería Profesional y Muebles a Medida`,
-  en: `${site.brandName} | Professional Carpentry & Custom Furniture`,
+  es: `${site.brandName} | Conecta con Carpinteros de Confianza en Florida`,
+  en: `${site.brandName} | Connect with Trusted Carpenters in Florida`,
 };
 
 export const seoDefaults = {

@@ -29,15 +29,16 @@ export const ui = {
     'nav.contact': 'Contacto',
     'nav.about': 'Sobre nosotros',
     'nav.projects': 'Proyectos',
+    'nav.faq': 'FAQ',
     'nav.privacy': 'Política de privacidad',
     'nav.terms': 'Términos y condiciones',
     'nav.sitemap': 'Mapa del sitio',
     'nav.openMenu': 'Abrir menú',
     'nav.language': 'Idioma',
 
-    'cta.quote': 'Solicitar presupuesto',
-    'cta.quoteFor': 'Solicitar presupuesto para',
-    'cta.seeWork': 'Ver nuestros trabajos',
+    'cta.quote': 'Contar mi proyecto',
+    'cta.quoteFor': 'Cuéntanos tu proyecto de',
+    'cta.seeWork': 'Ver trabajos realizados',
     'cta.viewService': 'Ver servicio',
     'cta.viewProduct': 'Ver producto',
     'cta.viewAllServices': 'Ver todos los servicios →',
@@ -67,39 +68,41 @@ export const ui = {
     'footer.legal': 'Legal',
     'footer.areas': 'Áreas donde trabajamos',
     'footer.description':
-      'Carpintería profesional y muebles a medida: closets, cocinas, gabinetes y proyectos personalizados en madera.',
+      'Cuéntanos tu proyecto de carpintería a medida y te contacta directamente un carpintero profesional en Florida.',
     'footer.rights': 'Todos los derechos reservados.',
     'footer.honeypotLabel': 'No completar este campo',
 
     'home.hero.eyebrow': 'Carpintería a medida, hecha con precisión',
-    'home.hero.title': 'Carpintería profesional, hecha a la medida de tu proyecto',
+    'home.hero.title': 'Encuentra Carpinteros de Confianza en Florida para tu Proyecto',
     'home.hero.subtitle':
-      'Diseñamos y fabricamos closets, cocinas, gabinetes y muebles a medida con materiales de calidad y terminaciones profesionales. Cuéntanos tu idea y te ayudamos a construirla.',
+      'Cuéntanos qué necesitas — closet, cocina, mueble a medida o reparación — y conectamos tu proyecto con un carpintero profesional de la zona. Él te contacta directamente para coordinar presupuesto y detalles contigo.',
 
     'home.services.eyebrow': 'Lo que hacemos',
-    'home.services.title': 'Servicios de carpintería',
+    'home.services.title': 'Conectamos tu proyecto con el carpintero adecuado',
     'home.services.subtitle':
-      'Desde el diseño hasta la instalación final: cada proyecto se adapta al espacio y necesidades reales del cliente.',
+      'Cuéntanos una sola vez qué necesitas. Nosotros compartimos tu proyecto con carpinteros profesionales del área de Florida según el tipo de trabajo, y ellos te contactan directamente para coordinar presupuesto y tiempos.',
 
-    'home.why.eyebrow': 'Por qué elegirnos',
-    'home.why.title': 'Compromiso con cada detalle de tu proyecto',
+    'home.why.eyebrow': 'Por qué usar CarpinteroPro',
+    'home.why.title': 'Ahorra tiempo buscando carpintero',
 
     'home.how.eyebrow': 'Proceso',
     'home.how.title': 'Cómo funciona',
 
     'home.products.eyebrow': 'Nuestro catálogo',
     'home.products.title': 'Productos y trabajos destacados',
-    'home.products.subtitle': 'Soluciones de carpintería que diseñamos y fabricamos a medida.',
+    'home.products.subtitle':
+      'Ejemplos de soluciones de carpintería a medida realizadas por carpinteros de nuestra zona.',
 
     'home.portfolio.eyebrow': 'Portfolio',
-    'home.portfolio.title': 'Trabajos recientes',
-    'home.portfolio.subtitle': 'Proyectos reales de carpintería que hemos diseñado y fabricado.',
+    'home.portfolio.title': 'Trabajos realizados por carpinteros de nuestra zona',
+    'home.portfolio.subtitle':
+      'Ejemplos de proyectos de carpintería a medida realizados por profesionales con los que hemos conectado clientes.',
 
     'home.areas.eyebrow': 'Cobertura',
     'home.areas.title': 'Áreas donde trabajamos',
 
     'home.testimonials.eyebrow': 'Clientes',
-    'home.testimonials.title': 'Lo que dicen quienes ya trabajaron con nosotros',
+    'home.testimonials.title': 'Lo que dicen quienes ya conectamos con un carpintero',
 
     'home.blog.eyebrow': 'Blog',
     'home.blog.title': 'Últimos artículos',
@@ -109,14 +112,16 @@ export const ui = {
     'home.faq.title': 'Preguntas frecuentes',
 
     'home.finalCta.title': '¿Tienes un proyecto de carpintería en mente?',
-    'home.finalCta.subtitle': 'Cuéntanos qué necesitas y te ayudamos a evaluarlo, sin compromiso.',
+    'home.finalCta.subtitle':
+      'Cuéntanos qué necesitas y te ponemos en contacto con el carpintero adecuado de tu zona, sin compromiso.',
 
     'quoteCta.title': '¿Tienes un proyecto en mente?',
-    'quoteCta.text': 'Cuéntanos qué necesitas y te ayudamos a darle forma, sin compromiso.',
+    'quoteCta.text':
+      'Cuéntanos qué necesitas y te ponemos en contacto con un carpintero de confianza de tu zona, sin compromiso.',
 
-    'form.title': 'Solicita tu presupuesto gratis',
+    'form.title': 'Cuéntanos tu proyecto',
     'form.subtitle':
-      'Cuéntanos sobre tu proyecto y te contactaremos con una evaluación sin compromiso.',
+      'Compartimos tu solicitud con un carpintero profesional de tu zona, y él te contactará directamente para coordinar presupuesto y detalles.',
     'form.name': 'Nombre',
     'form.phone': 'Teléfono',
     'form.email': 'Email',
@@ -131,7 +136,8 @@ export const ui = {
     'form.photos': 'Fotos del proyecto (opcional)',
     'form.preferredContact': 'Método de contacto preferido',
     'form.consent': 'Acepto ser contactado sobre mi solicitud.',
-    'form.successMessage': '¡Gracias! Hemos recibido tu solicitud y te contactaremos pronto.',
+    'form.successMessage':
+      '¡Gracias! Hemos recibido tu solicitud. Un carpintero de nuestra zona se pondrá en contacto contigo pronto.',
     'form.whatsappRedirect': 'Te llevamos a WhatsApp para completar el envío de tu solicitud.',
     'form.emailRedirect': 'Abrimos tu cliente de email para completar el envío.',
     'form.noChannel':
@@ -161,7 +167,7 @@ export const ui = {
 
     'services.title': 'Servicios de carpintería',
     'services.subtitle':
-      'Diseñamos y fabricamos soluciones de carpintería a medida, adaptadas al espacio, estilo y presupuesto de cada proyecto.',
+      'Cuéntanos tu proyecto y te contacta un carpintero de nuestra zona especializado en el tipo de trabajo que necesitas.',
     'services.empty': 'Todavía no hay servicios publicados.',
     'services.benefits': 'Beneficios de este servicio',
     'services.process': 'Cómo trabajamos este servicio',
@@ -188,7 +194,7 @@ export const ui = {
 
     'projects.title': 'Proyectos y portfolio',
     'projects.subtitle':
-      'Una muestra de trabajos de carpintería que hemos diseñado y fabricado a medida.',
+      'Una muestra de trabajos de carpintería a medida realizados por profesionales con los que hemos conectado clientes.',
     'projects.empty': 'Todavía no hay proyectos publicados.',
     'projects.demoBadge': 'Proyecto de ejemplo',
     'projects.demoNoteFull':
@@ -197,7 +203,8 @@ export const ui = {
     'projects.beforeAfter': 'Antes y después',
     'projects.gallery': 'Galería del proyecto',
     'projects.ctaTitle': '¿Quieres un proyecto como este?',
-    'projects.ctaText': 'Cuéntanos tu idea y te damos una evaluación sin compromiso.',
+    'projects.ctaText':
+      'Cuéntanos tu idea y te ponemos en contacto con el carpintero adecuado, sin compromiso.',
     'projects.moreProjects': 'Más proyectos',
     'projects.serviceUsed': 'Servicio utilizado',
     'projects.before': 'Antes',
@@ -224,23 +231,41 @@ export const ui = {
     'notFound.subtitle':
       'Puede que el enlace esté roto o que la página se haya movido. Prueba con alguno de estos accesos:',
 
-    'faq.home1.q': '¿Cómo solicito un presupuesto?',
+    'faq.home1.q': '¿Contarles mi proyecto tiene algún costo?',
     'faq.home1.a':
-      'Completa el formulario de presupuesto, escríbenos por WhatsApp o llámanos directamente. Cuéntanos qué necesitas y te contactaremos para avanzar con la evaluación.',
-    'faq.home2.q': '¿Puedo enviar fotos de mi proyecto?',
+      'No. Contarnos tu proyecto por el formulario o WhatsApp es completamente gratis, no pagas nada por que te contacte un carpintero.',
+    'faq.home2.q': '¿Quién hace el trabajo, CarpinteroPro o un tercero?',
     'faq.home2.a':
-      'Sí. El formulario de presupuesto permite adjuntar fotos, y también puedes enviarlas por WhatsApp o email para que tengamos más contexto de tu espacio.',
-    'faq.home3.q': '¿Realizan trabajos personalizados?',
+      'El carpintero que te contacte. Nosotros solo conectamos tu proyecto con profesionales de confianza de la zona; el trabajo lo realiza el carpintero directamente.',
+    'faq.home3.q': '¿Quién define el presupuesto?',
     'faq.home3.a':
-      'Sí, cada proyecto se diseña a partir de las medidas, el estilo y las necesidades reales del espacio del cliente.',
-    'faq.home4.q': '¿Cuánto tarda un proyecto?',
+      'El presupuesto y los detalles del proyecto los acuerdas directamente con el carpintero que te contacte, no con CarpinteroPro.',
+    'faq.home4.q': '¿Puede contactarme más de un carpintero por el mismo proyecto?',
     'faq.home4.a':
-      'El tiempo depende del alcance y la complejidad de cada proyecto. Te damos una estimación de tiempos durante la evaluación, antes de comenzar.',
-    'faq.home5.q': '¿Qué información necesitan para cotizar?',
+      'Sí, según disponibilidad. Así puedes comparar antes de decidir con quién trabajar.',
+    'faq.home5.q': '¿Cómo solicito un presupuesto?',
     'faq.home5.a':
-      'Nos ayuda mucho contar con las medidas del espacio, fotos de referencia, el tipo de proyecto y cualquier idea o material que ya tengas en mente.',
-    'faq.home6.q': '¿Trabajan proyectos residenciales y comerciales?',
-    'faq.home6.a': 'Sí, adaptamos el servicio tanto a proyectos residenciales como comerciales.',
+      'Completa el formulario o escríbenos por WhatsApp contándonos tu proyecto. Compartimos tu solicitud con el carpintero adecuado y él te contacta directamente para darte el presupuesto.',
+    'faq.home6.q': '¿Puedo enviar fotos de mi proyecto?',
+    'faq.home6.a':
+      'Sí, mientras más detalles y fotos compartas del espacio, más rápido y preciso será el contacto del carpintero.',
+    'faq.home7.q': '¿Qué información necesitan para conectar mi proyecto con un carpintero?',
+    'faq.home7.a':
+      'El tipo de trabajo (closet, cocina, mueble, reparación, etc.), medidas aproximadas del espacio, fotos de referencia si las tienes, y tu zona o ciudad.',
+    'faq.home8.q': '¿Cuánto tarda un proyecto?',
+    'faq.home8.a':
+      'Los tiempos de fabricación e instalación los define el carpintero según la complejidad de tu proyecto; te los confirmará directamente al contactarte.',
+    'faq.home9.q': '¿Trabajan proyectos residenciales y comerciales?',
+    'faq.home9.a':
+      'Sí, conectamos tanto proyectos residenciales como comerciales con el carpintero adecuado.',
+    'faq.home10.q': '¿El trabajo tiene garantía?',
+    'faq.home10.a':
+      'La garantía del trabajo la ofrece directamente el carpintero que lo realiza; te recomendamos confirmarla con él antes de acordar el proyecto.',
+    'faq.home11.q': '¿En qué zonas tienen carpinteros disponibles?',
+    'faq.home11.a': 'Actualmente conectamos proyectos en el área de Florida.',
+    'faq.home12.q': '¿Estoy obligado a contratar al carpintero que me contacte?',
+    'faq.home12.a':
+      'No. Contarnos tu proyecto no te obliga a nada — decides con quién trabajar o si prefieres no continuar.',
   },
   en: {
     'nav.home': 'Home',
@@ -250,15 +275,16 @@ export const ui = {
     'nav.contact': 'Contact',
     'nav.about': 'About',
     'nav.projects': 'Projects',
+    'nav.faq': 'FAQ',
     'nav.privacy': 'Privacy Policy',
     'nav.terms': 'Terms & Conditions',
     'nav.sitemap': 'Sitemap',
     'nav.openMenu': 'Open menu',
     'nav.language': 'Language',
 
-    'cta.quote': 'Get a Free Quote',
-    'cta.quoteFor': 'Request a quote for',
-    'cta.seeWork': 'See Our Work',
+    'cta.quote': 'Tell Us Your Project',
+    'cta.quoteFor': 'Tell us about your project for',
+    'cta.seeWork': 'See Completed Work',
     'cta.viewService': 'View service',
     'cta.viewProduct': 'View product',
     'cta.viewAllServices': 'View all services →',
@@ -288,39 +314,41 @@ export const ui = {
     'footer.legal': 'Legal',
     'footer.areas': 'Areas We Serve',
     'footer.description':
-      'Professional carpentry and custom furniture: closets, kitchens, cabinets and custom woodworking projects.',
+      'Tell us about your custom carpentry project and a professional carpenter in Florida will contact you directly.',
     'footer.rights': 'All rights reserved.',
     'footer.honeypotLabel': 'Do not fill out this field',
 
     'home.hero.eyebrow': 'Custom carpentry, built with precision',
-    'home.hero.title': 'Professional carpentry, custom-built for your project',
+    'home.hero.title': 'Find Trusted Carpenters in Florida for Your Project',
     'home.hero.subtitle':
-      'We design and build closets, kitchens, cabinets and custom furniture using quality materials and professional finishes. Tell us your idea and we’ll help you build it.',
+      "Tell us what you need — closet, kitchen, custom furniture or repair — and we'll connect your project with a professional carpenter in your area. They'll contact you directly to coordinate pricing and details.",
 
     'home.services.eyebrow': 'What we do',
-    'home.services.title': 'Carpentry Services',
+    'home.services.title': 'We connect your project with the right carpenter',
     'home.services.subtitle':
-      'From design to final installation: every project is tailored to the client’s real space and needs.',
+      'Tell us what you need once. We share your project with professional carpenters across Florida based on the type of work, and they contact you directly to coordinate pricing and timing.',
 
-    'home.why.eyebrow': 'Why choose us',
-    'home.why.title': 'Committed to every detail of your project',
+    'home.why.eyebrow': 'Why use CarpinteroPro',
+    'home.why.title': 'Save time searching for a carpenter',
 
     'home.how.eyebrow': 'Process',
     'home.how.title': 'How it works',
 
     'home.products.eyebrow': 'Our catalog',
     'home.products.title': 'Featured Products & Work',
-    'home.products.subtitle': 'Carpentry solutions we design and build to measure.',
+    'home.products.subtitle':
+      'Examples of custom carpentry solutions built by carpenters in our area.',
 
     'home.portfolio.eyebrow': 'Portfolio',
-    'home.portfolio.title': 'Recent Work',
-    'home.portfolio.subtitle': 'Real carpentry projects we’ve designed and built.',
+    'home.portfolio.title': 'Work completed by carpenters in our area',
+    'home.portfolio.subtitle':
+      "Examples of custom carpentry projects completed by professionals we've connected with clients.",
 
     'home.areas.eyebrow': 'Coverage',
     'home.areas.title': 'Areas We Serve',
 
     'home.testimonials.eyebrow': 'Clients',
-    'home.testimonials.title': 'What people who’ve worked with us are saying',
+    'home.testimonials.title': "What people we've connected with a carpenter are saying",
 
     'home.blog.eyebrow': 'Blog',
     'home.blog.title': 'Latest Articles',
@@ -331,14 +359,15 @@ export const ui = {
 
     'home.finalCta.title': 'Have a carpentry project in mind?',
     'home.finalCta.subtitle':
-      "Tell us what you need and we'll help you evaluate it, no strings attached.",
+      "Tell us what you need and we'll connect you with the right carpenter in your area, no strings attached.",
 
     'quoteCta.title': 'Have a project in mind?',
-    'quoteCta.text': "Tell us what you need and we'll help you shape it, no strings attached.",
+    'quoteCta.text':
+      "Tell us what you need and we'll connect you with a trusted carpenter in your area, no strings attached.",
 
-    'form.title': 'Get Your Free Quote',
+    'form.title': 'Tell Us About Your Project',
     'form.subtitle':
-      "Tell us about your project and we'll get back to you with a no-obligation evaluation.",
+      "We'll share your request with a professional carpenter in your area, and they'll contact you directly to coordinate pricing and details.",
     'form.name': 'Name',
     'form.phone': 'Phone',
     'form.email': 'Email',
@@ -353,7 +382,8 @@ export const ui = {
     'form.photos': 'Project photos (optional)',
     'form.preferredContact': 'Preferred contact method',
     'form.consent': 'I agree to be contacted about my request.',
-    'form.successMessage': "Thanks! We've received your request and will contact you soon.",
+    'form.successMessage':
+      "Thanks! We've received your request. A carpenter in our area will reach out to you soon.",
     'form.whatsappRedirect': "We're taking you to WhatsApp to complete your request.",
     'form.emailRedirect': 'We’re opening your email client to complete your request.',
     'form.noChannel':
@@ -383,7 +413,7 @@ export const ui = {
 
     'services.title': 'Carpentry Services',
     'services.subtitle':
-      "We design and build custom carpentry solutions, tailored to each project's space, style and budget.",
+      'Tell us about your project and a carpenter in our area who specializes in that type of work will contact you.',
     'services.empty': "There aren't any services published yet.",
     'services.benefits': 'Benefits of this service',
     'services.process': 'How we handle this service',
@@ -408,7 +438,8 @@ export const ui = {
     'products.similar': 'Similar Products',
 
     'projects.title': 'Projects & Portfolio',
-    'projects.subtitle': 'A sample of custom carpentry work we’ve designed and built.',
+    'projects.subtitle':
+      "A sample of custom carpentry work completed by professionals we've connected with clients.",
     'projects.empty': "There aren't any projects published yet.",
     'projects.demoBadge': 'Example project',
     'projects.demoNoteFull':
@@ -417,7 +448,8 @@ export const ui = {
     'projects.beforeAfter': 'Before & After',
     'projects.gallery': 'Project Gallery',
     'projects.ctaTitle': 'Want a project like this one?',
-    'projects.ctaText': "Tell us your idea and we'll give you a no-obligation evaluation.",
+    'projects.ctaText':
+      "Tell us your idea and we'll connect you with the right carpenter, no strings attached.",
     'projects.moreProjects': 'More Projects',
     'projects.serviceUsed': 'Service Used',
     'projects.before': 'Before',
@@ -444,23 +476,41 @@ export const ui = {
     'notFound.subtitle':
       'The link may be broken or the page may have moved. Try one of these instead:',
 
-    'faq.home1.q': 'How do I request a quote?',
+    'faq.home1.q': 'Does telling you about my project cost anything?',
     'faq.home1.a':
-      "Fill out the quote form, message us on WhatsApp, or call us directly. Tell us what you need and we'll reach out to move forward with the evaluation.",
-    'faq.home2.q': 'Can I send photos of my project?',
+      "No. Telling us about your project through the form or WhatsApp is completely free — you don't pay anything for a carpenter to contact you.",
+    'faq.home2.q': 'Who does the work, CarpinteroPro or someone else?',
     'faq.home2.a':
-      'Yes. The quote form lets you attach photos, and you can also send them via WhatsApp or email so we have more context on your space.',
-    'faq.home3.q': 'Do you take on custom work?',
+      'The carpenter who contacts you. We only connect your project with trusted local professionals; the carpenter carries out the work directly.',
+    'faq.home3.q': 'Who sets the price?',
     'faq.home3.a':
-      "Yes, every project is designed around the client's real measurements, style and space needs.",
-    'faq.home4.q': 'How long does a project take?',
+      'You agree on the price and project details directly with the carpenter who contacts you, not with CarpinteroPro.',
+    'faq.home4.q': 'Can more than one carpenter contact me about the same project?',
     'faq.home4.a':
-      'It depends on the scope and complexity of each project. We give you a time estimate during the evaluation, before starting.',
-    'faq.home5.q': 'What information do you need to quote a project?',
+      'Yes, depending on availability. That way you can compare before deciding who to work with.',
+    'faq.home5.q': 'How do I request a quote?',
     'faq.home5.a':
-      'It helps a lot to have the space measurements, reference photos, the type of project, and any ideas or materials you already have in mind.',
-    'faq.home6.q': 'Do you handle residential and commercial projects?',
-    'faq.home6.a': 'Yes, we adapt the service for both residential and commercial projects.',
+      "Fill out the form or message us on WhatsApp telling us about your project. We share your request with the right carpenter, and they'll contact you directly to give you a quote.",
+    'faq.home6.q': 'Can I send photos of my project?',
+    'faq.home6.a':
+      'Yes — the more details and photos you share of the space, the faster and more accurate the carpenter contacting you will be.',
+    'faq.home7.q': 'What information do you need to connect my project with a carpenter?',
+    'faq.home7.a':
+      'The type of work (closet, kitchen, furniture, repair, etc.), approximate space measurements, reference photos if you have them, and your area or city.',
+    'faq.home8.q': 'How long does a project take?',
+    'faq.home8.a':
+      "The carpenter sets the fabrication and installation timeline based on your project's complexity, and will confirm it directly when they contact you.",
+    'faq.home9.q': 'Do you handle residential and commercial projects?',
+    'faq.home9.a':
+      'Yes, we connect both residential and commercial projects with the right carpenter.',
+    'faq.home10.q': 'Is the work guaranteed?',
+    'faq.home10.a':
+      'The warranty on the work is offered directly by the carpenter who does it; we recommend confirming it with them before agreeing to the project.',
+    'faq.home11.q': 'What areas do you have carpenters available in?',
+    'faq.home11.a': 'We currently connect projects in the Florida area.',
+    'faq.home12.q': 'Am I obligated to hire the carpenter who contacts me?',
+    'faq.home12.a':
+      "No. Telling us about your project doesn't obligate you to anything — you decide who to work with, or whether to move forward at all.",
   },
 } as const;
 

@@ -10,7 +10,6 @@ import PortfolioPreview from '@components/home/PortfolioPreview.astro';
 import ServiceAreas from '@components/home/ServiceAreas.astro';
 import Testimonials from '@components/home/Testimonials.astro';
 import LatestArticles from '@components/home/LatestArticles.astro';
-import HomeFAQ from '@components/home/HomeFAQ.astro';
 import FinalCTA from '@components/home/FinalCTA.astro';
 import QuoteCTA from '@components/mdx/QuoteCTA.astro';
 import { seoDefaults } from '@config/seo';
@@ -34,12 +33,11 @@ const description = seoDefaults.defaultDescriptionFor[locale];
     <QuoteCTA
       locale={locale}
       title="¿Quieres un proyecto como estos?"
-      text="Cuéntanos qué espacio quieres transformar y te damos una evaluación sin compromiso."
+      text="Cuéntanos qué espacio quieres transformar y te ponemos en contacto con el carpintero adecuado."
     />
   </div>
   <ServiceAreas locale={locale} />
   <Testimonials locale={locale} />
   <LatestArticles locale={locale} />
-  <HomeFAQ locale={locale} />
   <FinalCTA locale={locale} />
 </MainLayout>

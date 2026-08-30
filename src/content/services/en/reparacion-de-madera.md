@@ -1,7 +1,7 @@
 ---
 title: 'Wood Repair'
-shortDescription: 'Repair of furniture, doors and wood structures damaged by use, humidity or time.'
-description: 'We repair furniture, doors and wood structures with damage from daily use, impacts, humidity or wear, evaluating whether it makes more sense to repair or replace the piece.'
+shortDescription: 'Tell us what needs repairing and a carpenter who specializes in restoration will contact you.'
+description: 'Repair of furniture, doors and wood structures damaged by use, humidity or time. Tell us about your project and a local carpenter will contact you.'
 heroImage: '/images/services/reparacion-de-madera/hero-restauracion-acabado-madera.webp'
 heroImageAlt: 'Applying wood stain to boards with a brush'
 icon: 'repair'
@@ -10,26 +10,28 @@ benefits:
   - 'Repair of hinges, drawers, damaged surfaces and structure'
   - 'Finish restoration when possible'
 process:
-  - title: 'Damage evaluation'
-    description: 'We inspect the piece to determine the real extent of the damage.'
+  - title: 'Tell us what needs repairing'
+    description: 'Tell us about the damage and, if you can, share photos of the piece.'
+  - title: 'A carpenter contacts you'
+    description: 'We share your request with a restoration-specialist carpenter in your area; they contact you directly.'
   - title: 'Repair proposal'
-    description: 'We explain what can be repaired and what result to expect.'
+    description: 'The carpenter explains what can be repaired and what result to expect.'
   - title: 'Repair'
-    description: 'We carry out the repair and, if applicable, restore the finish.'
+    description: 'The carpenter carries out the repair and, if applicable, restores the finish.'
 faqs:
   - question: 'Do you repair any type of wood furniture?'
-    answer: 'We evaluate each case; some damage is repairable and other cases require replacing the piece. We give you an honest evaluation before starting.'
+    answer: 'The carpenter evaluates each case; some damage is repairable and other cases require replacing the piece. They give you an honest evaluation before starting.'
 relatedProducts: []
 relatedProjects: []
 relatedPosts: []
 featured: false
 order: 6
 seoTitle: 'Wood Repair | CarpinteroPro'
-seoDescription: 'Repair of furniture, doors and wood structures damaged by use, humidity or time. Request your evaluation.'
+seoDescription: 'Tell us what needs repairing and a trusted local carpenter in Florida will contact you.'
 ---
 
-Not every damaged piece of furniture needs to be replaced. Often a drawer that won't close, a loose hinge or a scratched surface has a solution without building a new piece.
+Not every damaged piece of furniture needs to be replaced. Often a drawer that won't close, a loose hinge or a scratched surface has a solution without building a new piece. Tell us what needs repairing, and we'll connect your request with a local carpenter who specializes in restoration.
 
-## What we evaluate
+## What gets evaluated
 
-We check the type of damage (structural, surface-level, hardware) and give you an honest recommendation: whether to repair, restore the finish, or if the repair cost is close to that of a new piece.
+The carpenter who contacts you checks the type of damage (structural, surface-level, hardware) and gives you an honest recommendation: whether to repair, restore the finish, or if the repair cost is close to that of a new piece.

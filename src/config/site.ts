@@ -26,8 +26,8 @@ export const langFor: Record<Locale, string> = {
 };
 
 export const defaultDescriptionFor: Record<Locale, string> = {
-  es: 'CarpinteroPro ofrece servicios de carpintería profesional y muebles a medida: closets, cocinas, gabinetes y proyectos personalizados en madera.',
-  en: 'CarpinteroPro provides professional carpentry services and custom furniture: closets, kitchens, cabinets and custom woodworking projects.',
+  es: 'Cuéntanos tu proyecto de carpintería a medida y te contacta directamente un carpintero profesional en Florida. Closets, cocinas, muebles y más, sin buscar contratista por tu cuenta.',
+  en: 'Tell us about your custom carpentry project and a professional carpenter in Florida will contact you directly. Closets, kitchens, furniture and more, without searching for a contractor on your own.',
 };
 
 /** Categorías de contenido iniciales para el blog y los hubs de contenido (/blog/category/[slug]).

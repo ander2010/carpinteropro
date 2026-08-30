@@ -42,6 +42,7 @@ export const getFooterNav = (
         { label: t('nav.about'), href: getLocalizedPath(locale, '/about') },
         { label: t('nav.projects'), href: getLocalizedPath(locale, '/projects') },
         { label: t('nav.blog'), href: getLocalizedPath(locale, '/blog') },
+        { label: t('nav.faq'), href: getLocalizedPath(locale, '/faq') },
         { label: t('nav.contact'), href: getLocalizedPath(locale, '/contact') },
       ],
     },

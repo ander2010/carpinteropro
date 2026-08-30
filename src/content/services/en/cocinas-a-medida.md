@@ -1,7 +1,7 @@
 ---
 title: 'Custom Kitchens'
-shortDescription: 'Design and fabrication of custom kitchens adapted to your space and the way you cook.'
-description: 'Custom kitchens, from individual cabinets to a full integrated kitchen, with a layout built around your daily workflow.'
+shortDescription: 'Tell us about your kitchen project and a carpenter experienced in full kitchens will contact you.'
+description: 'Custom kitchens, from individual cabinets to a full integrated kitchen. Tell us about your project and a local carpenter will contact you to coordinate layout, materials and pricing.'
 heroImage: '/images/services/cocinas-a-medida/hero-cocina-a-medida.webp'
 heroImageAlt: 'Modern kitchen with a wood-paneled island and bar stools'
 gallery:
@@ -14,19 +14,19 @@ benefits:
   - 'Material options resistant to moisture and daily use'
   - 'Finishes matched to countertop and appliances'
 process:
-  - title: 'Measuring'
-    description: 'We measure the space, including the location of electrical outlets, water and appliances.'
-  - title: 'Layout design'
-    description: 'We define the placement of cabinets, drawers and work zones.'
-  - title: 'Material selection'
-    description: 'We choose materials and finishes based on budget and use.'
+  - title: 'Tell us about your project'
+    description: 'Tell us about the available space, including the location of electrical outlets, water and appliances.'
+  - title: 'A carpenter contacts you'
+    description: 'We share your request with a kitchen-experienced carpenter in your area; they contact you directly.'
+  - title: 'Design and materials'
+    description: 'You and the carpenter define the placement of cabinets, drawers, work zones, and the materials based on budget and use.'
   - title: 'Fabrication and installation'
-    description: 'We build in the workshop and install, coordinating with other trades if needed.'
+    description: 'The carpenter builds in their workshop and installs, coordinating with other trades if needed.'
 faqs:
   - question: 'Do you only handle the cabinets, or the whole kitchen?'
-    answer: 'We can take care of just the carpentry cabinets, or coordinate the full project, depending on what you need.'
+    answer: 'The carpenter who contacts you can take care of just the carpentry cabinets, or coordinate the full project, depending on what you need.'
   - question: 'Can I keep my current appliances?'
-    answer: 'Yes, we design the cabinets around the measurements of your current appliances or the ones you plan to install.'
+    answer: 'Yes, the carpenter designs the cabinets around the measurements of your current appliances or the ones you plan to install.'
 relatedProducts:
   - 'cocinas-integrales'
   - 'gabinetes-de-cocina'
@@ -38,15 +38,15 @@ relatedPosts:
 featured: true
 order: 2
 seoTitle: 'Custom Kitchens | CarpinteroPro'
-seoDescription: 'Design and fabrication of custom kitchens: cabinets, layout and finishes adapted to your real space. Request your quote.'
+seoDescription: 'Tell us about your custom kitchen project and a trusted local carpenter in Florida will contact you. Cabinets, layout and finishes.'
 ---
 
-The kitchen is one of the spaces where it matters most that the design fits how you actually use it: where you store each thing, how much counter space you need, and how you move between the prep, cooking and cleanup zones.
+The kitchen is one of the spaces where it matters most that the design fits how you actually use it: where you store each thing, how much counter space you need, and how you move between the prep, cooking and cleanup zones. Tell us about your project once, and we'll connect your request with a local carpenter experienced in kitchens.
 
 ## What the service includes
 
-We design and build the upper and lower cabinets, define the interior layout (drawers, organizers, dedicated zones) and coordinate finishes so they match the countertop, floor and the rest of the kitchen.
+The carpenter who contacts you designs and builds the upper and lower cabinets, defines the interior layout with you (drawers, organizers, dedicated zones) and coordinates finishes so they match the countertop, floor and the rest of the kitchen.
 
 ## Materials and finishes
 
-For kitchens we recommend materials resistant to moisture and constant use. During the evaluation we show you the available options based on your budget, from melamine to combinations with solid wood in specific details.
+For kitchens, materials resistant to moisture and constant use are recommended. The carpenter will show you the available options based on your budget when they contact you, from melamine to combinations with solid wood in specific details.

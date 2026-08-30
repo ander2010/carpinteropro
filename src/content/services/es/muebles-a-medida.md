@@ -1,7 +1,7 @@
 ---
 title: 'Muebles a medida'
-shortDescription: 'Muebles diseñados y fabricados específicamente para tu espacio: estanterías, escritorios, centros de entretenimiento y más.'
-description: 'Cuando un mueble estándar no se ajusta a tu espacio o necesidad, diseñamos y fabricamos una pieza a medida: estanterías, escritorios, centros de entretenimiento, muebles de oficina y proyectos personalizados.'
+shortDescription: 'Cuéntanos qué mueble necesitas — estanterías, escritorios, centros de entretenimiento — y te contacta el carpintero adecuado.'
+description: 'Cuando un mueble estándar no se ajusta a tu espacio o necesidad, cuéntanos tu proyecto y te contacta un carpintero de la zona: estanterías, escritorios, centros de entretenimiento, muebles de oficina y proyectos personalizados.'
 heroImage: '/images/services/muebles-a-medida/hero-mueble-a-medida-detalle.webp'
 heroImageAlt: 'Detalle de mesa y silla de madera a medida'
 gallery:
@@ -13,17 +13,19 @@ benefits:
   - 'Posibilidad de combinar materiales y acabados'
   - 'Ideal para espacios con medidas atípicas'
 process:
-  - title: 'Conversación inicial'
-    description: 'Nos cuentas la idea, el uso que le darás al mueble y el espacio disponible.'
+  - title: 'Cuéntanos tu proyecto'
+    description: 'Cuéntanos la idea, el uso que le darás al mueble y el espacio disponible.'
+  - title: 'El carpintero adecuado te contacta'
+    description: 'Compartimos tu solicitud con un carpintero de tu zona según el tipo de mueble; él te contacta directamente.'
   - title: 'Diseño'
-    description: 'Proponemos una distribución y materiales acordes al proyecto.'
+    description: 'El carpintero te propone una distribución y materiales acordes al proyecto.'
   - title: 'Fabricación e instalación'
-    description: 'Fabricamos en taller y coordinamos la entrega o instalación.'
+    description: 'El carpintero fabrica en su taller y coordina contigo la entrega o instalación.'
 faqs:
   - question: '¿Qué tipo de muebles pueden fabricar?'
-    answer: 'Estanterías, escritorios, centros de entretenimiento, muebles de oficina y piezas personalizadas según el proyecto que tengas en mente.'
+    answer: 'Estanterías, escritorios, centros de entretenimiento, muebles de oficina y piezas personalizadas — cuéntanos tu proyecto y te contacta el carpintero adecuado según lo que tengas en mente.'
   - question: '¿Puedo traer una referencia o diseño propio?'
-    answer: 'Sí, puedes compartirnos fotos de referencia o una idea propia y evaluamos cómo adaptarla a tu espacio.'
+    answer: 'Sí, puedes compartirnos fotos de referencia o una idea propia; el carpintero que te contacte evalúa contigo cómo adaptarla a tu espacio.'
 relatedProducts:
   - 'centros-de-entretenimiento'
 relatedProjects: []
@@ -32,11 +34,11 @@ relatedPosts:
 featured: true
 order: 4
 seoTitle: 'Muebles a medida | CarpinteroPro'
-seoDescription: 'Muebles a medida para espacios con necesidades específicas: estanterías, escritorios, centros de entretenimiento y más. Solicita tu presupuesto.'
+seoDescription: 'Cuéntanos tu proyecto de mueble a medida y te contacta un carpintero de confianza de tu zona en Florida: estanterías, escritorios, centros de entretenimiento y más.'
 ---
 
-No todos los espacios se ajustan a los muebles que se consiguen en tiendas. Cuando el espacio tiene medidas atípicas, o simplemente quieres algo que no existe como producto estándar, un mueble a medida resuelve el problema.
+No todos los espacios se ajustan a los muebles que se consiguen en tiendas. Cuando el espacio tiene medidas atípicas, o simplemente quieres algo que no existe como producto estándar, un mueble a medida resuelve el problema. Cuéntanos tu proyecto una sola vez y conectamos tu solicitud con el carpintero adecuado de tu zona.
 
 ## Ejemplos de proyectos
 
-Estanterías para espacios estrechos o con desniveles, escritorios integrados a la pared, centros de entretenimiento adaptados al tamaño real del televisor y el mueble, o piezas puntuales para completar un ambiente.
+Estanterías para espacios estrechos o con desniveles, escritorios integrados a la pared, centros de entretenimiento adaptados al tamaño real del televisor y el mueble, o piezas puntuales para completar un ambiente — todos proyectos que carpinteros de nuestra zona han realizado a medida.

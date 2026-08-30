@@ -50,35 +50,49 @@ endpoint, el formulario solo abre WhatsApp o un `mailto:` prellenado (el
 abre el cliente de correo del visitante).
 
 Para hosting cPanel/FTP tradicional (el caso más común de este proyecto), el
-repositorio ya incluye `public/contact.php`: un script PHP autocontenido (sin
-Composer ni librerías externas) que recibe el formulario y envía el email con
-los adjuntos usando `mail()`. Pasos:
+repositorio ya incluye `public/contact.php`, que recibe el formulario y envía
+el email con los adjuntos por **SMTP autenticado** usando
+[PHPMailer](https://github.com/PHPMailer/PHPMailer) (código incluido en
+`public/lib/phpmailer/`, sin Composer). Usa SMTP y no la función `mail()` de
+PHP a propósito: `mail()` "acepta" el envío (devuelve `true`) pero en hosting
+compartido (Hostinger incluido — está documentado por ellos mismos) el correo
+casi nunca llega, porque sale sin autenticación SPF/DKIM y el servidor de
+destino lo descarta o lo manda a spam. Pasos:
 
-1. Antes de compilar, define en tu `.env`:
+1. Crea un buzón de correo real en tu hosting (en Hostinger: **hPanel →
+   Emails → Administrar → Crear cuenta de correo**), por ejemplo
+   `info@carpinteropro.com`.
+2. Copia `public/mail-config.example.php` a `public/mail-config.php` (mismo
+   directorio) y completa los datos reales: host SMTP, usuario (el buzón que
+   acabas de crear) y contraseña (**la del buzón, no la de tu cuenta de
+   Hostinger/hPanel**). Ver ese archivo para el detalle de puertos/cifrado.
+   `mail-config.php` está en `.gitignore` — nunca se sube a git, solo por
+   FTP/hPanel, para no exponer la contraseña en el repositorio (que es
+   público).
+3. En el `.env` usado para compilar el sitio, define:
    ```
    PUBLIC_CONTACT_ENDPOINT=/contact.php
    ```
-2. `npm run build` — `contact.php` se copia automáticamente a `dist/` (vive
-   en `public/`, que Astro copia tal cual).
-3. Sube el contenido de `dist/` como siempre; `contact.php` quedará
+4. `npm run build` — `contact.php`, `mail-config.php` y `lib/phpmailer/` se
+   copian automáticamente a `dist/` (viven en `public/`, que Astro copia tal
+   cual).
+5. Sube el contenido de `dist/` como siempre; `contact.php` quedará
    accesible en `https://carpinteropro.com/contact.php`.
-4. Verifica que el hosting tenga `mail()` habilitada (viene activa por
-   defecto en la inmensa mayoría de hostings cPanel/compartidos).
-5. Haz un envío de prueba real desde el formulario en producción y confirma
+6. Haz un envío de prueba real desde el formulario en producción y confirma
    que llega a `info@carpinteropro.com` (revisa también la carpeta de spam).
 
 Notas:
 
-- El destinatario (`info@carpinteropro.com`) y el remitente
-  (`no-reply@carpinteropro.com`) están definidos como constantes al inicio
-  de `public/contact.php`; edítalos ahí si cambian.
+- El destinatario (`info@carpinteropro.com`) está definido como constante al
+  inicio de `public/contact.php`; edítalo ahí si cambia. El remitente es el
+  buzón SMTP configurado en `mail-config.php`.
 - Límites de adjuntos: hasta 5 fotos, 5 MB cada una, 15 MB en total. Si el
   hosting rechaza subidas de ese tamaño, sube el límite de PHP
   (`upload_max_filesize` / `post_max_size`) vía `.htaccess` o el panel de
   cPanel.
-- Si los correos no llegan o caen en spam, casi siempre es un tema de
-  configuración SPF/DKIM del dominio en el panel de DNS del hosting, no del
-  script en sí.
+- Si el envío falla, revisa que las credenciales en `mail-config.php` sean
+  correctas y que el puerto/cifrado coincidan (465+SSL o 587+TLS); si sigue
+  sin llegar, revisa spam antes de asumir que es un problema del script.
 - Si en vez de cPanel despliegas en Netlify o Vercel, `contact.php` no
   aplica (no hay PHP): usa Netlify Forms o un servicio externo como
   Formspree/Web3Forms (casi siempre de pago para adjuntar archivos) y apunta

@@ -1,33 +1,42 @@
 <?php
 /**
  * contact.php — recibe el envío del formulario de presupuesto (QuoteForm) y
- * manda un email con el resumen y las fotos adjuntas a TO_EMAIL.
+ * manda un email con el resumen y las fotos adjuntas a TO_EMAIL, usando SMTP
+ * autenticado (vía PHPMailer) en vez de mail() nativo.
  *
- * No requiere Composer ni librerías externas: usa mail() (disponible en
- * prácticamente cualquier hosting cPanel/compartido) y construye a mano el
- * mensaje MIME multipart/mixed para poder adjuntar archivos.
+ * mail() nativo no es fiable en hosting compartido: el hosting lo "acepta"
+ * (mail() devuelve true) pero el correo no llega, porque sale sin
+ * autenticación SPF/DKIM y el servidor de destino lo descarta o lo manda a
+ * spam (así ocurre en Hostinger, confirmado en su propia documentación).
+ * Por eso este script se autentica con un buzón real de tu dominio por SMTP.
  *
- * Para activarlo:
- *   1. Sube este archivo junto al resto del sitio (ya viaja dentro de dist/
- *      porque vive en public/, así que "npm run build" + subir dist/ es
- *      suficiente).
- *   2. En el .env usado para compilar el sitio, define:
- *        PUBLIC_CONTACT_ENDPOINT=/contact.php
- *   3. Verifica que el hosting tenga mail() habilitado (la mayoría de
- *      hostings cPanel lo traen activo por defecto).
+ * Requisitos para activarlo:
+ *   1. Crear un buzón real en tu hosting (en Hostinger: hPanel → Emails →
+ *      Administrar → Crear cuenta de correo), ej. info@carpinteropro.com.
+ *   2. Copiar public/mail-config.example.php a public/mail-config.php y
+ *      completar host/usuario/contraseña reales de SMTP (ver ese archivo).
+ *      mail-config.php NO se sube a git — solo por FTP/hPanel.
+ *   3. PUBLIC_CONTACT_ENDPOINT=/contact.php en el .env usado para compilar
+ *      el sitio.
  *
- * Si los correos llegan a spam, lo más probable es que falte configurar
- * SPF/DKIM para el dominio en el panel de DNS del hosting.
+ * Usa PHPMailer (public/lib/phpmailer/, incluido en el repo tal cual desde
+ * https://github.com/PHPMailer/PHPMailer — sin Composer).
  */
 
 declare(strict_types=1);
+
+require __DIR__ . '/lib/phpmailer/Exception.php';
+require __DIR__ . '/lib/phpmailer/PHPMailer.php';
+require __DIR__ . '/lib/phpmailer/SMTP.php';
+
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use PHPMailer\PHPMailer\PHPMailer;
 
 // -----------------------------------------------------------------------
 // Configuración — ajusta estos valores si cambian los datos del negocio.
 // -----------------------------------------------------------------------
 const TO_EMAIL = 'info@carpinteropro.com';
-const FROM_EMAIL = 'no-reply@carpinteropro.com'; // Debe ser un email del mismo dominio del sitio.
-const FROM_NAME = 'CarpinteroPro — Sitio web';
+const SITE_NAME = 'CarpinteroPro — Sitio web';
 const SITE_ORIGIN = 'https://carpinteropro.com';
 
 const MAX_FILES = 5;
@@ -55,6 +64,12 @@ function respond(int $status, array $payload): void
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, ['success' => false, 'error' => 'method_not_allowed']);
 }
+
+$mailConfigPath = __DIR__ . '/mail-config.php';
+if (!is_file($mailConfigPath)) {
+    respond(500, ['success' => false, 'error' => 'mail_config_missing']);
+}
+require $mailConfigPath;
 
 // Solo aceptamos envíos que vengan del propio sitio (evita que este script
 // se use como relay de correo desde cualquier otra web).
@@ -141,7 +156,8 @@ if ($preferredContact !== []) {
 $body = implode("\n\n", $lines);
 
 // -----------------------------------------------------------------------
-// Adjuntos (input file con name="photos[]")
+// Adjuntos (input file con name="photos[]") — se valida cada archivo y se
+// deja la ruta temporal lista; PHPMailer se encarga de leerlos y adjuntarlos.
 // -----------------------------------------------------------------------
 $attachments = [];
 $totalBytes = 0;
@@ -192,63 +208,54 @@ if (isset($_FILES['photos']) && is_array($_FILES['photos']['name'] ?? null)) {
             respond(422, ['success' => false, 'error' => 'attachments_too_large']);
         }
 
-        $content = file_get_contents($tmpPath);
-        if ($content === false) {
-            respond(500, ['success' => false, 'error' => 'read_failed']);
-        }
-
         $attachments[] = [
+            'path' => $tmpPath,
             'filename' => 'foto-' . ($i + 1) . '.' . ALLOWED_MIME_TYPES[$mime],
             'mime' => $mime,
-            'content' => $content,
         ];
     }
 }
 
 // -----------------------------------------------------------------------
-// Construcción y envío del email (MIME multipart/mixed hecho a mano)
+// Envío por SMTP autenticado (PHPMailer)
 // -----------------------------------------------------------------------
-function encodeHeader(string $value): string
-{
-    return '=?UTF-8?B?' . base64_encode($value) . '?=';
-}
+$mail = new PHPMailer(true);
 
-if (!function_exists('mail')) {
-    respond(500, ['success' => false, 'error' => 'mail_not_available']);
-}
+try {
+    $mail->isSMTP();
+    $mail->Host = SMTP_HOST;
+    $mail->SMTPAuth = true;
+    $mail->Username = SMTP_USER;
+    $mail->Password = SMTP_PASSWORD;
+    $mail->SMTPSecure = SMTP_SECURE === 'tls' ? PHPMailer::ENCRYPTION_STARTTLS : PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port = SMTP_PORT;
+    $mail->CharSet = PHPMailer::CHARSET_UTF8;
 
-$subjectRaw = 'Nueva solicitud de presupuesto' . ($context !== '' ? " — {$context}" : '') . " — {$name}";
-$subject = encodeHeader($subjectRaw);
+    // El "From" debe coincidir con el buzón autenticado: la mayoría de
+    // servidores SMTP (incluido Hostinger) rechazan o marcan como spam un
+    // From distinto de la cuenta que se autentica.
+    $mail->setFrom(SMTP_USER, SITE_NAME);
+    $mail->addAddress(TO_EMAIL);
+    if ($replyToEmail !== null) {
+        $mail->addReplyTo($replyToEmail, $name !== '' ? $name : $replyToEmail);
+    }
 
-$boundary = 'CPRO-' . bin2hex(random_bytes(16));
+    $mail->Subject =
+        'Nueva solicitud de presupuesto' . ($context !== '' ? " — {$context}" : '') . " — {$name}";
+    $mail->isHTML(false);
+    $mail->Body = $body;
 
-$headers = [];
-$headers[] = 'MIME-Version: 1.0';
-$headers[] = 'From: ' . encodeHeader(FROM_NAME) . ' <' . FROM_EMAIL . '>';
-if ($replyToEmail !== null) {
-    $replyDisplay = $name !== '' ? encodeHeader($name) . ' <' . $replyToEmail . '>' : $replyToEmail;
-    $headers[] = 'Reply-To: ' . $replyDisplay;
-}
-$headers[] = 'Content-Type: multipart/mixed; boundary="' . $boundary . '"';
+    foreach ($attachments as $attachment) {
+        $mail->addAttachment(
+            $attachment['path'],
+            $attachment['filename'],
+            PHPMailer::ENCODING_BASE64,
+            $attachment['mime'],
+        );
+    }
 
-$message = "--{$boundary}\r\n";
-$message .= "Content-Type: text/plain; charset=UTF-8\r\n";
-$message .= "Content-Transfer-Encoding: base64\r\n\r\n";
-$message .= chunk_split(base64_encode($body));
-
-foreach ($attachments as $attachment) {
-    $message .= "--{$boundary}\r\n";
-    $message .= "Content-Type: {$attachment['mime']}; name=\"{$attachment['filename']}\"\r\n";
-    $message .= "Content-Transfer-Encoding: base64\r\n";
-    $message .= "Content-Disposition: attachment; filename=\"{$attachment['filename']}\"\r\n\r\n";
-    $message .= chunk_split(base64_encode($attachment['content']));
-}
-
-$message .= "--{$boundary}--";
-
-$sent = mail(TO_EMAIL, $subject, $message, implode("\r\n", $headers));
-
-if (!$sent) {
+    $mail->send();
+} catch (PHPMailerException $e) {
     respond(500, ['success' => false, 'error' => 'send_failed']);
 }
 

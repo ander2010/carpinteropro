@@ -260,11 +260,14 @@ se carga ningún script de analítica.
 
 1. Si `PUBLIC_CONTACT_ENDPOINT` está definido en `.env`, envía los datos
    (incluidas fotos) como `FormData` a ese endpoint. Por defecto apunta a
-   `public/contact.php`, incluido en el repo: un script PHP sin dependencias
-   que envía por email el resumen completo con las fotos adjuntas a
-   `info@carpinteropro.com` (funciona en cualquier hosting cPanel/compartido
-   con `mail()` habilitado). También puede apuntarse a un servicio externo
-   (Formspree, Web3Forms, Getform, un webhook propio, etc.).
+   `public/contact.php`, incluido en el repo: envía por email el resumen
+   completo con las fotos adjuntas a `info@carpinteropro.com` usando SMTP
+   autenticado (PHPMailer, incluido en `public/lib/phpmailer/`) en vez de
+   `mail()` nativo — `mail()` no entrega de forma confiable en hosting
+   compartido. Requiere un buzón real y `public/mail-config.php` con sus
+   credenciales (ver `DEPLOYMENT.md`, sección "Formulario de contacto").
+   También puede apuntarse a un servicio externo (Formspree, Web3Forms,
+   Getform, un webhook propio, etc.).
 2. Si no hay endpoint pero sí WhatsApp configurado, abre WhatsApp con un
    resumen de la solicitud.
 3. Si tampoco hay WhatsApp pero sí email, abre un `mailto:` prellenado (sin

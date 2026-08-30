@@ -17,6 +17,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# credenciales SMTP reales del formulario de contacto (ver public/mail-config.example.php)
+public/mail-config.php
+
 # macOS
 .DS_Store
 

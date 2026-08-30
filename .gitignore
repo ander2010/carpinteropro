@@ -27,3 +27,6 @@ pnpm-debug.log*
 
 # pagefind search index (generated at build time)
 public/pagefind/
+
+# zona de trabajo local para borradores de artículos (ver content-drafts/blog/LEEME.md)
+content-drafts/

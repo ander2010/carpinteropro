@@ -175,7 +175,7 @@ const contactMethods = t('form.contactMethods').split(',');
       <input
         type="file"
         id={`${id}-photos`}
-        name="photos"
+        name="photos[]"
         accept="image/*"
         multiple
         class="text-ink-700 file:bg-ink-950 file:text-paper-50 hover:file:bg-ink-800 block w-full text-sm file:mr-4 file:rounded-full file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold"
@@ -191,11 +191,11 @@ const contactMethods = t('form.contactMethods').split(',');
           contactMethods.map((method, i) => (
             <label class="text-ink-700 flex items-center gap-2 text-sm">
               <input
-                type="radio"
-                name="preferredContact"
+                type="checkbox"
+                name="preferredContact[]"
                 value={method}
                 checked={i === 0}
-                class="border-ink-900/25 text-brand-600 focus:ring-brand-500"
+                class="border-ink-900/25 text-brand-600 focus:ring-brand-500 rounded"
               />
               {method}
             </label>
@@ -281,8 +281,18 @@ const contactMethods = t('form.contactMethods').split(',');
         const phoneLabel = locale === 'es' ? 'Teléfono' : 'Phone';
         const typeLabel = locale === 'es' ? 'Tipo de proyecto' : 'Project type';
         const locationLabel = locale === 'es' ? 'Ubicación' : 'Location';
+        const dateLabel = locale === 'es' ? 'Fecha aproximada' : 'Preferred date';
         const budgetLabel = locale === 'es' ? 'Presupuesto' : 'Budget';
         const descriptionLabel = locale === 'es' ? 'Descripción' : 'Description';
+        const contactLabel =
+          locale === 'es' ? 'Método de contacto preferido' : 'Preferred contact method';
+        const photosLabel = locale === 'es' ? 'Fotos adjuntas' : 'Attached photos';
+
+        const preferredContacts = data
+          .getAll('preferredContact[]')
+          .map((v) => String(v))
+          .filter(Boolean);
+        const photoCount = (data.getAll('photos[]') as File[]).filter((f) => f.size > 0).length;
 
         const parts = [
           context ? `${projectLabel}: ${context}` : '',
@@ -291,8 +301,11 @@ const contactMethods = t('form.contactMethods').split(',');
           data.get('email') ? `Email: ${data.get('email')}` : '',
           data.get('projectType') ? `${typeLabel}: ${data.get('projectType')}` : '',
           data.get('location') ? `${locationLabel}: ${data.get('location')}` : '',
+          data.get('preferredDate') ? `${dateLabel}: ${data.get('preferredDate')}` : '',
           data.get('budget') ? `${budgetLabel}: ${data.get('budget')}` : '',
           `${descriptionLabel}: ${data.get('description') ?? ''}`,
+          preferredContacts.length ? `${contactLabel}: ${preferredContacts.join(', ')}` : '',
+          photoCount > 0 ? `${photosLabel}: ${photoCount}` : '',
         ].filter(Boolean);
         return parts.join('\n');
       };

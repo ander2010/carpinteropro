@@ -259,15 +259,24 @@ se carga ningún script de analítica.
 (Home, Services, Products, Blog, Contact). Su comportamiento de envío:
 
 1. Si `PUBLIC_CONTACT_ENDPOINT` está definido en `.env`, envía los datos
-   (incluidas fotos) como `FormData` a ese endpoint externo (Formspree,
-   Getform, un webhook propio, etc.).
+   (incluidas fotos) como `FormData` a ese endpoint. Por defecto apunta a
+   `public/contact.php`, incluido en el repo: un script PHP sin dependencias
+   que envía por email el resumen completo con las fotos adjuntas a
+   `info@carpinteropro.com` (funciona en cualquier hosting cPanel/compartido
+   con `mail()` habilitado). También puede apuntarse a un servicio externo
+   (Formspree, Web3Forms, Getform, un webhook propio, etc.).
 2. Si no hay endpoint pero sí WhatsApp configurado, abre WhatsApp con un
    resumen de la solicitud.
-3. Si tampoco hay WhatsApp pero sí email, abre un `mailto:` prellenado.
+3. Si tampoco hay WhatsApp pero sí email, abre un `mailto:` prellenado (sin
+   adjuntos: `mailto:` no puede enviar archivos).
 4. Si no hay ningún canal configurado, se lo indica al visitante (estado
    previo al lanzamiento).
 
-Ver `.env.example` para más detalle.
+El método de contacto preferido (WhatsApp/Llamada/Email) admite selección
+múltiple (checkboxes), no una sola opción.
+
+Ver `.env.example` y `DEPLOYMENT.md` (sección "Formulario de contacto") para
+más detalle.
 
 ## Documentación relacionada
 
@@ -300,6 +309,6 @@ completa lo siguiente:
 | Testimonios reales                            | `src/data/testimonials.ts` (vacío por defecto)                                                                                                                |
 | Servicios y productos reales                  | Revisar/editar `src/content/services/` y `src/content/products/` — los incluidos son un punto de partida realista, no una lista cerrada                       |
 | Proyectos reales del portfolio                | Sustituir los dos proyectos `demo: true` en `src/content/projects/` por casos reales (o eliminarlos)                                                          |
-| Endpoint del formulario de contacto           | `.env` → `PUBLIC_CONTACT_ENDPOINT`                                                                                                                            |
+| Endpoint del formulario de contacto           | `.env` → `PUBLIC_CONTACT_ENDPOINT` (por defecto `/contact.php`, incluido en `public/`)                                                                        |
 | IDs de analítica (opcional)                   | `.env` → `PUBLIC_GA_ID` / `PUBLIC_GTM_ID`                                                                                                                     |
 | Dominio de producción                         | Ya configurado como `https://carpinteropro.com` en `astro.config.mjs` y `src/config/business.ts` — actualízalo si cambia                                      |

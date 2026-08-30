@@ -2,13 +2,18 @@
 // QuoteForm — formulario de presupuesto reutilizable.
 // Se puede insertar en Home, Services, Products, Blog y Contact.
 //
-// Comportamiento de envío (progresivo, ver <script> al final):
-// 1. Si PUBLIC_CONTACT_ENDPOINT está configurado (.env), se envía por fetch()
-//    como FormData (soporta adjuntar fotos) al endpoint externo.
-// 2. Si no hay endpoint pero sí WhatsApp configurado, se abre WhatsApp con un
-//    mensaje generado a partir de los datos del formulario.
-// 3. Si tampoco hay WhatsApp pero sí email, se abre un mailto: prellenado.
-// 4. Si no hay ningún canal configurado, se muestra un aviso (estado pre-lanzamiento).
+// Comportamiento de envío (ver <script> al final):
+// Se envía por fetch() como FormData (soporta adjuntar fotos) al endpoint en
+// PUBLIC_CONTACT_ENDPOINT (.env), o a '/contact.php' si esa variable no está
+// definida en el build. El valor por defecto es intencional: algunos
+// pipelines de deploy (ej. Git auto-deploy) no leen el .env local — que
+// nunca se sube a git —, así que sin este default el formulario quedaría
+// sin endpoint configurado aunque contact.php sí exista en el servidor.
+//
+// Los fallbacks de WhatsApp/mailto (ver más abajo en el <script>) solo se
+// usan si en el futuro se decide no tener endpoint (editando el valor por
+// defecto de data-endpoint aquí abajo); hoy el formulario siempre intenta
+// el fetch primero.
 import { business, hasWhatsApp, hasEmail } from '@config/business';
 import { useTranslations, type Locale } from '@i18n/utils';
 
@@ -44,7 +49,7 @@ const contactMethods = t('form.contactMethods').split(',');
   <form
     data-quote-form
     data-locale={locale}
-    data-endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT ?? ''}
+    data-endpoint={import.meta.env.PUBLIC_CONTACT_ENDPOINT || '/contact.php'}
     data-whatsapp-enabled={hasWhatsApp()}
     data-whatsapp-number={business.whatsapp}
     data-email-enabled={hasEmail()}

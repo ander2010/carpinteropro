@@ -42,44 +42,58 @@ npm run preview
 
 ## 3. Formulario de contacto (envío real de email con adjuntos)
 
-El formulario de presupuesto (`QuoteForm`) necesita un `PUBLIC_CONTACT_ENDPOINT`
-configurado para poder enviar un email de verdad (con las fotos adjuntas) a
-`info@carpinteropro.com` cuando alguien pulsa "Enviar solicitud". Sin ese
-endpoint, el formulario solo abre WhatsApp o un `mailto:` prellenado (el
-`mailto:` **no puede** adjuntar archivos ni enviar nada automáticamente: solo
-abre el cliente de correo del visitante).
-
-Para hosting cPanel/FTP tradicional (el caso más común de este proyecto), el
-repositorio ya incluye `public/contact.php`, que recibe el formulario y envía
-el email con los adjuntos por **SMTP autenticado** usando
+El formulario de presupuesto (`QuoteForm`) envía por defecto a `/contact.php`
+(no hace falta configurar `PUBLIC_CONTACT_ENDPOINT`; ese es el valor por
+defecto embebido en el código si la variable no está definida en el build).
+`contact.php` manda un email de verdad, con las fotos adjuntas, a
+`info@carpinteropro.com`, por **SMTP autenticado** usando
 [PHPMailer](https://github.com/PHPMailer/PHPMailer) (código incluido en
 `public/lib/phpmailer/`, sin Composer). Usa SMTP y no la función `mail()` de
 PHP a propósito: `mail()` "acepta" el envío (devuelve `true`) pero en hosting
 compartido (Hostinger incluido — está documentado por ellos mismos) el correo
 casi nunca llega, porque sale sin autenticación SPF/DKIM y el servidor de
-destino lo descarta o lo manda a spam. Pasos:
+destino lo descarta o lo manda a spam.
 
-1. Crea un buzón de correo real en tu hosting (en Hostinger: **hPanel →
-   Emails → Administrar → Crear cuenta de correo**), por ejemplo
-   `info@carpinteropro.com`.
-2. Copia `public/mail-config.example.php` a `public/mail-config.php` (mismo
-   directorio) y completa los datos reales: host SMTP, usuario (el buzón que
-   acabas de crear) y contraseña (**la del buzón, no la de tu cuenta de
-   Hostinger/hPanel**). Ver ese archivo para el detalle de puertos/cifrado.
-   `mail-config.php` está en `.gitignore` — nunca se sube a git, solo por
-   FTP/hPanel, para no exponer la contraseña en el repositorio (que es
-   público).
-3. En el `.env` usado para compilar el sitio, define:
-   ```
-   PUBLIC_CONTACT_ENDPOINT=/contact.php
-   ```
-4. `npm run build` — `contact.php`, `mail-config.php` y `lib/phpmailer/` se
-   copian automáticamente a `dist/` (viven en `public/`, que Astro copia tal
-   cual).
-5. Sube el contenido de `dist/` como siempre; `contact.php` quedará
-   accesible en `https://carpinteropro.com/contact.php`.
-6. Haz un envío de prueba real desde el formulario en producción y confirma
-   que llega a `info@carpinteropro.com` (revisa también la carpeta de spam).
+Falta un solo paso manual, que **no se puede automatizar por git**: crear
+`mail-config.php` con las credenciales SMTP reales. Ese archivo está en
+`.gitignore` a propósito (no se debe exponer una contraseña en un
+repositorio público) — pero justo por eso hay que subirlo aparte, y el
+**dónde** depende de cómo despliegas:
+
+### Si usas Git auto-deploy (hPanel → Advanced/Avanzado → Git)
+
+Ese deploy **reemplaza por completo** el contenido de la carpeta pública en
+cada push — cualquier archivo que subas ahí a mano (esté o no en git)
+desaparece en el siguiente `git push`. Por eso `contact.php` busca
+`mail-config.php` primero **un nivel arriba** de la carpeta pública (fuera de
+lo que el deploy reemplaza) y, si no está ahí, dentro de la carpeta pública
+como respaldo.
+
+1. Crea un buzón de correo real en hPanel → **Emails → Administrar → Crear
+   cuenta de correo** (ej. `info@carpinteropro.com`).
+2. Copia `public/mail-config.example.php`, complétalo con los datos reales
+   (host SMTP, el buzón que acabas de crear como usuario, y **la contraseña
+   de ese buzón** — no la de tu cuenta de Hostinger/hPanel) y guárdalo como
+   `mail-config.php`.
+3. En hPanel → **Administrador de archivos**, sube ese archivo a la carpeta
+   **padre** de la carpeta que Git despliega (si el deploy target es
+   `public_html/`, el archivo va un nivel arriba de `public_html/`, no
+   dentro).
+4. Haz push a `main` (o espera el deploy en curso) y prueba el formulario en
+   producción.
+
+### Si compilas tú y subes `dist/` por FTP manual
+
+Aquí no hay riesgo de que un deploy automático borre nada, así que es más
+simple:
+
+1. Igual que arriba: crea el buzón y completa `mail-config.php` a partir de
+   `public/mail-config.example.php`.
+2. Colócalo dentro de `public/` (junto a `contact.php`) **antes** de correr
+   `npm run build` — se copia solo a `dist/` porque Astro copia `public/` tal
+   cual (y sigue sin subirse a git).
+3. `npm run build` y sube el contenido de `dist/` como siempre.
+4. Prueba el formulario en producción.
 
 Notas:
 
@@ -128,9 +142,13 @@ PUBLIC_GA_ID=
 PUBLIC_GTM_ID=
 ```
 
-Ninguna es obligatoria para que el sitio compile y funcione: si faltan, el
-formulario usa el fallback de WhatsApp/email y no se carga analítica (ver
-README). Para el envío real de email con adjuntos, ver la sección 3 de arriba.
+Ninguna es obligatoria: `PUBLIC_CONTACT_ENDPOINT` ya vale `/contact.php` por
+defecto aunque no exista `.env` en el entorno que compila el sitio (útil para
+pipelines de deploy que no leen `.env`, como el Git auto-deploy de hPanel);
+solo hace falta definirla si quieres apuntar a otro endpoint distinto. Sin
+`PUBLIC_GA_ID`/`PUBLIC_GTM_ID` simplemente no se carga analítica. El envío
+real de email con adjuntos sí requiere un paso manual aparte (`mail-config.php`
+con credenciales SMTP) — ver la sección 3 de arriba.
 
 ## 7. Después de desplegar
 

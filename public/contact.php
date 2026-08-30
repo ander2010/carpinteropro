@@ -65,8 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, ['success' => false, 'error' => 'method_not_allowed']);
 }
 
-$mailConfigPath = __DIR__ . '/mail-config.php';
-if (!is_file($mailConfigPath)) {
+// Se busca primero UN NIVEL ARRIBA de esta carpeta (fuera de lo que el
+// deploy de Git reemplaza en cada push) y, si no está ahí, dentro de esta
+// misma carpeta (útil para FTP manual, donde no hay ese problema).
+$mailConfigCandidates = [__DIR__ . '/../mail-config.php', __DIR__ . '/mail-config.php'];
+$mailConfigPath = null;
+foreach ($mailConfigCandidates as $candidate) {
+    if (is_file($candidate)) {
+        $mailConfigPath = $candidate;
+        break;
+    }
+}
+if ($mailConfigPath === null) {
     respond(500, ['success' => false, 'error' => 'mail_config_missing']);
 }
 require $mailConfigPath;

@@ -2,10 +2,22 @@
 /**
  * Plantilla de credenciales SMTP para public/contact.php.
  *
- * Copia este archivo como "mail-config.php" (misma carpeta) y completa los
- * valores reales. mail-config.php NO se sube a git (ver .gitignore): se
- * sube solo por FTP / hPanel junto al resto de public/, para no exponer la
+ * Copia este archivo como "mail-config.php" y completa los valores reales.
+ * mail-config.php NO se sube a git (ver .gitignore), para no exponer la
  * contraseña en un repositorio público.
+ *
+ * DÓNDE SUBIRLO — importante si usas el deploy automático de Git de hPanel:
+ * ese deploy REEMPLAZA por completo el contenido de la carpeta pública en
+ * cada push (borra cualquier archivo que hayas subido a mano ahí, esté o no
+ * en git). contact.php busca este archivo primero UN NIVEL ARRIBA de la
+ * carpeta pública (fuera de lo que el deploy reemplaza) y, si no lo
+ * encuentra ahí, dentro de la carpeta pública. Así que:
+ *   - Con Git auto-deploy en hPanel: sube "mail-config.php" a la carpeta
+ *     PADRE de la carpeta pública (ej. si el sitio se sirve desde
+ *     .../public_html/, súbelo a .../ — un nivel arriba de public_html).
+ *   - Con FTP manual (subiendo dist/ tú mismo): puedes subirlo dentro de la
+ *     misma carpeta pública, junto a contact.php; ahí no hay riesgo de que
+ *     un deploy automático lo borre.
  *
  * mail() nativo de PHP no entrega de forma confiable en hosting compartido
  * (Hostinger y la mayoría de hostings modernos lo filtran por falta de

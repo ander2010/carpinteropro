@@ -1,8 +1,8 @@
 ---
 title: 'Cocina integral a medida (proyecto de ejemplo)'
 description: 'Ejemplo de cocina integral a medida, con gabinetes superiores e inferiores, pensado para ilustrar la estructura de una ficha de proyecto.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Cocina integral a medida — proyecto de ejemplo'
+heroImage: '/images/projects/cocina-integral-demo/hero-cocina-integral-terminada.webp'
+heroImageAlt: 'Cocina integral terminada con gabinetes blancos y cajón extraíble con ollas'
 gallery:
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Gabinetes superiores de la cocina de ejemplo'

@@ -1,8 +1,8 @@
 ---
 title: 'Custom Integrated Kitchen (example project)'
 description: 'An example custom integrated kitchen, with upper and lower cabinets, meant to illustrate the structure of a portfolio entry.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Custom integrated kitchen — example project'
+heroImage: '/images/projects/cocina-integral-demo/hero-cocina-integral-terminada.webp'
+heroImageAlt: 'Finished integrated kitchen with white cabinets and a pull-out drawer with pots'
 gallery:
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Upper cabinets of the example kitchen'

@@ -2,11 +2,8 @@
 title: 'Gabinetes y muebles de baño'
 shortDescription: 'Vanities y gabinetes de baño a medida, resistentes a la humedad y adaptados a tu espacio.'
 description: 'Fabricamos vanities y muebles de baño a medida, con materiales pensados para ambientes húmedos y distribución interior útil para tu rutina diaria.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Vanity de baño a medida — imagen de referencia'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Vanity de baño con gabinetes a medida'
+heroImage: '/images/services/gabinetes-y-muebles-de-bano/hero-gabinete-bano-cajon-toallas.webp'
+heroImageAlt: 'Gabinete de baño a medida con cajón abierto mostrando toallas y productos de higiene organizados'
 icon: 'bathroom'
 benefits:
   - 'Materiales resistentes a la humedad del baño'

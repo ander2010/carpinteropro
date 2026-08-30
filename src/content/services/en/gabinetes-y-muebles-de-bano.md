@@ -2,11 +2,8 @@
 title: 'Bathroom Cabinets & Furniture'
 shortDescription: 'Custom vanities and bathroom cabinets, moisture-resistant and built for your space.'
 description: 'We build custom vanities and bathroom furniture, with materials designed for humid environments and an interior layout suited to your daily routine.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Custom bathroom vanity — reference image'
-gallery:
-  - src: '/images/placeholders/placeholder-1x1.svg'
-    alt: 'Bathroom vanity with custom cabinets'
+heroImage: '/images/services/gabinetes-y-muebles-de-bano/hero-gabinete-bano-cajon-toallas.webp'
+heroImageAlt: 'Custom bathroom cabinet with an open drawer showing organized towels and toiletries'
 icon: 'bathroom'
 benefits:
   - 'Materials resistant to bathroom humidity'

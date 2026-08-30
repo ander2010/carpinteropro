@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-label="CarpinteroPro">
-  <rect x="0" y="4" width="56" height="56" rx="12" fill="#F8F3EA"/>
-  <path d="M12 44 L28 16 L44 44 Z" stroke="#B17434" stroke-width="3.2" stroke-linejoin="round" fill="none"/>
-  <path d="M19 44 L28 28 L37 44" stroke="#1D1912" stroke-width="3.2" stroke-linejoin="round" fill="none"/>
-  <text x="70" y="40" font-family="Georgia, 'Fraunces', serif" font-size="28" font-weight="600" fill="#F8F3EA">Carpintero<tspan fill="#D9A35F">Pro</tspan></text>
-</svg>

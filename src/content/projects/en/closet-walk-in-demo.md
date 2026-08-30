@@ -1,8 +1,8 @@
 ---
 title: 'Custom Walk-In Closet (example project)'
 description: 'An example custom walk-in closet, with hanging zones, drawers and open shelving, meant to illustrate the structure of a portfolio entry.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Custom walk-in closet — example project'
+heroImage: '/images/projects/closet-walk-in-demo/hero-walkin-closet-vestidor-completo.webp'
+heroImageAlt: 'Finished walk-in closet with double-hang, open shelving and a center island with drawers'
 gallery:
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Hanging zone of the example walk-in closet'

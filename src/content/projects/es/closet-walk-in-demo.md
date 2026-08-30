@@ -1,8 +1,8 @@
 ---
 title: 'Walk-in closet a medida (proyecto de ejemplo)'
 description: 'Ejemplo de walk-in closet a medida, con zonas de colgado, cajonería y estantería abierta, pensado para ilustrar la estructura de una ficha de proyecto.'
-heroImage: '/images/placeholders/placeholder-16x9.svg'
-heroImageAlt: 'Walk-in closet a medida — proyecto de ejemplo'
+heroImage: '/images/projects/closet-walk-in-demo/hero-walkin-closet-vestidor-completo.webp'
+heroImageAlt: 'Walk-in closet terminado con colgado doble, estantería abierta e isla central con cajonería'
 gallery:
   - src: '/images/placeholders/placeholder-1x1.svg'
     alt: 'Zona de colgado del walk-in closet de ejemplo'

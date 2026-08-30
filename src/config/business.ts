@@ -119,15 +119,21 @@ export const business: BusinessConfig = {
   tagline: null,
   domain: 'https://carpinteropro.com',
 
-  phone: '',
-  phoneDisplay: '',
-  whatsapp: '',
-  email: '',
+  phone: '+17282077911',
+  phoneDisplay: '(728) 207-7911',
+  whatsapp: '17282077911',
+  email: 'info@carpinteropro.com',
 
   address: null,
   geo: null,
 
-  openingHours: [],
+  openingHours: [
+    {
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '00:00',
+      closes: '23:59',
+    },
+  ],
 
   serviceAreas: [],
 

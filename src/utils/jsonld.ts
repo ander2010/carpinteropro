@@ -17,7 +17,7 @@ export const organizationSchema = () => {
     name: business.name,
     url: business.domain,
   };
-  const logo = absoluteUrl('/images/brand/logo.svg');
+  const logo = absoluteUrl('/images/brand/mark.png');
   if (logo) schema.logo = logo;
   const sameAs = getSameAsUrls();
   if (sameAs.length > 0) schema.sameAs = sameAs;
@@ -32,7 +32,7 @@ export const localBusinessSchema = () => {
     '@type': 'HomeAndConstructionBusiness',
     name: business.name,
     url: business.domain,
-    image: absoluteUrl('/images/brand/logo.svg'),
+    image: absoluteUrl('/images/brand/mark.png'),
   };
 
   if (business.phone) schema.telephone = business.phone;
@@ -134,7 +134,7 @@ export const articleSchema = (opts: {
     name: business.name,
     logo: {
       '@type': 'ImageObject',
-      url: absoluteUrl('/images/brand/logo.svg'),
+      url: absoluteUrl('/images/brand/mark.png'),
     },
   },
 });

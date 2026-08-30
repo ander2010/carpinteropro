@@ -39,6 +39,12 @@ const dayLabelsFor: Record<Locale, Record<string, string>> = {
   },
 };
 const dayLabels = dayLabelsFor[locale];
+
+const isOpen24_7 =
+  business.openingHours.length === 1 &&
+  business.openingHours[0].days.length === 7 &&
+  business.openingHours[0].opens === '00:00' &&
+  business.openingHours[0].closes === '23:59';
 ---
 
 <MainLayout
@@ -119,11 +125,15 @@ const dayLabels = dayLabelsFor[locale];
                 {t('contact.hours')}
               </h2>
               <ul class="text-ink-700 mt-2 space-y-1 text-sm">
-                {business.openingHours.map((block) => (
-                  <li>
-                    {block.days.map((d) => dayLabels[d]).join(', ')}: {block.opens} – {block.closes}
-                  </li>
-                ))}
+                {isOpen24_7 ? (
+                  <li>{t('contact.open24')}</li>
+                ) : (
+                  business.openingHours.map((block) => (
+                    <li>
+                      {`${block.days.map((d) => dayLabels[d]).join(', ')}: ${block.opens} – ${block.closes}`}
+                    </li>
+                  ))
+                )}
               </ul>
             </div>
           )

@@ -213,6 +213,7 @@ export const ui = {
     'contact.email': 'Email',
     'contact.address': 'Dirección',
     'contact.hours': 'Horario',
+    'contact.open24': 'Abiertos las 24 horas, todos los días',
     'contact.areas': 'Áreas de servicio',
 
     'about.title': 'Sobre',
@@ -432,6 +433,7 @@ export const ui = {
     'contact.email': 'Email',
     'contact.address': 'Address',
     'contact.hours': 'Hours',
+    'contact.open24': 'Open 24 hours, every day',
     'contact.areas': 'Service Areas',
 
     'about.title': 'About',

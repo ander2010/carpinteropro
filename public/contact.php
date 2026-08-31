@@ -297,25 +297,31 @@ function appendLeadToSheet(array $row): bool
 
     $row['secret'] = defined('SHEETS_SHARED_SECRET') ? SHEETS_SHARED_SECRET : '';
 
+    // IMPORTANTE: no seguimos la redirección (CURLOPT_FOLLOWLOCATION en
+    // false a propósito). Un Google Apps Script Web App SIEMPRE responde a
+    // doPost() con un 302 hacia script.googleusercontent.com para entregar
+    // el resultado — y ESE segundo paso falla de forma consistente para
+    // clientes no-navegador (curl, PHP) con un genérico "unable to open the
+    // file", AUNQUE doPost() ya se haya ejecutado por completo (incluido el
+    // appendRow a la hoja). Confirmado probando en vivo: la fila llega al
+    // Sheet incluso cuando seguir la redirección da error. Por eso, para
+    // este caso, un 302 de script.google.com ya es la señal fiable de que
+    // Apps Script recibió y procesó la solicitud — no hace falta ni
+    // conviene intentar leer el JSON de confirmación.
     $ch = curl_init(SHEETS_WEBHOOK_URL);
     curl_setopt_array($ch, [
         CURLOPT_POST => true,
         CURLOPT_POSTFIELDS => json_encode($row),
         CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_FOLLOWLOCATION => false,
         CURLOPT_TIMEOUT => 10,
     ]);
-    $response = curl_exec($ch);
+    curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
 
-    if ($response === false || $httpCode !== 200) {
-        return false;
-    }
-
-    $decoded = json_decode((string) $response, true);
-    return is_array($decoded) && ($decoded['success'] ?? false) === true;
+    return $httpCode === 302;
 }
 
 $leadId = 'CP-' . date('Ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 5));

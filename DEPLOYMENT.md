@@ -146,6 +146,23 @@ Notas sobre el registro en Sheets:
 - Si dejas `SHEETS_WEBHOOK_URL` vacío en `mail-config.php`, este paso se
   omite silenciosamente y solo se envía el email — útil si todavía no
   configuraste el Sheet.
+- **Detalle técnico importante** (por si algún día hay que depurar esto de
+  nuevo): un Google Apps Script Web App siempre responde a `doPost()` con
+  una redirección 302 hacia `script.googleusercontent.com` para entregar el
+  resultado. Ese segundo paso falla de forma consistente para clientes que
+  no son un navegador (`curl`, PHP) con un genérico "unable to open the
+  file" — **incluso cuando `doPost()` ya se ejecutó por completo y la fila
+  ya se agregó a la hoja**. Confirmado probando en vivo contra dos
+  implementaciones distintas. Por eso `appendLeadToSheet()` en
+  `contact.php` NO sigue esa redirección (`CURLOPT_FOLLOWLOCATION` en
+  `false`) y trata un **302 de `script.google.com`** como señal suficiente
+  de éxito, en vez de intentar leer el JSON de confirmación.
+  Contrapartida: si `SHEETS_SHARED_SECRET` no coincide entre
+  `mail-config.php` y el Apps Script, `doPost()` igual responde con 302
+  (aunque internamente rechace la solicitud sin agregar la fila), así que
+  `contact.php` no puede detectar ese caso — si no ves filas nuevas a pesar
+  de que todo "parece" funcionar, lo primero a revisar es que el secreto
+  sea idéntico en ambos lados.
 
 Notas:
 

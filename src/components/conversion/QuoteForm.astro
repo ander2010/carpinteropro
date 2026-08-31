@@ -215,6 +215,10 @@ const contactMethods = t('form.contactMethods').split(',');
       <input type="text" id={`${id}-company`} name="company" tabindex="-1" autocomplete="off" />
     </div>
 
+    <p class="text-ink-500 text-xs leading-relaxed">
+      {t('form.consentNotice')}
+    </p>
+
     <div class="flex items-start gap-3">
       <input
         type="checkbox"
@@ -240,6 +244,27 @@ const contactMethods = t('form.contactMethods').split(',');
       <span data-submit-label>{t('cta.sendRequest')}</span>
     </button>
   </form>
+
+  <div
+    data-form-success
+    class="hidden flex-col items-start gap-3 py-4"
+    role="status"
+    aria-live="polite"
+  >
+    <span
+      class="bg-brand-600/10 text-brand-700 flex h-12 w-12 items-center justify-center rounded-full"
+    >
+      <svg class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </span>
+    <h3 class="text-ink-950 text-2xl font-semibold">{t('form.successTitle')}</h3>
+    <p class="text-ink-600">{t('form.successText')}</p>
+    <p class="text-ink-500 text-sm">{t('form.successPhoneNote')}</p>
+  </div>
 </div>
 
 <script>
@@ -256,12 +281,19 @@ const contactMethods = t('form.contactMethods').split(',');
       const t = useTranslations(locale);
 
       const statusEl = form.querySelector<HTMLElement>('[data-form-status]');
+      const successEl = form.parentElement?.querySelector<HTMLElement>('[data-form-success]');
       const submitButton = form.querySelector<HTMLButtonElement>('[data-submit-button]');
       const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
       const endpoint = form.dataset.endpoint ?? '';
       const whatsappEnabled = form.dataset.whatsappEnabled === 'true';
       const emailEnabled = form.dataset.emailEnabled === 'true';
       const context = form.dataset.context ?? '';
+
+      const showSuccessScreen = () => {
+        form.classList.add('hidden');
+        successEl?.classList.remove('hidden');
+        successEl?.classList.add('flex');
+      };
 
       const setStatus = (message: string, tone: 'success' | 'error' | 'info') => {
         if (!statusEl) return;
@@ -329,6 +361,14 @@ const contactMethods = t('form.contactMethods').split(',');
 
         const data = new FormData(form);
         if (context) data.set('context', context);
+        data.set('pageUrl', window.location.href);
+        try {
+          data.set('utmSource', localStorage.getItem('utm_source') ?? '');
+          data.set('utmMedium', localStorage.getItem('utm_medium') ?? '');
+          data.set('utmCampaign', localStorage.getItem('utm_campaign') ?? '');
+        } catch {
+          // localStorage puede no estar disponible (modo privado, etc.) — no es crítico.
+        }
 
         if (submitButton) submitButton.disabled = true;
         if (submitLabel) submitLabel.textContent = t('cta.sending');
@@ -341,7 +381,7 @@ const contactMethods = t('form.contactMethods').split(',');
               headers: { Accept: 'application/json' },
             });
             if (!response.ok) throw new Error('request-failed');
-            setStatus(t('form.successMessage'), 'success');
+            showSuccessScreen();
             form.reset();
           } else if (whatsappEnabled) {
             const waNumber = form.dataset.whatsappNumber ?? '';

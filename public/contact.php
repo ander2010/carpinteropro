@@ -1,8 +1,9 @@
 <?php
 /**
- * contact.php — recibe el envío del formulario de presupuesto (QuoteForm) y
- * manda un email con el resumen y las fotos adjuntas a TO_EMAIL, usando SMTP
- * autenticado (vía PHPMailer) en vez de mail() nativo.
+ * contact.php — recibe el envío del formulario de presupuesto (QuoteForm),
+ * registra el lead en Google Sheets y manda un email con el resumen y las
+ * fotos adjuntas a TO_EMAIL, usando SMTP autenticado (vía PHPMailer) en vez
+ * de mail() nativo.
  *
  * mail() nativo no es fiable en hosting compartido: el hosting lo "acepta"
  * (mail() devuelve true) pero el correo no llega, porque sale sin
@@ -14,16 +15,25 @@
  *   1. Crear un buzón real en tu hosting (en Hostinger: hPanel → Emails →
  *      Administrar → Crear cuenta de correo), ej. info@carpinteropro.com.
  *   2. Copiar public/mail-config.example.php a public/mail-config.php y
- *      completar host/usuario/contraseña reales de SMTP (ver ese archivo).
- *      mail-config.php NO se sube a git — solo por FTP/hPanel.
+ *      completar host/usuario/contraseña reales de SMTP, más la URL del
+ *      Google Apps Script y el secreto compartido (ver ese archivo y
+ *      DEPLOYMENT.md, sección "Formulario de contacto"). mail-config.php NO
+ *      se sube a git — solo por FTP/hPanel.
  *   3. PUBLIC_CONTACT_ENDPOINT=/contact.php en el .env usado para compilar
  *      el sitio.
+ *
+ * El registro en Google Sheets y el envío del email se intentan por
+ * separado: si uno de los dos falla, el otro igual se intenta, para no
+ * perder el lead solo porque un canal falló. Se responde error al
+ * visitante únicamente si AMBOS fallan.
  *
  * Usa PHPMailer (public/lib/phpmailer/, incluido en el repo tal cual desde
  * https://github.com/PHPMailer/PHPMailer — sin Composer).
  */
 
 declare(strict_types=1);
+
+date_default_timezone_set('America/New_York');
 
 require __DIR__ . '/lib/phpmailer/Exception.php';
 require __DIR__ . '/lib/phpmailer/PHPMailer.php';
@@ -47,6 +57,37 @@ const ALLOWED_MIME_TYPES = [
     'image/png' => 'png',
     'image/webp' => 'webp',
     'image/gif' => 'gif',
+];
+
+// ZIP codes de Miami-Dade y Broward (Florida), usados para rellenar la
+// columna "Condado" del Google Sheet cuando el cliente escribe un código
+// postal reconocible en "Ubicación". Fuente: listados públicos de USPS por
+// condado. Si el ZIP no aparece en ninguna lista, la columna queda vacía.
+const MIAMI_DADE_ZIPS = [
+    '33002', '33010', '33011', '33012', '33013', '33014', '33015', '33016', '33017', '33018',
+    '33030', '33031', '33032', '33033', '33034', '33035', '33039', '33054', '33055', '33056',
+    '33090', '33092', '33101', '33102', '33106', '33109', '33111', '33112', '33114', '33116',
+    '33119', '33122', '33124', '33125', '33126', '33127', '33128', '33129', '33130', '33131',
+    '33132', '33133', '33134', '33135', '33136', '33137', '33138', '33139', '33140', '33141',
+    '33142', '33143', '33144', '33145', '33146', '33147', '33149', '33150', '33151', '33152',
+    '33153', '33154', '33155', '33156', '33157', '33158', '33160', '33161', '33162', '33163',
+    '33164', '33165', '33166', '33167', '33168', '33169', '33170', '33172', '33173', '33174',
+    '33175', '33176', '33177', '33178', '33179', '33180', '33181', '33182', '33183', '33184',
+    '33185', '33186', '33187', '33188', '33189', '33190', '33191', '33192', '33193', '33194',
+    '33195', '33196', '33197', '33198', '33199', '33206', '33222', '33231', '33233', '33234',
+    '33238', '33239', '33242', '33243', '33245', '33247', '33255', '33256', '33257', '33261',
+    '33265', '33266', '33269', '33280', '33283', '33296', '33299',
+];
+const BROWARD_ZIPS = [
+    '33004', '33008', '33009', '33019', '33020', '33021', '33022', '33023', '33024', '33025',
+    '33026', '33027', '33028', '33029', '33060', '33061', '33062', '33063', '33064', '33065',
+    '33066', '33067', '33068', '33069', '33071', '33072', '33073', '33074', '33075', '33076',
+    '33077', '33081', '33082', '33083', '33084', '33093', '33097', '33301', '33302', '33303',
+    '33304', '33305', '33306', '33307', '33308', '33309', '33310', '33311', '33312', '33313',
+    '33314', '33315', '33316', '33317', '33318', '33319', '33320', '33321', '33322', '33323',
+    '33324', '33325', '33326', '33327', '33328', '33329', '33330', '33331', '33332', '33334',
+    '33335', '33336', '33337', '33338', '33339', '33340', '33345', '33346', '33348', '33349',
+    '33351', '33355', '33359', '33388', '33394', '33441', '33442', '33443',
 ];
 
 header('Content-Type: application/json; charset=utf-8');
@@ -122,6 +163,10 @@ $projectType = cleanText((string) ($_POST['projectType'] ?? ''));
 $location = cleanText((string) ($_POST['location'] ?? ''));
 $preferredDate = cleanText((string) ($_POST['preferredDate'] ?? ''));
 $budget = cleanText((string) ($_POST['budget'] ?? ''));
+$pageUrl = cleanText((string) ($_POST['pageUrl'] ?? ''));
+$utmSource = cleanText((string) ($_POST['utmSource'] ?? ''));
+$utmMedium = cleanText((string) ($_POST['utmMedium'] ?? ''));
+$utmCampaign = cleanText((string) ($_POST['utmCampaign'] ?? ''));
 
 $preferredContact = [];
 if (isset($_POST['preferredContact'])) {
@@ -131,6 +176,20 @@ if (isset($_POST['preferredContact'])) {
         if ($item !== '') {
             $preferredContact[] = $item;
         }
+    }
+}
+
+// ZIP y condado, a partir del campo de ubicación (texto libre).
+$zip = '';
+if (preg_match('/\b\d{5}\b/', $location, $zipMatch)) {
+    $zip = $zipMatch[0];
+}
+$county = '';
+if ($zip !== '') {
+    if (in_array($zip, MIAMI_DADE_ZIPS, true)) {
+        $county = 'Miami-Dade';
+    } elseif (in_array($zip, BROWARD_ZIPS, true)) {
+        $county = 'Broward';
     }
 }
 
@@ -227,8 +286,70 @@ if (isset($_FILES['photos']) && is_array($_FILES['photos']['name'] ?? null)) {
 }
 
 // -----------------------------------------------------------------------
-// Envío por SMTP autenticado (PHPMailer)
+// Registro del lead en Google Sheets (vía Google Apps Script Web App).
+// Best-effort: si falla, no interrumpe el envío del email.
 // -----------------------------------------------------------------------
+function appendLeadToSheet(array $row): bool
+{
+    if (!defined('SHEETS_WEBHOOK_URL') || SHEETS_WEBHOOK_URL === '' || !function_exists('curl_init')) {
+        return false;
+    }
+
+    $row['secret'] = defined('SHEETS_SHARED_SECRET') ? SHEETS_SHARED_SECRET : '';
+
+    $ch = curl_init(SHEETS_WEBHOOK_URL);
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($row),
+        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT => 10,
+    ]);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($response === false || $httpCode !== 200) {
+        return false;
+    }
+
+    $decoded = json_decode((string) $response, true);
+    return is_array($decoded) && ($decoded['success'] ?? false) === true;
+}
+
+$leadId = 'CP-' . date('Ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 5));
+$now = new DateTime('now');
+$photosSummary = count($attachments) > 0 ? count($attachments) . ' foto(s) (enviadas por email)' : '';
+
+$sheetOk = appendLeadToSheet([
+    'leadId' => $leadId,
+    'fecha' => $now->format('Y-m-d'),
+    'hora' => $now->format('H:i'),
+    'nombre' => $name,
+    'telefono' => $phone,
+    'email' => $email,
+    'zip' => $zip,
+    'condado' => $county,
+    'tipoProyecto' => $projectType,
+    'descripcion' => $description,
+    'presupuesto' => $budget,
+    'cuandoComenzar' => $preferredDate,
+    'contactoPreferido' => implode(', ', $preferredContact),
+    'fotos' => $photosSummary,
+    'fuente' => 'Website',
+    'paginaOrigen' => $pageUrl,
+    'utmSource' => $utmSource,
+    'utmMedium' => $utmMedium,
+    'utmCampaign' => $utmCampaign,
+    'consentimiento' => 'Sí — ' . $now->format('Y-m-d H:i'),
+]);
+
+// -----------------------------------------------------------------------
+// Envío por SMTP autenticado (PHPMailer). Best-effort: si falla, no borra
+// el registro ya guardado en el Sheet.
+// -----------------------------------------------------------------------
+$mailOk = true;
 $mail = new PHPMailer(true);
 
 try {
@@ -251,7 +372,7 @@ try {
     }
 
     $mail->Subject =
-        'Nueva solicitud de presupuesto' . ($context !== '' ? " — {$context}" : '') . " — {$name}";
+        "[{$leadId}] Nueva solicitud de presupuesto" . ($context !== '' ? " — {$context}" : '') . " — {$name}";
     $mail->isHTML(false);
     $mail->Body = $body;
 
@@ -266,6 +387,10 @@ try {
 
     $mail->send();
 } catch (PHPMailerException $e) {
+    $mailOk = false;
+}
+
+if (!$sheetOk && !$mailOk) {
     respond(500, ['success' => false, 'error' => 'send_failed']);
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plantilla de credenciales SMTP para public/contact.php.
+ * Plantilla de credenciales SMTP + Google Sheets para public/contact.php.
  *
  * Copia este archivo como "mail-config.php" y completa los valores reales.
  * mail-config.php NO se sube a git (ver .gitignore), para no exponer la
@@ -30,6 +30,14 @@
  *      prefieres separar el buzón de envío del de recepción).
  *   2. SMTP_PASSWORD es la contraseña de ESE buzón — NO la contraseña de tu
  *      cuenta de Hostinger/hPanel.
+ *
+ * SHEETS_WEBHOOK_URL / SHEETS_SHARED_SECRET: cada lead válido se registra
+ * como una fila nueva en un Google Sheet, vía un Google Apps Script Web App
+ * (no requiere cuenta de servicio de Google Cloud ni Composer). Ver
+ * DEPLOYMENT.md, sección "Formulario de contacto", para el script exacto a
+ * pegar en el Sheet y los pasos de despliegue. Si se deja
+ * SHEETS_WEBHOOK_URL vacío, el registro en Sheets simplemente se omite (el
+ * email sigue funcionando igual).
  */
 
 define('SMTP_HOST', 'smtp.hostinger.com');
@@ -37,3 +45,6 @@ define('SMTP_PORT', 465); // 465 = SSL implícito (probar primero). 587 = STARTT
 define('SMTP_SECURE', 'ssl'); // 'ssl' para el puerto 465, 'tls' para el 587.
 define('SMTP_USER', 'info@carpinteropro.com'); // Buzón real creado en hPanel.
 define('SMTP_PASSWORD', 'CAMBIA-ESTO-por-la-contrasena-real-del-buzon');
+
+define('SHEETS_WEBHOOK_URL', ''); // URL de "/exec" del Google Apps Script desplegado (ver DEPLOYMENT.md).
+define('SHEETS_SHARED_SECRET', 'CAMBIA-ESTO-por-un-secreto-largo-y-unico'); // Debe coincidir con SHARED_SECRET en el Apps Script.

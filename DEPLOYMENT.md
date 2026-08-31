@@ -95,6 +95,58 @@ simple:
 3. `npm run build` y sube el contenido de `dist/` como siempre.
 4. Prueba el formulario en producción.
 
+### Registro de leads en Google Sheets
+
+Cada envío válido del formulario (que pase la validación y el honeypot) se
+registra como una fila nueva en un Google Sheet — nunca reemplaza filas
+existentes. Esto usa un **Google Apps Script Web App**, no una cuenta de
+servicio de Google Cloud: no requiere Composer ni credenciales de API
+complejas, solo pegar un script dentro del propio Sheet.
+
+1. Abre el Google Sheet donde quieres guardar los leads → menú
+   **Extensiones → Apps Script**.
+2. Borra el contenido de `Code.gs` y pega el contenido completo de
+   [`scripts/google-apps-script-leads.gs`](scripts/google-apps-script-leads.gs)
+   (incluido en este repo).
+3. Dentro del script, reemplaza `SHARED_SECRET` por un valor secreto — debe
+   coincidir **exactamente** con `SHEETS_SHARED_SECRET` en `mail-config.php`
+   (paso 5).
+4. Menú **Implementar → Nueva implementación** → tipo **Aplicación web**.
+   Ejecutar como: **Yo**. Quién tiene acceso: **Cualquier usuario**. Autoriza
+   los permisos que pida Google (son sobre tu propio Sheet).
+5. Copia la URL que termina en `/exec`. En `mail-config.php`, define:
+   ```php
+   define('SHEETS_WEBHOOK_URL', 'https://script.google.com/macros/s/XXXXX/exec');
+   define('SHEETS_SHARED_SECRET', 'el-mismo-secreto-del-paso-3');
+   ```
+6. En la **fila 1** del Sheet, escribe estos encabezados, uno por columna, de
+   A a AB (en este orden): `Lead ID, Fecha, Hora, Nombre, Teléfono, Email,
+ZIP Code, Condado, Tipo de proyecto, Descripción, Presupuesto, Cuándo
+quiere comenzar, Contacto preferido, Fotos, Fuente, Página de origen, UTM
+Source, UTM Medium, UTM Campaign, Consentimiento, Estado, Carpintero
+asignado, Fecha asignación, Contactado, Presupuesto realizado, Trabajo
+cerrado, Valor del trabajo, Notas`.
+7. Prueba el formulario en producción y confirma que aparece una fila nueva.
+
+Notas sobre el registro en Sheets:
+
+- Es **best-effort y no bloqueante**: si Sheets falla (URL mal copiada,
+  Sheet borrado, etc.), el email de todos modos se intenta enviar, y
+  viceversa. Solo se muestra error al visitante si **ambos** fallan.
+- `Lead ID` se genera como `CP-YYYYMMDD-XXXXX` (fecha + 5 caracteres al azar).
+- `Condado` se calcula a partir del código postal de 5 dígitos que el
+  visitante haya escrito en "Ubicación", contra listas públicas de ZIP codes
+  de Miami-Dade y Broward (`MIAMI_DADE_ZIPS`/`BROWARD_ZIPS` en
+  `contact.php`). Si no hay un ZIP reconocible, la columna queda vacía.
+- `UTM Source/Medium/Campaign` y `Página de origen` se capturan en el
+  navegador (ver `captureUtmParams()` en `src/layouts/MainLayout.astro`):
+  se guardan en `localStorage` la primera vez que llegan en la URL (ej. un
+  clic desde un anuncio) y viajan con el formulario aunque el envío ocurra
+  en una página distinta a la que recibió el clic.
+- Si dejas `SHEETS_WEBHOOK_URL` vacío en `mail-config.php`, este paso se
+  omite silenciosamente y solo se envía el email — útil si todavía no
+  configuraste el Sheet.
+
 Notas:
 
 - El destinatario (`info@carpinteropro.com`) está definido como constante al

@@ -47,7 +47,7 @@ export const ui = {
     'cta.viewAllBlog': 'Ver todo el blog →',
     'cta.whatsapp': 'Hablar por WhatsApp',
     'cta.call': 'Llamar',
-    'cta.sendRequest': 'Enviar solicitud',
+    'cta.sendRequest': 'Enviar mi proyecto',
     'cta.sending': 'Enviando...',
     'cta.readGuide': 'Leer guía',
 
@@ -135,9 +135,14 @@ export const ui = {
     'form.descriptionPlaceholder': 'Medidas, materiales, ideas, referencias...',
     'form.photos': 'Fotos del proyecto (opcional)',
     'form.preferredContact': 'Método de contacto preferido',
-    'form.consent': 'Acepto ser contactado sobre mi solicitud.',
-    'form.successMessage':
-      '¡Gracias! Hemos recibido tu solicitud. Un carpintero de nuestra zona se pondrá en contacto contigo pronto.',
+    'form.consentNotice':
+      'Al enviar tu proyecto, aceptas que CarpinteroPro y un profesional independiente de nuestra red puedan contactarte acerca de tu solicitud. CarpinteroPro conecta clientes con profesionales independientes.',
+    'form.consent': 'Acepto ser contactado acerca de mi solicitud.',
+    'form.successTitle': '¡Recibimos tu proyecto!',
+    'form.successText':
+      'Estamos buscando un profesional disponible para tu solicitud. Un carpintero independiente de nuestra red podrá comunicarse contigo para conocer los detalles y preparar un presupuesto.',
+    'form.successPhoneNote':
+      'Ten tu teléfono disponible para que podamos atender tu solicitud lo antes posible.',
     'form.whatsappRedirect': 'Te llevamos a WhatsApp para completar el envío de tu solicitud.',
     'form.emailRedirect': 'Abrimos tu cliente de email para completar el envío.',
     'form.noChannel':
@@ -293,7 +298,7 @@ export const ui = {
     'cta.viewAllBlog': 'View all articles →',
     'cta.whatsapp': 'Chat on WhatsApp',
     'cta.call': 'Call',
-    'cta.sendRequest': 'Send request',
+    'cta.sendRequest': 'Send My Project',
     'cta.sending': 'Sending...',
     'cta.readGuide': 'Read guide',
 
@@ -381,9 +386,14 @@ export const ui = {
     'form.descriptionPlaceholder': 'Measurements, materials, ideas, references...',
     'form.photos': 'Project photos (optional)',
     'form.preferredContact': 'Preferred contact method',
+    'form.consentNotice':
+      'By submitting your project, you agree that CarpinteroPro and an independent professional from our network may contact you about your request. CarpinteroPro connects clients with independent professionals.',
     'form.consent': 'I agree to be contacted about my request.',
-    'form.successMessage':
-      "Thanks! We've received your request. A carpenter in our area will reach out to you soon.",
+    'form.successTitle': "We've received your project!",
+    'form.successText':
+      "We're looking for an available professional for your request. An independent carpenter from our network will reach out to go over the details and put together a quote.",
+    'form.successPhoneNote':
+      'Keep your phone handy so we can get to your request as soon as possible.',
     'form.whatsappRedirect': "We're taking you to WhatsApp to complete your request.",
     'form.emailRedirect': 'We’re opening your email client to complete your request.',
     'form.noChannel':

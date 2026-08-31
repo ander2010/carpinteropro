@@ -102,7 +102,24 @@ const unprefixedPath = locale === 'en' && path.startsWith('/en') ? path.slice(3)
         });
       }
 
+      // Guarda utm_source/utm_medium/utm_campaign de la URL actual en
+      // localStorage (último valor gana) para que el formulario de
+      // presupuesto los incluya al enviarse, aunque el envío ocurra en una
+      // página distinta a la que trajo el tráfico pago.
+      function captureUtmParams() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          (['utm_source', 'utm_medium', 'utm_campaign'] as const).forEach((key) => {
+            const value = params.get(key);
+            if (value) localStorage.setItem(key, value);
+          });
+        } catch {
+          // localStorage puede no estar disponible (modo privado, etc.) — no es crítico.
+        }
+      }
+
       document.addEventListener('astro:page-load', bindTrackedClicks);
+      document.addEventListener('astro:page-load', captureUtmParams);
       document.addEventListener('astro:page-load', initScrollReveal);
       // Limpia los ScrollTrigger de la página anterior antes de la transición
       // de vista, para no acumular listeners atados a elementos ya eliminados.

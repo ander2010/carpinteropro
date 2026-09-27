@@ -4,7 +4,7 @@
 # Panel tipo CRM en /admin: completas el formulario, das clic en "Publish" y
 # el CMS crea/edita el archivo correspondiente directamente en el repositorio
 # (commit real a Git). Ver CMS_SETUP.md para la configuración necesaria antes
-# de poder usarlo (Netlify Identity + Git Gateway).
+# de poder usarlo (GitHub OAuth App + proxy en Cloudflare Workers).
 #
 # IMPORTANTE — slugs entre idiomas: para que el selector de idioma del sitio
 # funcione correctamente, una misma pieza de contenido en español e inglés
@@ -14,8 +14,14 @@
 # =============================================================================
 
 backend:
-  name: git-gateway
+  name: github
+  repo: ander2010/carpinteropro
   branch: main
+  # URL del proxy OAuth (Cloudflare Worker, ver tools/decap-oauth-worker/ y
+  # CMS_SETUP.md). Reemplaza esto por la URL real que te da Cloudflare al
+  # desplegar el Worker (termina en ".workers.dev" salvo que uses dominio propio).
+  base_url: https://carpinteropro-decap-oauth.ander2010.workers.dev
+  auth_endpoint: auth
 
 # Los archivos que suba un editor (imágenes, etc.) se guardan aquí y quedan
 # servidos públicamente en /images/uploads/...

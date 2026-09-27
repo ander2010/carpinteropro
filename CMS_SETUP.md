@@ -20,75 +20,88 @@ para quien prefiera un formulario en el navegador.
 
 El panel guarda los cambios haciendo un **commit a Git**, así que necesita:
 
-1. Que el proyecto esté en un repositorio Git con un remoto (GitHub).
+1. Que el proyecto esté en un repositorio Git con un remoto (GitHub) — ya
+   está: [github.com/ander2010/carpinteropro](https://github.com/ander2010/carpinteropro).
 2. Un mecanismo de autenticación para saber quién tiene permiso de guardar.
 
-La forma más simple de resolver ambos puntos sin escribir código adicional es
-desplegar el sitio en **Netlify** y usar **Netlify Identity + Git Gateway**
-(gratis en el plan Starter de Netlify). El sitio en sí sigue siendo 100%
-portable a cualquier hosting (ver DEPLOYMENT.md) — sólo el panel `/admin`
-depende de esta pieza concreta.
+El sitio real se despliega en **Hostinger** (ver DEPLOYMENT.md), no en
+Netlify, así que el panel usa el backend `github` de Decap CMS en lugar de
+`git-gateway` (que solo funciona si el sitio corre en Netlify). El backend
+`github` necesita una **GitHub OAuth App** más un pequeño servidor que haga
+el intercambio de código→token (GitHub no permite hacer ese paso desde el
+navegador directamente, por seguridad: expondría el Client Secret). Ese
+servidor va en **Cloudflare Workers** (gratis, sin tarjeta), es un único
+archivo (`tools/decap-oauth-worker/index.js`) y no tiene nada que ver con
+dónde vive el sitio — Hostinger sigue sirviendo `carpinteropro.com` exactamente
+igual que hoy.
 
 ## Pasos de configuración
 
-### 1. Sube el proyecto a GitHub
+### 1. Crea la GitHub OAuth App
+
+1. En GitHub: **Settings → Developer settings → OAuth Apps → New OAuth App**
+   (o directo en [github.com/settings/developers](https://github.com/settings/developers)).
+2. Rellena:
+   - **Application name**: `CarpinteroPro CMS` (o lo que prefieras).
+   - **Homepage URL**: `https://carpinteropro.com`
+   - **Authorization callback URL**: `https://carpinteropro-decap-oauth.TU-SUBDOMINIO.workers.dev/callback`
+     (el subdominio exacto lo sabrás en el paso 2 — puedes volver a editar
+     esta URL después de desplegar el Worker, GitHub te deja cambiarla).
+3. Guarda. Copia el **Client ID** y genera un **Client Secret** (solo se
+   muestra una vez — cópialo a un lugar seguro).
+
+### 2. Despliega el proxy OAuth en Cloudflare Workers
+
+El código ya está en `tools/decap-oauth-worker/` en este repo.
+
+**Opción A — con Wrangler (CLI, recomendado):**
 
 ```bash
-git init   # si aún no es un repositorio (puede que ya lo hayas hecho)
-git add .
-git commit -m "Initial commit"
+cd tools/decap-oauth-worker
+npx wrangler login          # abre el navegador, inicia sesión en Cloudflare (gratis)
+npx wrangler deploy         # crea el Worker y te da su URL (....workers.dev)
+npx wrangler secret put OAUTH_CLIENT_ID
+npx wrangler secret put OAUTH_CLIENT_SECRET
 ```
 
-Crea un repositorio nuevo en [github.com/new](https://github.com/new) y
-conéctalo:
+Pega el Client ID y Client Secret de GitHub cuando te los pida cada comando.
 
-```bash
-git remote add origin https://github.com/TU-USUARIO/carpinteropro.git
-git branch -M main
-git push -u origin main
-```
+**Opción B — desde el dashboard de Cloudflare (sin terminal):**
 
-### 2. Despliega el sitio en Netlify
+1. Entra a [dash.cloudflare.com](https://dash.cloudflare.com) → **Workers &
+   Pages → Create → Create Worker**. Ponle el nombre `carpinteropro-decap-oauth`.
+2. En el editor, borra el código de ejemplo y pega el contenido completo de
+   `tools/decap-oauth-worker/index.js`. **Deploy**.
+3. **Settings → Variables and Secrets** → agrega `OAUTH_CLIENT_ID` (texto
+   normal) y `OAUTH_CLIENT_SECRET` (marca como **Secret**) con los valores de
+   GitHub. Guarda (esto vuelve a desplegar el Worker automáticamente).
 
-1. Entra a [app.netlify.com](https://app.netlify.com) → **Add new site** →
-   **Import an existing project** → conecta tu cuenta de GitHub y elige el
-   repositorio.
-2. Build command: `npm run build`. Publish directory: `dist`.
-3. Despliega. Confirma que el sitio carga correctamente en la URL de Netlify.
+Al terminar, Cloudflare te muestra la URL final, algo como
+`https://carpinteropro-decap-oauth.tu-usuario.workers.dev`.
 
-### 3. Activa Netlify Identity
+### 3. Conecta la URL del Worker en los dos lugares que la necesitan
 
-1. En el panel del sitio en Netlify: **Site configuration → Identity → Enable
-   Identity**.
-2. En **Registration preferences**, elige **Invite only** (para que sólo tú —
-   u otras personas que invites — puedan entrar al panel).
+1. **En GitHub** (la OAuth App del paso 1): edita la **Authorization
+   callback URL** para que sea exactamente `<URL-del-Worker>/callback`.
+2. **En este repo**: abre `public/admin/config.yml` y reemplaza la línea
+   `base_url:` por la URL real del Worker (sin `/callback` al final, esa
+   parte la agrega Decap solo). Haz commit y push de ese cambio — el deploy
+   de Hostinger lo recoge automáticamente.
 
-### 4. Activa Git Gateway
+### 4. Entra al panel
 
-1. Dentro de **Identity → Services → Git Gateway**, haz clic en **Enable Git
-   Gateway**. Esto permite que Netlify Identity autorice los commits al
-   repositorio en tu nombre, sin que tengas que crear un token de GitHub
-   manualmente.
+Visita `https://carpinteropro.com/admin/`, clic en **Login with GitHub**,
+autoriza la app, y ya puedes crear/editar contenido desde el formulario.
 
-### 5. Invítate como usuario
+El backend `github` solo deja guardar a cuentas de GitHub con permiso de
+escritura sobre el repositorio (tú, o quien invites como colaborador en
+GitHub) — no hace falta un paso extra de "invitar usuarios" como con Netlify
+Identity.
 
-1. **Identity → Invite users**, escribe tu propio email.
-2. Revisa tu correo y acepta la invitación (te pedirá crear una contraseña).
-
-### 6. Entra al panel
-
-Visita `https://TU-SITIO.netlify.app/admin/` (o tu dominio una vez lo
-conectes), inicia sesión con el usuario que acabas de crear, y ya puedes
-crear/editar contenido desde el formulario.
-
-Cada vez que guardas algo en el panel, Netlify **reconstruye el sitio
-automáticamente** con el nuevo contenido (normalmente en 1-2 minutos).
-
-## Después de conectar tu dominio propio
-
-Cuando `carpinteropro.com` apunte a Netlify (ver POST_DEPLOYMENT.md), el
-panel queda disponible en `https://carpinteropro.com/admin/` — no necesitas
-cambiar nada en `config.yml`.
+Cada `Publish` desde el panel crea un commit real en `main`. Como el
+repositorio ya tiene Git auto-deploy activado en Hostinger (ver
+DEPLOYMENT.md), ese commit dispara la reconstrucción del sitio igual que un
+`git push` hecho a mano.
 
 ## Importante: slugs entre idiomas
 
@@ -105,12 +118,3 @@ Las imágenes que subas desde el CMS se guardan en `public/images/uploads/` y
 quedan disponibles automáticamente en las páginas. Para mejor rendimiento,
 sube imágenes ya optimizadas (WebP, tamaño razonable) — el panel no
 comprime las imágenes por ti.
-
-## Si prefieres no usar Netlify
-
-Decap CMS también soporta el backend `github` con OAuth propio (sin Netlify),
-pero requiere desplegar un pequeño servidor proxy de autenticación (por
-ejemplo, con una función serverless en Vercel). Es más trabajo de
-configuración; si te interesa esta ruta, documenta primero tu elección de
-hosting y podemos ajustar `public/admin/config.yml` (`backend.name: github`)
-en consecuencia.

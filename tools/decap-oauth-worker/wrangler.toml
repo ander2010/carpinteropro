@@ -1,0 +1,6 @@
+# Config de Cloudflare Workers para el proxy OAuth de Decap CMS.
+# Despliegue: dentro de esta carpeta, `npx wrangler deploy`
+# (o pega index.js a mano en el editor del dashboard de Cloudflare — ver CMS_SETUP.md).
+name = "carpinteropro-decap-oauth"
+main = "index.js"
+compatibility_date = "2026-01-01"

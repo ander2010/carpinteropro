@@ -100,6 +100,8 @@ async function handleCallback(url, request, env) {
     <script>
       (function () {
         function receiveMessage(e) {
+          if (e.data !== 'authorizing:github') return;          // ignora mensajes de extensiones
+          if (e.origin !== 'https://carpinteropro.com' && e.origin !== 'https://www.carpinteropro.com') return; // solo responde a tu panel
           window.opener.postMessage('authorization:github:success:${payload.replace(/'/g, "\\'")}', e.origin);
           window.removeEventListener('message', receiveMessage, false);
         }

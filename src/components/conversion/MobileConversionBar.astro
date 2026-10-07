@@ -17,7 +17,7 @@ const ariaLabel = locale === 'es' ? 'Acciones rápidas de contacto' : 'Quick con
   class="border-ink-900/10 fixed inset-x-0 bottom-0 z-40 flex items-stretch border-t bg-white/95 shadow-[0_-4px_16px_rgba(20,17,13,0.08)] backdrop-blur sm:hidden"
   style="padding-bottom: env(safe-area-inset-bottom);"
   aria-label={ariaLabel}
-  transition:persist
+  transition:persist={`mobile-conversion-bar-${locale}`}
 >
   {
     showPhone && (

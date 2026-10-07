@@ -42,7 +42,7 @@ collections:
     label_singular: 'Artículo'
     folder: 'src/content/blog/es'
     path: '{{slug}}/index'
-    slug: '{{year}}-{{month}}-{{day}}-{{fields.urlSlug}}'
+    slug: '{{fields.urlSlug}}'
     extension: 'mdx'
     format: 'frontmatter'
     create: true
@@ -91,7 +91,7 @@ collections:
     label_singular: 'Post'
     folder: 'src/content/blog/en'
     path: '{{slug}}/index'
-    slug: '{{year}}-{{month}}-{{day}}-{{fields.urlSlug}}'
+    slug: '{{fields.urlSlug}}'
     extension: 'mdx'
     format: 'frontmatter'
     create: true
